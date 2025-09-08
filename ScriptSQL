@@ -1,0 +1,79 @@
+-- 1. Table utilisateur 
+CREATE TABLE utilisateur (
+    id_utilisateur INT AUTO_INCREMENT PRIMARY KEY,
+    email          VARCHAR(100) NOT NULL UNIQUE,
+    mot_de_passe   VARCHAR(255) NOT NULL,
+    nom            VARCHAR(50) NOT NULL,
+    prenom         VARCHAR(50) NOT NULL,
+    username       VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- 2. Table publication 
+CREATE TABLE publication (
+    id_publication INT AUTO_INCREMENT PRIMARY KEY,
+    contenu        TEXT NOT NULL,
+    date_publication DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    utilisateur_id INT NOT NULL,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
+
+-- 3. Table comments 
+CREATE TABLE comments (
+    id_commentaire  INT AUTO_INCREMENT PRIMARY KEY,
+    contenu         TEXT NOT NULL,
+    date_commentaire DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    publication_id  INT NOT NULL,
+    utilisateur_id  INT NOT NULL,
+    FOREIGN KEY (publication_id) REFERENCES publication(id_publication),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
+
+-- 4. Table likes 
+CREATE TABLE likes (
+    id_like        INT AUTO_INCREMENT PRIMARY KEY,
+    date_like      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    publication_id INT NOT NULL,
+    utilisateur_id INT NOT NULL,
+    FOREIGN KEY (publication_id) REFERENCES publication(id_publication),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    UNIQUE (publication_id, utilisateur_id) -- un seul like par user par publication
+);
+
+-- 5. Table reposts 
+CREATE TABLE reposts (
+    id_repost      INT AUTO_INCREMENT PRIMARY KEY,
+    date_repost    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    publication_id INT NOT NULL,
+    utilisateur_id INT NOT NULL,
+    FOREIGN KEY (publication_id) REFERENCES publication(id_publication),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    UNIQUE (publication_id, utilisateur_id) -- un seul repost par user par publication
+);
+
+-- 6. Table notification 
+CREATE TABLE notification (
+    id_notification INT AUTO_INCREMENT PRIMARY KEY,
+    type            VARCHAR(50) NOT NULL,
+    message         TEXT NOT NULL,
+    date_envoi      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    utilisateur_id  INT NOT NULL,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
+
+-- 7. Table session 
+CREATE TABLE session (
+    id_session     INT AUTO_INCREMENT PRIMARY KEY,
+    date_connexion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    date_expiration DATETIME NOT NULL,
+    utilisateur_id INT NOT NULL,
+    token          CHAR(64) NOT NULL UNIQUE,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
+
+-- 8. Table watchlist 
+CREATE TABLE watchlist (
+    id_watchlist   INT AUTO_INCREMENT PRIMARY KEY,
+    date_ajout     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    utilisateur_id INT NOT NULL,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
