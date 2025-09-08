@@ -1,0 +1,5 @@
+docker run --name mysql-CryptoCube -e MYSQL_ROOT_PASSWORD=oracle -e MYSQL_DATABASE=site_db -p 3306:3306 -d mysql:latest
+
+docker exec -it mysql-CryptoCube mysql -u root -p
+
+use site_db;
