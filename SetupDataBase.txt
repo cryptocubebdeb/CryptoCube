@@ -1,5 +1,7 @@
-docker run --name mysql-CryptoCube -e MYSQL_ROOT_PASSWORD=oracle -e MYSQL_DATABASE=site_db -p 3306:3306 -d mysql:latest
+Pour creer: 
+docker run --name postgres-CryptoCube -e POSTGRES_PASSWORD=oracle -e POSTGRES_USER=postgres -e POSTGRES_DB=site_db -p 5432:5432 -d postgres:latest
 
-docker exec -it mysql-CryptoCube mysql -u root -p
+Pour se connecter: 
+docker exec -it postgres-CryptoCube psql -U postgres -d site_db
 
-use site_db;
+
