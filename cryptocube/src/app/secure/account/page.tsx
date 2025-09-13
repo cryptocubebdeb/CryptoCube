@@ -23,7 +23,7 @@ export default function Page()
 
             <div className="p-6 ml-5 mt-2 w-full max-w-full">
                 <div className={styles.personalInfoHeader}>
-                    <h2 className="text-xl font-semibold">Personal Information</h2>
+                    <h2 className="text-xl">Personal Information</h2>
 
                     <Button
                         variant="outlined"
@@ -87,7 +87,7 @@ export default function Page()
 
 
                 <div className={styles.profileInfoHeader}>
-                    <h2 className="text-xl font-semibold">Profile Information</h2>
+                    <h2 className="text-xl">Profile Information</h2>
 
                     <Button
                         variant="outlined"

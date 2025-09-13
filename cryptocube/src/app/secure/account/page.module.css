@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
+
+body {
+    font-family: 'Geologica', sans-serif;
+}
+
 .title {
     font-size: 1.8rem;
-    font-weight: bold;
+    font-weight: 400;
     margin-top: 2.5rem;
     margin-left: 3rem;
 }
