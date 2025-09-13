@@ -2,6 +2,7 @@ import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
 import { User } from "lucide-react" // for user icon
+import { Search } from 'lucide-react' // for search icon
 
 const Links = [
     { href:"/secure/dashboard", text: 'Home'},
@@ -9,6 +10,7 @@ const Links = [
     { href:"/secure/simulator", text: 'Simulator'},
     { href:"/secure/community", text: 'Community'},
     { href:"/secure/about", text: 'About'},
+    { href:"", icon: <Search size={20} /> },
     { href:"/secure/account", icon: <User size={20} /> }
 ];
 
