@@ -46,7 +46,7 @@ export default function Page()
                                 {isEditingPersonal ? (
                                     <input
                                         type="text"
-                                        defaultValue={"John"}
+                                        defaultValue={"Your first name"}
                                         className = {styles.inputField}
                                     />
                                 ) : (
@@ -59,7 +59,7 @@ export default function Page()
                                 {isEditingPersonal ? (
                                     <input
                                         type="text"
-                                        defaultValue={"Doe"}
+                                        defaultValue={"Your last name"}
                                         className = {styles.inputField}
                                     />
                                 ) : (
@@ -73,7 +73,7 @@ export default function Page()
                             {isEditingPersonal ? (
                                 <input
                                     type="email"
-                                    defaultValue={"johndoe@gmail.com"}
+                                    defaultValue={"Your email"}
                                     className = {styles.inputEmailField}
                                 />
                             ) : (
@@ -106,11 +106,11 @@ export default function Page()
                         {isEditingProfile ? (
                             <input
                                 type="text"
-                                defaultValue={"johndoe222"}
+                                defaultValue={"Your username"}
                                 className = {styles.inputField}
                             />
                         ) : (
-                            <div className={styles.nameDisplay}>johndoe222</div>
+                            <div className={styles.usernameDisplay}>johndoe222</div>
                         )}
                     </div>
 
@@ -119,17 +119,17 @@ export default function Page()
                         {isEditingProfile ? (
                             <input
                                 type="text"
-                                defaultValue={"****"}
+                                defaultValue={"Your password"}
                                 className = {styles.inputField}
                             />
                         ) : (
-                            <div className={styles.nameDisplay}>*******</div>
+                            <div className={styles.passwordDisplay}>*******</div>
                         )}
                     </div>
 
                     <Button variant="outlined" sx={{ width: '15%' }}>Change password</Button>
                 </div>
-                </div>
+            </div>
                 
         
         </main> 
