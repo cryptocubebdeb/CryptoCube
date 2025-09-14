@@ -5,7 +5,7 @@ export default function Page()
   return (
   <>
     <div className="h-screen flex flex-col justify-center items-center space-y-6">
-      <h1 className="text-6xl font-bold text-center font-mono font-semibold ">Crypto<span className="text-yellow-400">Cube</span></h1>
+      <h1 className="text-6xl font-bold text-center font-mono font-semibold">Crypto<span className="text-yellow-400">Cube</span></h1>
       <h1 className="text-2xl text-center font-mono ">Redefining the future of crypto, one cube at a time</h1>
       <h1 className="text-xl text-center font-mono ">Launching soon</h1>
 
