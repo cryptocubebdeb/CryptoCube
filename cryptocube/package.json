@@ -10,10 +10,14 @@
     "format": "biome format --write"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.2",
     "lucide-react": "^0.544.0",
+=======
+    "@heroicons/react": "^2.2.0",
+>>>>>>> 05abd2f1df7251bc75c76e3fd36c454d90f4c10c
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0"
