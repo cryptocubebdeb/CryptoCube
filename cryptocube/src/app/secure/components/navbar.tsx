@@ -1,13 +1,17 @@
 import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
+import { User } from "lucide-react" // for user icon
+import { Search } from 'lucide-react' // for search icon
 
 const Links = [
     { href:"/secure/dashboard", text: 'Home'},
     { href:"/secure/coins", text: 'Coins'},
     { href:"/secure/simulator", text: 'Simulator'},
     { href:"/secure/community", text: 'Community'},
-    { href:"/secure/about", text: 'About'}
+    { href:"/secure/about", text: 'About'},
+    { href:"", icon: <Search size={20} /> },
+    { href:"/secure/account", icon: <User size={20} /> }
 ];
 
 
@@ -19,8 +23,9 @@ const Navbar = () => {
                 <ul className="flex flex-row items-center gap-6 ">
                 {Links.map((link) => (
                     <li key={link.href}>
-                        <Link href={link.href} className="uppercase hover:text-yellow-400 transition-colors font-mono">
-                            {link.text}
+                        <Link href={link.href}
+                            className="uppercase hover:text-yellow-400 transition-colors font-mono">
+                            {link.text || link.icon}
                         </Link>
                     </li>
                 ))}
