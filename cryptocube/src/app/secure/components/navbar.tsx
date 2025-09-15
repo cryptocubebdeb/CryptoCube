@@ -5,13 +5,13 @@ import { User } from "lucide-react" // for user icon
 import { Search } from 'lucide-react' // for search icon
 
 const Links = [
-    { href:"/secure/dashboard", text: 'Home'},
+    { href:"/secure/dashboard", text: 'Accueil'},
     { href:"/secure/coins", text: 'Coins'},
-    { href:"/secure/simulator", text: 'Simulator'},
-    { href:"/secure/community", text: 'Community'},
-    { href:"/secure/about", text: 'About'},
+    { href:"/secure/simulator", text: 'Simulateur'},
+    { href:"/secure/community", text: 'Communauté'},
+    { href:"/secure/about", text: 'À propos'},
     { href:"", icon: <Search size={20} /> },
-    { href:"/secure/account", icon: <User size={20} /> }
+    { href:"/secure/account/details", icon: <User size={20} /> }
 ];
 
 
