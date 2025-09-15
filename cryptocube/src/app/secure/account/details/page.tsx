@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../components/sidebar"
+import Sidebar from "../../components/sidebar"
 import styles from './page.module.css'
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import ProfilePic from "./ProfilePic";
@@ -131,17 +131,17 @@ export default function Page()
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-            <h2 className={styles.title}>My Details</h2>
+            <h2 className={styles.title}>Mes Détails</h2>
 
             {/* Gestion loading et erreur */}
-            <div className="p-6 ml-5 mt-2 w-full max-w-full">
+            {/* <div className="p-6 ml-5 mt-2 w-full max-w-full">
                 {loading && <p style={{ color: 'white' }}>Loading...</p>}
                 {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            </div>
+            </div> */}
 
             <div className="p-6 ml-5 mt-2 w-full max-w-full">
                 <div className={styles.personalInfoHeader}>
-                    <h2 className="text-xl">Personal Information</h2>
+                    <h2 className="text-xl">Information Personnel</h2>
 
                     <Button
                         variant="outlined"
@@ -150,7 +150,7 @@ export default function Page()
                         onClick={() => (isEditingPersonal ? savePersonal() : setIsEditingPersonal(!isEditingPersonal))}
                         sx={{ mt: 1, mb: 1, mr: 10}}
                     >
-                        {isEditingPersonal ? 'Save' : 'Edit'}
+                        {isEditingPersonal ? 'Sauvegarder' : 'Modifier'}
                     </Button>
                 </div>
 
@@ -162,7 +162,7 @@ export default function Page()
                     <div className={styles.infoText}>
                         <div className={styles.nameFields}>
                             <div>
-                                <p className={styles.infoTitles}>FIRST NAME</p>
+                                <p className={styles.infoTitles}>PRÉNOM</p>
                                 {isEditingPersonal ? (
                                     <input
                                         type="text"
@@ -176,7 +176,7 @@ export default function Page()
                             </div>
                            
                            <div>
-                                <p className={styles.infoTitles}>LAST NAME</p>
+                                <p className={styles.infoTitles}>NOM</p>
                                 {isEditingPersonal ? (
                                     <input
                                         type="text"
@@ -191,7 +191,7 @@ export default function Page()
                         </div>
         
                         <div>
-                            <p className={styles.infoTitles}>EMAIL</p>
+                            <p className={styles.infoTitles}>COURRIEL</p>
                             {isEditingPersonal ? (
                                 <input
                                     type="email"
@@ -210,14 +210,14 @@ export default function Page()
 
 
                 <div className={styles.profileInfoHeader}>
-                    <h2 className="text-xl">Profile Information</h2>
+                    <h2 className="text-xl">Information de Profil</h2>
 
                     <Button
                         variant="outlined"
                         onClick={() => (isEditingProfile ? saveProfile() : setIsEditingProfile(!isEditingProfile))}
                         sx={{ mt: 1, mb: 1, mr: 10}}
                     >
-                        {isEditingProfile ? 'Save' : 'Edit'}
+                        {isEditingProfile ? 'Sauvegarder' : 'Modifier'}
                     </Button>
                 </div>
 
@@ -225,34 +225,34 @@ export default function Page()
 
                 <div className={styles.profileInfo}>
                     <div>
-                        <p className={styles.infoTitles}>USERNAME</p>
+                        <p className={styles.infoTitles}>NOM D'UTILISATEUR</p>
                         {isEditingProfile ? (
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className = {styles.inputField}
+                                className = {styles.inputProfileField}
                             />
                         ) : (
-                            <div className={styles.usernameDisplay}>{user?.username}</div>
+                            <div className={styles.profileDisplay}>{user?.username}</div>
                         )}
                     </div>
 
                     <div>
-                        <p className={styles.infoTitles}>PASSWORD</p>
+                        <p className={styles.infoTitles}>MOT DE PASSE</p>
                         {isEditingProfile ? (
                             <input
                                 type="text"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className = {styles.inputField}
+                                className = {styles.inputProfileField}
                             />
                         ) : (
-                            <div className={styles.passwordDisplay}>{user?.password}</div>
+                            <div className={styles.profileDisplay}>{user?.password}</div>
                         )}
                     </div>
 
-                    <Button variant="outlined" sx={{ width: '15%' }}>Change password</Button>
+                    <Button variant="outlined" sx={{ width: '20%' }}>Changer le mot de passe</Button>
                 </div>
             </div>
                 
