@@ -32,8 +32,8 @@ export default function Page() {
         style={{ backgroundColor: "#15171E" }}
         onSubmit={handleSubmit}
       >
-        <div>
-        <label htmlFor="nom" className="block mb-1 text-base">
+        <div >
+        <label htmlFor="nom" className="block mb-1 text-base ">
           Nom
         </label>
         <input
@@ -43,7 +43,7 @@ export default function Page() {
           placeholder="Saisissez votre nom"
           value={form.nom}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
           required
         />
         </div>
@@ -58,7 +58,7 @@ export default function Page() {
           placeholder="Saisissez votre prénom"
           value={form.prenom}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
           required
         />
         </div>
@@ -73,7 +73,7 @@ export default function Page() {
           placeholder="Saisissez votre email"
           value={form.email}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
           required
         />
         </div>
@@ -88,7 +88,7 @@ export default function Page() {
           placeholder="Saisissez votre nom d'utilisateur"
           value={form.username}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 placeholder-gray-400"
           required
         />
         </div>
@@ -103,7 +103,7 @@ export default function Page() {
           placeholder="Saisissez votre mot de passe"
           value={form.password}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
           required
         />
         </div>
@@ -118,13 +118,13 @@ export default function Page() {
           placeholder="Confirmer votre mot de passe"
           value={form.confirmPassword}
           onChange={handleChange}
-          className="border p-2 rounded w-full placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
           required
         />
         </div>
         <button
         type="submit"
-        className="py-2 rounded-full font-semibold border bg-gray-300 hover:bg-gray-400 text-black"
+        className="py-2 rounded-full font-semibold border bg-gray-300 hover:bg-gray-400 text-black w-70 mx-auto m-8"
         >
         S'inscrire
         </button>
