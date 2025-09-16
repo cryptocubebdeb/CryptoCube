@@ -2,7 +2,12 @@
 import Link from "next/link"
 import { useState } from "react"
 import Navbar from "@/app/secure/components/navbar"
+import { Geologica } from "next/font/google"
 
+const geologica = Geologica({
+  subsets: ["latin"],
+  weight: ["400", "700"], 
+})
 export default function Page() {
   const [form, setForm] = useState({
     nom: "",
@@ -23,17 +28,17 @@ export default function Page() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className={`h-screen flex flex-col ${geologica.className}`}>
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
-      <h1 className="text-2xl font-mono mb-6 mt-12">Inscription</h1>
+      <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
       <form
         className="flex flex-col space-y-4 w-[500px] h-[850.82px] p-8 rounded shadow text-white"
         style={{ backgroundColor: "#15171E" }}
         onSubmit={handleSubmit}
       >
         <div >
-        <label htmlFor="nom" className="block mb-1 text-base ">
+        <label htmlFor="nom" className="block mb-1 text-base w-100 mx-auto ">
           Nom
         </label>
         <input
@@ -43,12 +48,12 @@ export default function Page() {
           placeholder="Saisissez votre nom"
           value={form.nom}
           onChange={handleChange}
-          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
         <div>
-        <label htmlFor="prenom" className="block mb-1 text-base">
+        <label htmlFor="prenom" className="block mb-1 text-base w-100 mx-auto">
           Prénom
         </label>
         <input
@@ -58,12 +63,12 @@ export default function Page() {
           placeholder="Saisissez votre prénom"
           value={form.prenom}
           onChange={handleChange}
-          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
         <div>
-        <label htmlFor="email" className="block mb-1 text-base">
+        <label htmlFor="email" className="block mb-1 text-base w-100 mx-auto">
           Email
         </label>
         <input
@@ -73,12 +78,12 @@ export default function Page() {
           placeholder="Saisissez votre email"
           value={form.email}
           onChange={handleChange}
-          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
         <div>
-        <label htmlFor="username" className="block mb-1 text-base">
+        <label htmlFor="username" className="block mb-1 text-base w-100 mx-auto">
           Nom d'utilisateur
         </label>
         <input
@@ -88,12 +93,12 @@ export default function Page() {
           placeholder="Saisissez votre nom d'utilisateur"
           value={form.username}
           onChange={handleChange}
-          className="border p-2 rounded w-100 placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
         <div>
-        <label htmlFor="password" className="block mb-1 text-base">
+        <label htmlFor="password" className="block mb-1 text-base w-100 mx-auto">
           Mot de passe
         </label>
         <input
@@ -103,12 +108,12 @@ export default function Page() {
           placeholder="Saisissez votre mot de passe"
           value={form.password}
           onChange={handleChange}
-          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
         <div>
-        <label htmlFor="confirmPassword" className="block mb-1 text-base">
+        <label htmlFor="confirmPassword" className="block mb-1 text-base w-100 mx-auto">
           Confirmer le mot de passe
         </label>
         <input
@@ -118,7 +123,7 @@ export default function Page() {
           placeholder="Confirmer votre mot de passe"
           value={form.confirmPassword}
           onChange={handleChange}
-          className="border p-2 rounded w-100 mx-auto placeholder-gray-400"
+          className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
           required
         />
         </div>
