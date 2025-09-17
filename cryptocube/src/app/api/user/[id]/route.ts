@@ -17,7 +17,6 @@ export async function GET(
         return NextResponse.json({
             id_utilisateur: userId,
             email: "johndoe222@gmail.com",
-            password: "hashed_password",
             nom: "Doe",
             prenom: "John",
             username: "johndoe222"
@@ -26,7 +25,7 @@ export async function GET(
 
     // Real database query
     const { rows } = await pool.query(
-        "SELECT id_utilisateur, email, password, nom, prenom, username FROM utilisateur WHERE id_utilisateur = $1",
+        "SELECT id_utilisateur, email, nom, prenom, username FROM utilisateur WHERE id_utilisateur = $1",
         [userId]
     );
 
@@ -47,9 +46,9 @@ export async function PUT(
     }
 
     const data = await request.json();
-    const { email, password, nom, prenom, username } = data;
+    const { email, nom, prenom, username } = data;
 
-    if (!email || !password || !nom || !prenom || !username) {
+    if (!email || !nom || !prenom || !username) {
         return NextResponse.json({ error: "Missing user data" }, { status: 400 });
     }
 
@@ -58,7 +57,6 @@ export async function PUT(
         return NextResponse.json({
             id_utilisateur: userId,
             email,
-            password,
             nom,
             prenom,
             username
@@ -67,8 +65,8 @@ export async function PUT(
 
     // Real database query
     const { rows } = await pool.query(
-        "UPDATE utilisateur SET email = $1, password = $2, nom = $3, prenom = $4, username = $5 WHERE id_utilisateur = $6 RETURNING id_utilisateur, email, nom, prenom, username",
-        [email, password, nom, prenom, username, userId]
+        "UPDATE utilisateur SET email = $1, nom = $2, prenom = $3, username = $4 WHERE id_utilisateur = $5 RETURNING id_utilisateur, email, nom, prenom, username",
+        [email, nom, prenom, username, userId]
     );
 
     if (!rows.length) {

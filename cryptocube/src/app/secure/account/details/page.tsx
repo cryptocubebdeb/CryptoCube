@@ -18,7 +18,6 @@ import TextField from "@mui/material/TextField";
 type User = {
     id_utilisateur: number;
     email: string;
-    password: string; // TEMPORARY. WILL HASH
     nom: string;
     prenom: string;
     username: string;
@@ -42,7 +41,6 @@ export default function Page()
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
 
     // For password change
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -76,8 +74,8 @@ export default function Page()
             return;
         }
 
-        if (newPassword.trim().length < 6) {
-            setPasswordError("Le mot de passe doit contenir au moins 6 caractères.");
+        if (newPassword.trim().length < 8) {
+            setPasswordError("Le mot de passe doit contenir au moins 8 caractères.");
             return;
         }
 
@@ -90,16 +88,12 @@ export default function Page()
             setIsSavingPassword(true);
             setPasswordError(null);
 
-            const res = await fetch(`/api/user/${USER_ID}`, {
-                method: "PUT",
+            const res = await fetch(`/api/user/${USER_ID}/password`, {
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    email: user.email,
                     currentPassword, // for backend verification
-                    password: newPassword,
-                    nom: user.nom,
-                    prenom: user.prenom,
-                    username: user.username
+                    newPassword
                 }),
             });
 
@@ -107,13 +101,7 @@ export default function Page()
                 throw new Error("Échec de la mise à jour du mot de passe");
             }
 
-            const updatedUser: User = await res.json();
-            setUser(updatedUser);
-
-            // cleanup + close popup
-            setCurrentPassword("");
-            setNewPassword("");
-            setConfirmPassword("");
+            resetPasswordFields();
             setIsPopupOpen(false);
         } catch (e: any) {
             setPasswordError(e?.message ?? "Une erreur s'est produite");
@@ -142,7 +130,6 @@ export default function Page()
                 setLastName(userData.nom);
                 setEmail(userData.email);
                 setUsername(userData.username);
-                setPassword(userData.password);
             } catch (e: any) {
                 setError(e?.message ?? "An error occurred");
             } finally {
@@ -161,7 +148,6 @@ export default function Page()
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     email,
-                    password,
                     nom: lastName,
                     prenom: firstName,
                     username
@@ -192,7 +178,6 @@ export default function Page()
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     email,
-                    password,
                     nom: lastName,
                     prenom: firstName,
                     username
@@ -328,16 +313,7 @@ export default function Page()
 
                     <div>
                         <p className={styles.infoTitles}>MOT DE PASSE</p>
-                        {isEditingProfile ? (
-                            <input
-                                type="text"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className = {styles.inputProfileField}
-                            />
-                        ) : (
-                            <div className={styles.profileDisplay}>{user?.password}</div>
-                        )}
+                        <div className={styles.profileDisplay}>•••••••</div>
                     </div>
 
                     <Button variant="outlined" sx={{ width: '20%' }} onClick={togglePopup}>Changer le mot de passe</Button>
