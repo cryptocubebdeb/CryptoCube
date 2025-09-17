@@ -2,10 +2,17 @@
 
 import Link from "next/link"
 import Sidebar from "../../components/sidebar"
-import styles from './page.module.css'
+import styles from '../page.module.css'
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import ProfilePic from "./ProfilePic";
 import { useEffect, useState } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 
 // Define the User type
 type User = {
@@ -36,6 +43,85 @@ export default function Page()
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    // For password change
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isSavingPassword, setIsSavingPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+
+    const resetPasswordFields = () => {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setPasswordError(null);
+        setIsSavingPassword(false);
+    };
+
+    const closePasswordDialog = () => {
+        resetPasswordFields();
+        setIsPopupOpen(false);
+    };
+
+    const togglePopup = () => setIsPopupOpen(v => !v);
+
+    // Handler for changing password
+    const handlePasswordChange = async () => {
+        if (!user) return;
+
+        if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
+            setPasswordError("Tous les champs sont requis.");
+            return;
+        }
+
+        if (newPassword.trim().length < 6) {
+            setPasswordError("Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        try {
+            setIsSavingPassword(true);
+            setPasswordError(null);
+
+            const res = await fetch(`/api/user/${USER_ID}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: user.email,
+                    currentPassword, // for backend verification
+                    password: newPassword,
+                    nom: user.nom,
+                    prenom: user.prenom,
+                    username: user.username
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Échec de la mise à jour du mot de passe");
+            }
+
+            const updatedUser: User = await res.json();
+            setUser(updatedUser);
+
+            // cleanup + close popup
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+            setIsPopupOpen(false);
+        } catch (e: any) {
+            setPasswordError(e?.message ?? "Une erreur s'est produite");
+        } finally {
+            setIsSavingPassword(false);
+        }
+    };
+
 
     // Load user data on component mount
     useEffect(() => {
@@ -88,7 +174,9 @@ export default function Page()
 
             // Update state with new user data and exit edit mode
             setUser(updatedUser);
+            closePasswordDialog();
             setIsEditingPersonal(false);
+
         } catch (e: any) {
             setError(e?.message ?? "An error occurred. Could not save personal info");
         }
@@ -252,7 +340,90 @@ export default function Page()
                         )}
                     </div>
 
-                    <Button variant="outlined" sx={{ width: '20%' }}>Changer le mot de passe</Button>
+                    <Button variant="outlined" sx={{ width: '20%' }} onClick={togglePopup}>Changer le mot de passe</Button>
+
+                    <Dialog
+                        open={isPopupOpen}
+                        onClose={closePasswordDialog}
+                        PaperProps={{
+                            sx: {
+                                backgroundColor: '#2A2E3B',
+                                color: 'white',
+                                borderRadius: 3,
+                                width: 500,
+                                p: 1
+                            },
+                        }}
+                        >
+                        <DialogTitle>Changer le mot de passe</DialogTitle>
+
+                        <DialogContent>
+                            <Stack spacing={2} sx={{ mt: 1 }}>
+                                <TextField
+                                    label="Mot de passe actuel"
+                                    type="password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
+                                />
+
+                                <TextField
+                                    label="Nouveau mot de passe"
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
+                                />
+
+                                <TextField
+                                    label="Confirmer le mot de passe"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
+                                />
+
+                                <Button variant="text" size="small" sx={{ alignSelf: 'flex-end', textTransform: 'none', color: 'rgba(255,255,255,0.7)' }}>
+                                    Forgot password?
+                                </Button>
+
+                                {passwordError && (
+                                    <span style={{ color: '#ff7a7a' }}>{passwordError}</span>
+                                )}
+                            </Stack>
+                        </DialogContent>
+
+                        <DialogActions sx={{ pr: 3, pb: 2, pl: 3, justifyContent: 'flex-start', gap: 1 }}>
+                            <Button
+                                variant="contained"
+                                onClick={handlePasswordChange}
+                                disabled={isSavingPassword}
+                            >
+                                {isSavingPassword ? 'Enregistrement...' : 'Enregistrer'}
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                onClick={closePasswordDialog}
+                                disabled={isSavingPassword}
+                            >
+                                Annuler
+                            </Button>
+                        
+                        </DialogActions>
+                    </Dialog>
                 </div>
             </div>
                 
@@ -260,5 +431,5 @@ export default function Page()
         </main> 
     </div>
   </>
-    )
+    );
 }

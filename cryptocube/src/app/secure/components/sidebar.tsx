@@ -1,12 +1,14 @@
 import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
-import { User, Star, Bell } from "lucide-react" // for icons
+import { User, Star, Bell, Settings, LogOut } from "lucide-react" // for icons
 
 const Links = [
-    { href:"/secure/account", icon: <User size={18} />, text: 'Détails'},
-    { href:"/secure/watchlist", icon: <Star size={18} />, text: 'Watchlist'},
-    { href:"/secure/notifications",icon: <Bell size={18} />,  text: 'Notifications'}
+    { href:"/secure/account/details", icon: <User size={18} />, text: 'Détails'},
+    { href:"/secure/account/watchlist", icon: <Star size={18} />, text: 'Watchlist'},
+    { href:"/secure/account/notifications",icon: <Bell size={18} />,  text: 'Notifications'},
+    { href:"/secure/account/settings", icon: <Settings size={18} />, text: 'Paramètres'},
+    { href:"", icon: <LogOut size={18} />, text:'Déconnexion'}
 ];
 
 
