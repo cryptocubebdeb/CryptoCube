@@ -152,7 +152,7 @@ export default function Page() {
 
             {/* Icônes sociales */}
             <div className="flex justify-center gap-6">
-              {/* Google → cercle blanc, texte orange; hover: reste blanc */}
+              {/* Google */}
               <a
                 href="#"
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-white"
@@ -161,7 +161,7 @@ export default function Page() {
                 <FaGoogle className="w-7 h-7 text-orange-500" />
               </a>
 
-              {/* Reddit → rouge -> plus foncé au hover */}
+              {/* Reddit*/}
               <a
                 href="#"
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
@@ -170,7 +170,7 @@ export default function Page() {
                 <FaRedditAlien className="w-7 h-7 text-white" />
               </a>
 
-              {/* Facebook → bleu -> plus foncé au hover */}
+              {/* Facebook*/}
               <a
                 href="#"
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
