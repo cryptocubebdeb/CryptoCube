@@ -4,13 +4,13 @@ import { UserIcon } from '@heroicons/react/24/outline'
 import { LockClosedIcon } from '@heroicons/react/24/outline'
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-
+import bcrypt from "bcryptjs";
 
 export default function Page() 
 {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("") //would be cool to have two login option email and username
-    const [password, setPassword] = useState("")
+    const [motDePasse, setMotDePasse] = useState("")
     const [message, setMessage] = useState("")
     const router = useRouter()
 
@@ -18,12 +18,12 @@ export default function Page()
       e.preventDefault() 
 
       try {
-        const response = await fetch("/api/users/login", {
+        const response = await fetch("/api/usersAuth/login", {
           method: "POST",
           headers: { 
             "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email, password })
+          }, 
+          body: JSON.stringify({ email, motDePasse })
         }) 
         
         if (!response.ok) {
@@ -63,7 +63,7 @@ export default function Page()
           <h1 className="py-2">Password</h1>
           <div className="flex flex-row py-2">
             <LockClosedIcon className="h-6 w-6 text-gray-500" aria-hidden="true" />
-            <input className="border-none w-full text-base px-6" type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="Type your password" required />
+            <input className="border-none w-full text-base px-6" type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} name="password" placeholder="Type your password" required />
           </div>
         </div>
         <div className="py-8">

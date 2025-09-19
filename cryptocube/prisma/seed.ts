@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from "bcryptjs"
 
 //Code source: https://blog.sethcorker.com/question/how-do-you-seed-a-database-with-prisma/
 const prisma = new PrismaClient()
@@ -7,12 +8,14 @@ const prisma = new PrismaClient()
   if it does, its gonna do the update which does nothing,`
   else if it doesnt exist its gonna create it */
 async function main() {
+  const hashedPassword = await bcrypt.hash("Password123!",10)
+
   const alice = await prisma.utilisateur.upsert({
     where: { email: "alice@outlook.com" }, 
     update: {},
     create: {
       email: "alice@outlook.com",
-      motDePasse: "Password123!",
+      motDePasse: hashedPassword,
       nom: "leblanc",
       prenom: "alice",
       username: "aliceleblanc05"
@@ -24,7 +27,7 @@ async function main() {
     update: {},
     create: {
       email: "johndoe@outlook.com",
-      motDePasse: "Password123!",
+      motDePasse: hashedPassword,
       nom: "Doe",
       prenom: "John",
       username: "johndoe03"
@@ -36,7 +39,7 @@ async function main() {
     update: {},
     create: {
       email: "janedoe@outlook.com",
-      motDePasse: "Password123!",
+      motDePasse: hashedPassword,
       nom: "Doe",
       prenom: "Jane",
       username: "janedoe06"

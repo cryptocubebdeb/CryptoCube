@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import { NextRequest } from "next/server"
+import bcrypt from "bcryptjs";
+
 
 const prisma = new PrismaClient()
 
@@ -29,7 +31,7 @@ export async function POST( req: NextRequest ) {
   const { email, motDePasse } = await req.json()
 
   const user = await prisma.utilisateur.findFirst({
-    where: { email, motDePasse },
+    where: { email },
   })
 
   if (!user) {
@@ -38,7 +40,17 @@ export async function POST( req: NextRequest ) {
         headers: { "Content-Type": "application/json" },
     })
   } 
+
+  console.log("User found:", user)
+console.log("DB password:", user?.motDePasse)
+  const rightPassword = await bcrypt.compare (motDePasse, user.motDePasse)
+  if (!rightPassword) {
+    return new Response(JSON.stringify({ message: "Mot de passe invalide"}), {
+        status: 404, 
+        headers: { "Content-Type": "application/json" },
+    })
+  }
   
-  return Response.json({ ssage: "Connexion réussi!", user })
+  return Response.json({ message: "Connexion réussi!", user })
 }
 
