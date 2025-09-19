@@ -1,9 +1,18 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
 import Navbar from "@/app/secure/components/navbar"
 import { Geologica } from "next/font/google"
-import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa";
+import { useState } from "react"
+
+// MUI
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import TextField from "@mui/material/TextField"
+import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+
+// Icônes
+import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa"
 
 const geologica = Geologica({
   subsets: ["latin"],
@@ -25,7 +34,7 @@ export default function Page() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Ajouter la logique d'inscription ici
+
   }
 
   return (
@@ -33,144 +42,152 @@ export default function Page() {
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
         <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
-        <form
-          className="flex flex-col space-y-4 w-[500px] h-[850.82px] p-8 rounded shadow text-white"
-          style={{ backgroundColor: "#15171E" }}
+        <Box
+          component="form"
           onSubmit={handleSubmit}
+          sx={{
+            width: 500,
+            bgcolor: "#15171E",
+            color: "white",
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
         >
-          <div >
-            <label htmlFor="nom" className="block mb-1 text-base w-100 mx-auto ">
-              Nom
-            </label>
-            <input
-              id="nom"
-              type="text"
+          <Stack spacing={2}>
+            <TextField
+              label="Nom"
               name="nom"
-              placeholder="Saisissez votre nom"
               value={form.nom}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <div>
-            <label htmlFor="prenom" className="block mb-1 text-base w-100 mx-auto">
-              Prénom
-            </label>
-            <input
-              id="prenom"
-              type="text"
+
+            <TextField
+              label="Prénom"
               name="prenom"
-              placeholder="Saisissez votre prénom"
               value={form.prenom}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <div>
-            <label htmlFor="email" className="block mb-1 text-base w-100 mx-auto">
-              Email
-            </label>
-            <input
-              id="email"
+
+            <TextField
+              label="Email"
               type="email"
               name="email"
-              placeholder="Saisissez votre email"
               value={form.email}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <div>
-            <label htmlFor="username" className="block mb-1 text-base w-100 mx-auto">
-              Nom d'utilisateur
-            </label>
-            <input
-              id="username"
-              type="text"
+
+            <TextField
+              label="Nom d'utilisateur"
               name="username"
-              placeholder="Saisissez votre nom d'utilisateur"
               value={form.username}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <div>
-            <label htmlFor="password" className="block mb-1 text-base w-100 mx-auto">
-              Mot de passe
-            </label>
-            <input
-              id="password"
+
+            <TextField
+              label="Mot de passe"
               type="password"
               name="password"
-              placeholder="Saisissez votre mot de passe"
               value={form.password}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <div>
-            <label htmlFor="confirmPassword" className="block mb-1 text-base w-100 mx-auto">
-              Confirmer le mot de passe
-            </label>
-            <input
-              id="confirmPassword"
+
+            <TextField
+              label="Confirmer le mot de passe"
               type="password"
               name="confirmPassword"
-              placeholder="Confirmer votre mot de passe"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="border p-2 rounded w-100 mx-auto placeholder-gray-400 block"
               required
+              fullWidth
+              variant="outlined"
+              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-          </div>
-          <button
-            type="submit"
-            className="py-2 rounded-full font-semibold border bg-gray-300 hover:bg-gray-400 text-black w-70 mx-auto m-8"
-          >
-            S'inscrire
-          </button>
+            <Box display="flex" justifyContent="center">
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 4,
+                  borderRadius: 999,
+                  fontWeight: 700,
+                  bgcolor: "#e5e7eb",
+                  color: "black",
+                  width: "210px",
+                  mx: "auto",
+                  "&:hover": { bgcolor: "#d1d5db" }
+                }}
+              >
+                S'inscrire
+              </Button>   </Box>
 
-          {/* Ligne de séparation */}
-          <div className="flex items-center my-4">
-            <hr className="flex-grow border-gray-500" />
-            <span className="px-2 text-gray-400 text-sm">ou s'inscrire avec</span>
-            <hr className="flex-grow border-gray-500" />
-          </div>
+            {/* Séparateur */}
+            <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>ou s'inscrire avec</Divider>
 
-          <div className="flex justify-center gap-6">
-            <a
-              href="#"
-              className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-white"
-            >
-              <FaGoogle className="w-9 h-9 text-orange-500" /> {/* Google*/}
-            </a>
+            {/* Icônes sociales */}
+            <div className="flex justify-center gap-6">
+              {/* Google → cercle blanc, texte orange; hover: reste blanc */}
+              <a
+                href="#"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-white"
+                aria-label="S'inscrire avec Google"
+              >
+                <FaGoogle className="w-7 h-7 text-orange-500" />
+              </a>
 
-            <a
-              href="#"
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-700"
-            >
-              <FaRedditAlien className="w-7 h-7 text-white" /> {/* Reddit*/}
-            </a>
+              {/* Reddit → rouge -> plus foncé au hover */}
+              <a
+                href="#"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
+                aria-label="S'inscrire avec Reddit"
+              >
+                <FaRedditAlien className="w-7 h-7 text-white" />
+              </a>
 
-            <a
-              href="#"
-              className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-700"
-            >
-              <FaFacebookF className="w-7 h-7 text-white" /> {/* Facebook*/}
-            </a>
-          </div>
-          <p className="text-center text-sm mt-2">
-            Déjà un compte ?{" "}
-            <Link href="/auth/login" className="underline">
-              Se connecter
-            </Link>
-          </p>
-        </form>
+              {/* Facebook → bleu -> plus foncé au hover */}
+              <a
+                href="#"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
+                aria-label="S'inscrire avec Facebook"
+              >
+                <FaFacebookF className="w-7 h-7 text-white" />
+              </a>
+            </div>
+
+            <p className="text-center text-sm mt-2 text-gray-300">
+              Déjà un compte?{" "}
+              <Link href="/auth/login" className="underline">
+                Se connecter
+              </Link>
+            </p>
+          </Stack>
+        </Box>
       </div>
     </div>
   )
