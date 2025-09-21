@@ -28,13 +28,59 @@ export default function Page() {
     confirmPassword: "",
   })
 
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    username: "",
+    nom: "",
+    prenom: "",
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
+  const validateName = (name: string) => {
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/; // Accepte les lettres, espaces, apostrophes et tirets
+    return nameRegex.test(name) && name.length > 1;
+  };
+
+  const validateUsername = (username: string) => {
+    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/; // Accepte lettres, chiffres, et underscores, min 3 caractères
+    return usernameRegex.test(username);
+  };
+
+  const validatePasswordStrength = (password: string) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newErrors = {
+      nom: validateName(form.nom) ? "" : "Le nom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
+      prenom: validateName(form.prenom) ? "" : "Le prénom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
+      email: validateEmail(form.email) ? "" : "Format d'email incorrect.",
+      username: validateUsername(form.username) ? "" : "Le nom d'utilisateur doit contenir au moins 3 caractères alphanumériques.",
+      password: validatePasswordStrength(form.password) ? "" : "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+      confirmPassword: form.password === form.confirmPassword ? "" : "Les mots de passe ne correspondent pas.",
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((error) => error !== "");
+    if (!hasErrors) {
+      console.log("Formulaire valide, soumission...");
+      
+    }
   }
 
   return (
@@ -63,6 +109,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.nom}
+              helperText={errors.nom}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
@@ -75,6 +123,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.prenom}
+              helperText={errors.prenom}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
@@ -88,6 +138,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.email}
+              helperText={errors.email}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
@@ -100,6 +152,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.username}
+              helperText={errors.username}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
@@ -113,6 +167,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.password}
+              helperText={errors.password}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
@@ -126,6 +182,8 @@ export default function Page() {
               required
               fullWidth
               variant="outlined"
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
               InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
