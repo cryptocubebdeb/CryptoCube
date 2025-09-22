@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../components/sidebar"
+import Sidebar from "../../../components/sidebar"
 import styles from '../page.module.css'
 
 // Define the User type
 type User = {
-    id_utilisateur: number;
+    id: number;
     email: string;
     password: string; // TEMPORARY. WILL HASH
     nom: string;

@@ -1,11 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../components/sidebar"
-import styles from '../page.module.css'
+import Sidebar from "../../../components/sidebar"
+import styles from './page.module.css'
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import ProfilePic from "./ProfilePic";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -13,20 +13,27 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 // Define the User type
 type User = {
-    id_utilisateur: number;
+    id: number;
     email: string;
     nom: string;
     prenom: string;
     username: string;
 }
 
-const USER_ID = 1; // Replace with actual user ID
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
 
-export default function Page() 
+export default function Page({ params }: PageProps) 
 {
+    const { id } = use(params);
+    const USER_ID = Number(id);
+
     // Toggles for showing edit mode vs view mode
     const [isEditingPersonal, setIsEditingPersonal] = useState(false);
     const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -98,7 +105,8 @@ export default function Page()
             });
 
             if (!res.ok) {
-                throw new Error("Échec de la mise à jour du mot de passe");
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Échec de la mise à jour du mot de passe");
             }
 
             resetPasswordFields();
@@ -110,40 +118,44 @@ export default function Page()
         }
     };
 
-
-    // Load user data on component mount
     useEffect(() => {
-        ;(async () => {
+        console.log("USER_ID:", USER_ID, "Type:", typeof USER_ID, "isFinite:", Number.isFinite(USER_ID));
+        
+        if (!Number.isFinite(USER_ID)) {
+            setError("Invalid user ID");
+            setLoading(false);
+            return;
+        }
+
+        const loadUser = async () => {
             try {
-                // Load user data from API
-                setLoading(true);
-                setError(null);
-                const res = await fetch(`/api/user/${USER_ID}`);
+                const res = await fetch(`/api/user/${USER_ID}/settings`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch user data");
                 }
                 const userData: User = await res.json();
-
-                // Set user object and copy its values into local states
                 setUser(userData);
                 setFirstName(userData.prenom);
                 setLastName(userData.nom);
                 setEmail(userData.email);
                 setUsername(userData.username);
             } catch (e: any) {
-                setError(e?.message ?? "An error occurred");
+                setError(e?.message ?? "An error occurred while loading user data");
             } finally {
                 setLoading(false);
             }
-        })();
-    }, [])
+        };
+
+        loadUser();
+    }, [USER_ID]); // add user_id as dependency
+
 
     // Save handler for Personal Information section
     const savePersonal = async () => {
         if (!user) return;
         try {
             // Update user data via API
-            const res = await fetch(`/api/user/${USER_ID}`, {
+            const res = await fetch(`/api/user/${USER_ID}/settings`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -160,7 +172,6 @@ export default function Page()
 
             // Update state with new user data and exit edit mode
             setUser(updatedUser);
-            closePasswordDialog();
             setIsEditingPersonal(false);
 
         } catch (e: any) {
@@ -173,7 +184,7 @@ export default function Page()
         if (!user) return;
         try {
             // Update user data via API
-            const res = await fetch(`/api/user/${USER_ID}`, {
+            const res = await fetch(`/api/user/${USER_ID}/settings`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -316,24 +327,32 @@ export default function Page()
                         <div className={styles.profileDisplay}>•••••••</div>
                     </div>
 
-                    <Button variant="outlined" sx={{ width: '20%' }} onClick={togglePopup}>Changer le mot de passe</Button>
+                    <Button variant="outlined" sx={{ width: '20%', marginTop: '1px' }} onClick={togglePopup}>Changer le mot de passe</Button>
 
                     <Dialog
                         open={isPopupOpen}
                         onClose={closePasswordDialog}
-                        PaperProps={{
-                            sx: {
-                                backgroundColor: '#2A2E3B',
-                                color: 'white',
-                                borderRadius: 3,
-                                width: 500,
-                                p: 1
-                            },
-                        }}
-                        >
-                        <DialogTitle>Changer le mot de passe</DialogTitle>
+                        maxWidth="sm"
+                        fullWidth>
+                        
+                        <DialogTitle sx={{ position: 'relative', pr: 6 }}>
+                            Changer le mot de passe
 
-                        <DialogContent>
+                            <IconButton
+                                aria-label="close"
+                                onClick={closePasswordDialog}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500]
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </DialogTitle>
+
+                        <DialogContent sx={{ pb: 0 }}>
                             <Stack spacing={2} sx={{ mt: 1 }}>
                                 <TextField
                                     label="Mot de passe actuel"
@@ -371,17 +390,22 @@ export default function Page()
                                     InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
                                 />
 
-                                <Button variant="text" size="small" sx={{ alignSelf: 'flex-end', textTransform: 'none', color: 'rgba(255,255,255,0.7)' }}>
-                                    Forgot password?
-                                </Button>
-
-                                {passwordError && (
-                                    <span style={{ color: '#ff7a7a' }}>{passwordError}</span>
-                                )}
+                                <div className="flex flex-row justify-between items-center">
+                                    <div style={{ minWidth: 0, flex: 1 }}>
+                                        {passwordError && (
+                                            <span style={{ color: '#ff7a7a' }}>{passwordError}</span>
+                                        )}
+                                    </div>
+                                    
+                                    <Button variant="text" size="small" sx={{ textTransform: 'none', color: 'rgba(255,255,255,0.7)', flexShrink: 0 }}>
+                                        Forgot password?
+                                    </Button>
+                                </div>
+                                
                             </Stack>
                         </DialogContent>
 
-                        <DialogActions sx={{ pr: 3, pb: 2, pl: 3, justifyContent: 'flex-start', gap: 1 }}>
+                        <DialogActions sx={{ pr: 2, pb: 2.5, pl: 3, justifyContent: 'flex-start', gap: 1 }}>
                             <Button
                                 variant="contained"
                                 onClick={handlePasswordChange}
@@ -397,7 +421,6 @@ export default function Page()
                             >
                                 Annuler
                             </Button>
-                        
                         </DialogActions>
                     </Dialog>
                 </div>

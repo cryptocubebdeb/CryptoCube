@@ -28,7 +28,7 @@ const Sidebar = () => {
                 </ul>
             </div>
 
-            <div className='mb-20'>
+            <div className='mb-30'>
                 <Link href="" className='flex items-center gap-3 hover:text-red-500 transition-colors'>
                     <LogOut size={18} />
                     <span className='font-mono'>Déconnexion</span>

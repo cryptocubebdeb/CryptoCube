@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap'); */
+
 
 :root {
   --background: #ffffff;
@@ -28,3 +30,8 @@ body {
 .btn-primary {
   @apply w-64 bg-yellow-400 px-6 py-2 text-white rounded-3xl hover:bg-yellow-700 font-mono font-semibold;
 }
+
+.navbar-text {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 700;
+} 

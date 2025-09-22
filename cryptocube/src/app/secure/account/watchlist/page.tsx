@@ -6,7 +6,7 @@ import styles from '../page.module.css'
 
 // Define the User type
 type User = {
-    id_utilisateur: number;
+    id: number;
     email: string;
     password: string; // TEMPORARY. WILL HASH
     nom: string;

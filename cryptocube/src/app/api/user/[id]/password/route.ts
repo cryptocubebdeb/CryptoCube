@@ -1,11 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import pool from "@/app/lib/db";
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { use } from "react";
 
-const useStub = process.env.USE_STUB === 'true';
-
-const STUB_CURRENT_PASSWORD="oracle123"; // For stub only
+const prisma = new PrismaClient();
 
 export async function PATCH(
     request: NextRequest,
@@ -28,39 +25,36 @@ export async function PATCH(
         return NextResponse.json({ error: "New password must be at least 8 characters long" }, { status: 400 });
     }
 
-    if (useStub) {
-        if (currentPassword !== STUB_CURRENT_PASSWORD) {
+    try {
+        // Fetch user's password
+        const user = await prisma.utilisateur.findUnique({
+            where: { id_utilisateur: userId },
+            select: { motDePasse: true }
+        });
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+
+        // Compare current password
+        const match = await bcrypt.compare(currentPassword, user.motDePasse);
+        if (!match) {
             return NextResponse.json({ error: "Current password is incorrect" }, { status: 403 });
         }
-        return NextResponse.json({ message: "Password updated successfully (stub)" });
+
+        // Hash new password
+        const newHashed = await bcrypt.hash(newPassword, 12);
+
+        // Update password in database
+        await prisma.utilisateur.update({
+            where: { id_utilisateur: userId },
+            data: { password: newHashed }
+        });
+
+        return NextResponse.json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error("Error updating password:", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    } finally {
+        await prisma.$disconnect();
     }
-
-
-    // ================== Real database query ==================
-    // Fetch user's password
-    const { rows } = await pool.query(
-        "SELECT password FROM utilisateur WHERE id_utilisateur = $1",
-        [userId]
-    );
-    if (!rows.length) {
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-    const hashed = rows[0].password as string;
-
-    // Compare current password
-    const match = await bcrypt.compare(currentPassword, hashed);
-    if (!match) {
-        return NextResponse.json({ error: "Current password is incorrect" }, { status: 403 });
-    }
-
-    // Hash new password
-    const newHashed = await bcrypt.hash(newPassword, 12);
-
-    // Update password in database
-    await pool.query(
-        "UPDATE utilisateur SET password = $1 WHERE id_utilisateur = $2",
-        [newHashed, userId]
-    );
-
-    return NextResponse.json({ message: "Password updated successfully" });
 }
