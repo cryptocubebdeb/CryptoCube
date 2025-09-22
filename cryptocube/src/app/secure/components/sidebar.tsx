@@ -1,4 +1,5 @@
 import React from 'react'
+import '../../globals.css'
 import Link from "next/link"
 import Image from "next/image"
 import { User, Star, Bell, Settings, LogOut } from "lucide-react" // for icons
@@ -19,7 +20,7 @@ const Sidebar = () => {
                 <ul className='flex flex-col gap-6'>
                     {Links.map((link) => (
                         <li key={link.href}>
-                            <Link href={link.href} className='flex items-center gap-3 hover:text-yellow-400 transition-colors'>
+                            <Link href={link.href} className='sidebar-text flex items-center gap-3 hover:text-yellow-400 transition-colors'>
                                 {link.icon}
                                 <span className='font-mono'>{link.text}</span>
                             </Link>

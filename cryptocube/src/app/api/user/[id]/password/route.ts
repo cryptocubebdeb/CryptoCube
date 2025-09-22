@@ -28,7 +28,7 @@ export async function PATCH(
     try {
         // Fetch user's password
         const user = await prisma.utilisateur.findUnique({
-            where: { id_utilisateur: userId },
+            where: { id: userId },
             select: { motDePasse: true }
         });
         if (!user) {
@@ -46,8 +46,8 @@ export async function PATCH(
 
         // Update password in database
         await prisma.utilisateur.update({
-            where: { id_utilisateur: userId },
-            data: { password: newHashed }
+            where: { id: userId },
+            data: { motDePasse: newHashed }
         });
 
         return NextResponse.json({ message: "Password updated successfully" });

@@ -1,6 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
 @import "tailwindcss";
-/* @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap'); */
-
 
 :root {
   --background: #ffffff;
@@ -33,5 +32,10 @@ body {
 
 .navbar-text {
     font-family: 'Geologica', sans-serif;
-    font-weight: 700;
+    font-weight: 400;
 } 
+
+.sidebar-text {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+}
