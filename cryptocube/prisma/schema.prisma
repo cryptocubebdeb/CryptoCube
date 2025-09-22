@@ -12,15 +12,3 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-
-model Utilisateur {
-  id         Int    @id @default(autoincrement()) @map("id_utilisateur")
-  email      String @unique @db.VarChar(100)
-  motDePasse String @map("mot_de_passe") @db.VarChar(255)
-  nom        String @db.VarChar(50)
-  prenom     String @db.VarChar(50)
-  username   String @unique @db.VarChar(50)
-
-  @@map("utilisateur")
-}
