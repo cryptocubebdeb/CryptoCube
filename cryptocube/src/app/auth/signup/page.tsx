@@ -62,7 +62,7 @@ export default function Page() {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = {
@@ -78,8 +78,41 @@ export default function Page() {
 
     const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (!hasErrors) {
-      console.log("Formulaire valide, soumission...");
-      
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Inscription réussie:", data);
+          alert("Inscription réussie !");
+          
+          // Réinitialiser le formulaire
+          setForm({
+            nom: "",
+            prenom: "",
+            email: "",
+            username: "",
+            password: "",
+            confirmPassword: "",
+          });
+          
+          // Optionnel : rediriger vers la page de connexion
+          // window.location.href = '/auth/login';
+        } else {
+          console.error("Erreur d'inscription:", data.error);
+          alert(`Erreur: ${data.error}`);
+        }
+      } catch (error) {
+        console.error("Erreur réseau:", error);
+        alert("Erreur de connexion au serveur");
+      }
     }
   }
 
