@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../../components/sidebar"
+import Sidebar from "../../../../components/sidebar"
 import styles from '../../page.module.css'
 
 // Define the User type

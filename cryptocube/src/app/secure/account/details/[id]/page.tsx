@@ -211,7 +211,7 @@ export default function Page({ params }: PageProps)
 
     return (
     <><div className="flex h-screen p-10">
-        <Sidebar />
+        <Sidebar userId={USER_ID} />
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
