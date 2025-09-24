@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import { NextRequest } from "next/server"
-import bcrypt from "bcryptjs";
-
+import bcrypt from "bcryptjs"
+import { cookies } from "next/headers"
 
 const prisma = new PrismaClient()
 
@@ -27,7 +27,7 @@ const prisma = new PrismaClient()
   return Response.json({ message: "ok", status: 200, data: result })
 }*/
 
-export async function POST( req: NextRequest ) {
+export async function handleLogin( req: NextRequest ) {
   const { email, motDePasse } = await req.json()
 
   const user = await prisma.utilisateur.findFirst({
