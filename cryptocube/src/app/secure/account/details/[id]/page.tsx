@@ -333,8 +333,16 @@ export default function Page({ params }: PageProps)
                         open={isPopupOpen}
                         onClose={closePasswordDialog}
                         maxWidth="sm"
-                        fullWidth>
-                        
+                        fullWidth
+                        PaperProps={{
+                            sx: {
+                                backgroundColor: '#15171E',
+                                color: 'white',
+                                borderRadius: '12px',
+                            }
+                        }}
+                    >
+
                         <DialogTitle sx={{ position: 'relative', pr: 6 }}>
                             Changer le mot de passe
 
@@ -362,7 +370,13 @@ export default function Page({ params }: PageProps)
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: 3,
+                                            bgcolor: "rgba(255,255,255,0.08)",
+                                            color: 'white'
+                                        }
+                                    }}
                                     InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
                                 />
 
@@ -374,7 +388,13 @@ export default function Page({ params }: PageProps)
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputProps={{ 
+                                        sx: {
+                                            borderRadius: 3,
+                                            bgcolor: "rgba(255,255,255,0.08)",
+                                            color: 'white'
+                                        }
+                                    }}
                                     InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
                                 />
 
@@ -386,7 +406,13 @@ export default function Page({ params }: PageProps)
                                     required
                                     fullWidth
                                     variant="outlined"
-                                    InputProps={{ sx: {borderRadius: 3, bgcolor: "rgba(255,255,255,0.08)"}}}
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: 3,
+                                            bgcolor: "rgba(255,255,255,0.08)",
+                                            color: 'white'
+                                        }
+                                    }}
                                     InputLabelProps={{ sx: { color: "rgba(255,255,255,0.5)" } }}
                                 />
 
