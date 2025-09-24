@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../../../generated/prisma'; 
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -27,6 +27,47 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Validation format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Format d'email invalide" },
+        { status: 400 }
+      );
+    }
+    
+    // Validation username
+    if (username.length < 3 || username.length > 20) {
+      return NextResponse.json(
+        { error: "Le nom d'utilisateur doit contenir entre 3 et 20 caractères" },
+        { status: 400 }
+      );
+    }
+    
+    const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!usernameRegex.test(username)) {
+      return NextResponse.json(
+        { error: "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets et underscores" },
+        { status: 400 }
+      );
+    }
+    
+    // Validation mot de passe
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "Le mot de passe doit contenir au moins 8 caractères" },
+        { status: 400 }
+      );
+    }
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(password)) {
+      return NextResponse.json(
+        { error: "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial" },
+        { status: 400 }
+      );
+    }
+    
     if (password !== confirmPassword) {
       return NextResponse.json(
         { error: "Les mots de passe ne correspondent pas" },
@@ -35,18 +76,24 @@ export async function POST(request: NextRequest) {
     }
     
     // Vérifier si l'email ou le username existe déjà
-    const existingUser = await prisma.utilisateur.findFirst({
-      where: {
-        OR: [
-          { email: email },
-          { username: username }
-        ]
-      }
+    const existingEmail = await prisma.utilisateur.findUnique({ 
+      where: { email: email }
     });
     
-    if (existingUser) {
+    if (existingEmail) {
       return NextResponse.json(
-        { error: "L'email ou le nom d'utilisateur existe déjà" },
+        { error: "Cette adresse email est déjà utilisée" },
+        { status: 409 }
+      );
+    }
+    
+    const existingUsername = await prisma.utilisateur.findUnique({ 
+      where: { username: username }
+    });
+    
+    if (existingUsername) {
+      return NextResponse.json(
+        { error: "Ce nom d'utilisateur est déjà pris" },
         { status: 409 }
       );
     }
@@ -55,13 +102,13 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 12);
     
     // Créer l'utilisateur en base de données
-    const newUser = await prisma.utilisateur.create({
+    const newUser = await prisma.utilisateur.create({ 
       data: {
         nom,
         prenom,
         email,
         username,
-        motDePasse: hashedPassword,
+        motDePasse: hashedPassword, 
       },
       select: {
         id: true,
