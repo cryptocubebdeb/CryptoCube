@@ -1,44 +1,35 @@
 "use client";
+
 import Link from "next/link"
 import { UserIcon } from '@heroicons/react/24/outline'
 import { LockClosedIcon } from '@heroicons/react/24/outline'
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import bcrypt from "bcryptjs";
+import { FormEvent } from 'react'
+import { signIn } from "next-auth/react";
 
-export default function Page() 
-{
-    const [email, setEmail] = useState("")
-    const [username, setUsername] = useState("") //would be cool to have two login option email and username
-    const [motDePasse, setMotDePasse] = useState("")
-    const [message, setMessage] = useState("")
-    const router = useRouter()
+export default function Page() {
+  const [message, setMessage] = useState("")
+  const router = useRouter()
+  
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+      event.preventDefault() 
 
-    async function handleSubmit(e: React.FormEvent) {
-      e.preventDefault() 
+      const formData = new FormData(event.currentTarget)
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+      
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password, 
+        callbackUrl: "/secure/dashboard",
+      });
 
-      try {
-        const response = await fetch("/api/usersAuth/login", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-          }, 
-          body: JSON.stringify({ email, motDePasse })
-        }) 
-        
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }       
-
-        const result = await response.json();
-        console.log(result);
-
-        router.push("/secure/dashboard")
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message);
-          setMessage("login failed")
-        }
+      if (result?.error) {
+        setMessage("Login failed");
+      } else {
+        router.push(result?.url ?? "/secure/dashboard");
       }
     }
 
@@ -54,7 +45,7 @@ export default function Page()
           <h1 className="py-2 text-xl">email</h1>
           <div className="flex flex-row py-2">
             <UserIcon className="h-6 w-6 text-gray-500" aria-hidden="true" />
-            <input className="border-none w-full text-base px-6" type="email" value={email} onChange={(e) => setEmail(e.target.value)} name="email" placeholder="Type your email" required />
+            <input className="border-none w-full text-base px-6" type="email" name="email" placeholder="Type your email" required />
           </div>
         </div>
 
@@ -63,13 +54,15 @@ export default function Page()
           <h1 className="py-2">Password</h1>
           <div className="flex flex-row py-2">
             <LockClosedIcon className="h-6 w-6 text-gray-500" aria-hidden="true" />
-            <input className="border-none w-full text-base px-6" type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} name="password" placeholder="Type your password" required />
+            <input className="border-none w-full text-base px-6" type="password" name="password" placeholder="Type your password" required />
           </div>
         </div>
         <div className="py-8">
           {/* Login button */}
           <button className="btn-primary" type="submit">Login</button>
         </div>
+
+        {message && <p className="text-red-500">{message}</p>}
 
         {/* Other ways to sign in (have to implement other ways to login but later) */}
         <div>
