@@ -10,14 +10,21 @@ import Stack from "@mui/material/Stack"
 import TextField from "@mui/material/TextField"
 import Box from "@mui/material/Box"
 import Divider from "@mui/material/Divider"
+import IconButton from "@mui/material/IconButton"
+import InputAdornment from "@mui/material/InputAdornment"
 
-// Icônes
+// Icônes MUI
+import Visibility from "@mui/icons-material/Visibility"
+import VisibilityOff from "@mui/icons-material/VisibilityOff"
+
+// Icônes sociales
 import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa"
 
 const geologica = Geologica({
   subsets: ["latin"],
   weight: ["400", "700"],
 })
+
 export default function Page() {
   const [form, setForm] = useState({
     nom: "",
@@ -37,6 +44,14 @@ export default function Page() {
     prenom: "",
   });
 
+  // États pour la visibilité des mots de passe
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Fonctions pour toggle la visibilité
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -47,12 +62,12 @@ export default function Page() {
   };
 
   const validateName = (name: string) => {
-    const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/; // Accepte les lettres, espaces, apostrophes et tirets
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/;
     return nameRegex.test(name) && name.length > 1;
   };
 
   const validateUsername = (username: string) => {
-    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/; // Accepte lettres, chiffres, et underscores, min 3 caractères
+    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
     return usernameRegex.test(username);
   };
 
@@ -62,7 +77,7 @@ export default function Page() {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = {
@@ -78,8 +93,43 @@ export default function Page() {
 
     const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (!hasErrors) {
+
       console.log("Formulaire valide, soumission...");
       
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Inscription réussie:", data);
+          alert("Inscription réussie !");
+          alert("Inscription réussie");
+          
+          // Réinitialiser le formulaire
+          setForm({
+            nom: "",
+            prenom: "",
+            email: "",
+            username: "",
+            password: "",
+            confirmPassword: "",
+          });
+          
+        } else {
+          console.error("Erreur d'inscription:", data.error);
+          alert(`Erreur: ${data.error}`);
+        }
+      } catch (error) {
+        console.error("Erreur réseau:", error);
+        alert("Erreur de connexion au serveur");
+      }
     }
   }
 
@@ -160,7 +210,7 @@ export default function Page() {
 
             <TextField
               label="Mot de passe"
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
               onChange={handleChange}
@@ -169,13 +219,27 @@ export default function Page() {
               variant="outlined"
               error={!!errors.password}
               helperText={errors.password}
-              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputProps={{
+                sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                      sx={{ color: "rgba(255,255,255,0.6)" }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
 
             <TextField
               label="Confirmer le mot de passe"
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
@@ -184,7 +248,21 @@ export default function Page() {
               variant="outlined"
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword}
-              InputProps={{ sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" } }}
+              InputProps={{
+                sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle confirm password visibility"
+                      onClick={handleClickShowConfirmPassword}
+                      edge="end"
+                      sx={{ color: "rgba(255,255,255,0.6)" }}
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
             <Box display="flex" justifyContent="center">
@@ -203,7 +281,8 @@ export default function Page() {
                 }}
               >
                 S'inscrire
-              </Button>   </Box>
+              </Button>
+            </Box>
 
             {/* Séparateur */}
             <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>ou s'inscrire avec</Divider>
