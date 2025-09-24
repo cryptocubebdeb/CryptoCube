@@ -93,11 +93,9 @@ export default function Page() {
 
     const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (!hasErrors) {
-<<<<<<< Updated upstream
-=======
+
       console.log("Formulaire valide, soumission...");
       
->>>>>>> Stashed changes
       try {
         const response = await fetch('/api/auth/signup', {
           method: 'POST',
@@ -111,11 +109,8 @@ export default function Page() {
 
         if (response.ok) {
           console.log("Inscription réussie:", data);
-<<<<<<< Updated upstream
           alert("Inscription réussie !");
-=======
           alert("Inscription réussie");
->>>>>>> Stashed changes
           
           // Réinitialiser le formulaire
           setForm({
@@ -127,12 +122,6 @@ export default function Page() {
             confirmPassword: "",
           });
           
-<<<<<<< Updated upstream
-          // Optionnel : rediriger vers la page de connexion
-          // window.location.href = '/auth/login';
-=======
-          //rediriger vers la page de connexion
->>>>>>> Stashed changes
         } else {
           console.error("Erreur d'inscription:", data.error);
           alert(`Erreur: ${data.error}`);
