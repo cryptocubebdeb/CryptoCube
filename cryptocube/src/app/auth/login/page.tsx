@@ -1,46 +1,35 @@
 "use client";
+
 import Link from "next/link"
 import { UserIcon } from '@heroicons/react/24/outline'
 import { LockClosedIcon } from '@heroicons/react/24/outline'
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import bcrypt  from "bcryptjs"
 import { FormEvent } from 'react'
+import { signIn } from "next-auth/react";
 
-export default function Page() 
-{
-    const [message, setMessage] = useState("")
-    const router = useRouter()
-
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+export default function Page() {
+  const [message, setMessage] = useState("")
+  const router = useRouter()
+  
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault() 
 
       const formData = new FormData(event.currentTarget)
-      const email = formData.get('email')
-      const motDePasse = formData.get('password')
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+      
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password, 
+        callbackUrl: "/secure/dashboard",
+      });
 
-      try {
-        const response = await fetch("/api/usersAuth/login", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-          }, 
-          body: JSON.stringify({ email, motDePasse })
-        }) 
-        
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }       
-
-        const result = await response.json();
-        console.log(result);
-
-        router.push("/secure/dashboard")
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message);
-          setMessage("login failed")
-        }
+      if (result?.error) {
+        setMessage("Login failed");
+      } else {
+        router.push(result?.url ?? "/secure/dashboard");
       }
     }
 
@@ -72,6 +61,8 @@ export default function Page()
           {/* Login button */}
           <button className="btn-primary" type="submit">Login</button>
         </div>
+
+        {message && <p className="text-red-500">{message}</p>}
 
         {/* Other ways to sign in (have to implement other ways to login but later) */}
         <div>
