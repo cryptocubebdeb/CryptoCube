@@ -1,8 +1,10 @@
+import '../../globals.css'
 import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
 import { User } from "lucide-react" // for user icon
 import { Search } from 'lucide-react' // for search icon
+
 
 const Links = [
     { href:"/secure/dashboard", text: 'Accueil'},
@@ -24,7 +26,7 @@ const Navbar = () => {
                 {Links.map((link) => (
                     <li key={link.href}>
                         <Link href={link.href}
-                            className="uppercase hover:text-yellow-400 transition-colors font-mono">
+                            className="navbar-text uppercase text-sm hover:text-yellow-400 transition-colors">
                             {link.text || link.icon}
                         </Link>
                     </li>

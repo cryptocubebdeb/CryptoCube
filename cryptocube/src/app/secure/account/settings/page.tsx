@@ -24,8 +24,9 @@ export default function Page()
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-            <h2 className={styles.title}>Mon Watchlist</h2>
+            <h2 className={styles.title}>Mes Paramètres</h2>
         
+            {/* Language + Light/Dark mode*/}
         </main> 
     </div>
   </>

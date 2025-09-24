@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../components/sidebar"
-import styles from '../page.module.css'
+import Sidebar from "../../../components/sidebar"
+import styles from '../../page.module.css'
 
 // Define the User type
 type User = {
@@ -24,7 +24,7 @@ export default function Page()
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-            <h2 className={styles.title}>Mon Watchlist</h2>
+            <h2 className={styles.title}>Mes Notifications</h2>
         
         </main> 
     </div>
