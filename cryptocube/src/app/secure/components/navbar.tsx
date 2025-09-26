@@ -5,7 +5,6 @@ import Image from "next/image"
 import { User } from "lucide-react" // for user icon
 import { Search } from 'lucide-react' // for search icon
 
-
 const Links = [
     { href:"/secure/dashboard", text: 'Accueil'},
     { href:"/secure/coins", text: 'Coins'},
