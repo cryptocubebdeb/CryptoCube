@@ -3,6 +3,7 @@ import Link from "next/link"
 import Navbar from "@/app/secure/components/navbar"
 import { Geologica } from "next/font/google"
 import { useState } from "react"
+import { signIn } from "next-auth/react"
 
 // MUI
 import Button from "@mui/material/Button"
@@ -132,6 +133,43 @@ export default function Page() {
       }
     }
   }
+
+  // Fonctions OAuth
+  const handleGoogleSignUp = async () => {
+    try {
+      await signIn('google', { 
+        callbackUrl: '/secure/dashboard',
+        redirect: true 
+      });
+    } catch (error) {
+      console.error('Erreur Google OAuth:', error);
+      alert('Erreur lors de la connexion avec Google');
+    }
+  };
+
+  const handleFacebookSignUp = async () => {
+    try {
+      await signIn('facebook', { 
+        callbackUrl: '/secure/dashboard',
+        redirect: true 
+      });
+    } catch (error) {
+      console.error('Erreur Facebook OAuth:', error);
+      alert('Erreur lors de la connexion avec Facebook');
+    }
+  };
+
+  const handleRedditSignUp = async () => {
+    try {
+      await signIn('reddit', { 
+        callbackUrl: '/secure/dashboard',
+        redirect: true 
+      });
+    } catch (error) {
+      console.error('Erreur Reddit OAuth:', error);
+      alert('Erreur lors de la connexion avec Reddit');
+    }
+  };
 
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
@@ -290,31 +328,34 @@ export default function Page() {
             {/* Icônes sociales */}
             <div className="flex justify-center gap-6">
               {/* Google */}
-              <a
-                href="#"
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-white"
+              <button
+                type="button"
+                onClick={handleGoogleSignUp}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100 transition-colors"
                 aria-label="S'inscrire avec Google"
               >
                 <FaGoogle className="w-7 h-7 text-orange-500" />
-              </a>
+              </button>
 
               {/* Reddit*/}
-              <a
-                href="#"
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
+              <button
+                type="button"
+                onClick={handleRedditSignUp}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600 transition-colors"
                 aria-label="S'inscrire avec Reddit"
               >
                 <FaRedditAlien className="w-7 h-7 text-white" />
-              </a>
+              </button>
 
               {/* Facebook*/}
-              <a
-                href="#"
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
+              <button
+                type="button"
+                onClick={handleFacebookSignUp}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
                 aria-label="S'inscrire avec Facebook"
               >
                 <FaFacebookF className="w-7 h-7 text-white" />
-              </a>
+              </button>
             </div>
 
             <p className="text-center text-sm mt-2 text-gray-300">
