@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Sidebar from "../../../components/sidebar"
 import styles from '../../page.module.css'
+import { useSession } from "next-auth/react"; 
 
 // Define the User type
 type User = {
@@ -14,10 +15,20 @@ type User = {
     username: string;
 }
 
-const USER_ID = 1; // Replace with actual user ID
 
 export default function Page() 
 {
+    const { data: session } = useSession();
+    const USER_ID = session?.user?.id ? Number(session.user.id) : null;
+
+    if (!USER_ID) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white">
+        <p>Veuillez vous connecter pour voir vos notifications</p>
+      </div>
+    );
+  }
+
     return (
     <><div className="flex h-screen p-10">
         <Sidebar userId={USER_ID}/>

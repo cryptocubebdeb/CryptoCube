@@ -1,22 +1,26 @@
+"use client";
+
 import '../../globals.css'
 import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
 import { User } from "lucide-react" // for user icon
 import { Search } from 'lucide-react' // for search icon
+import { useSession } from "next-auth/react"
 
-const Links = [
+const Navbar = () => {
+    const { data: session } = useSession();
+    const USER_ID = session?.user?.id;
+
+    const Links = [
     { href:"/secure/dashboard", text: 'Accueil'},
     { href:"/secure/coins", text: 'Coins'},
     { href:"/secure/simulator", text: 'Simulateur'},
     { href:"/secure/community", text: 'Communauté'},
     { href:"/secure/about", text: 'À propos'},
     { href:"", icon: <Search size={20} /> },
-    { href:"/secure/account/details", icon: <User size={20} /> }
+    { href: USER_ID ? `/secure/account/details/${USER_ID}` : "/auth/login", icon: <User size={20} /> }
 ];
-
-
-const Navbar = () => {
     return (
         <header className="w-full">
             <nav className="w-full">

@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSession } from "next-auth/react";  
 
 // Define the User type
 type User = {
@@ -31,8 +32,9 @@ interface PageProps {
 
 export default function Page({ params }: PageProps) 
 {
+    const { data: session } = useSession();  
     const { id } = use(params);
-    const USER_ID = Number(id);
+    const USER_ID = session?.user?.id ? Number(session.user.id) : null; 
 
     // Toggles for showing edit mode vs view mode
     const [isEditingPersonal, setIsEditingPersonal] = useState(false);
@@ -119,13 +121,11 @@ export default function Page({ params }: PageProps)
     };
 
     useEffect(() => {
-        console.log("USER_ID:", USER_ID, "Type:", typeof USER_ID, "isFinite:", Number.isFinite(USER_ID));
-        
-        if (!Number.isFinite(USER_ID)) {
-            setError("Invalid user ID");
-            setLoading(false);
-            return;
-        }
+    if (!USER_ID) {
+      setError("No session or invalid user ID");
+      setLoading(false);
+      return;
+    }
 
         const loadUser = async () => {
             try {
@@ -211,7 +211,7 @@ export default function Page({ params }: PageProps)
 
     return (
     <><div className="flex h-screen p-10">
-        <Sidebar userId={USER_ID} />
+        <Sidebar userId={USER_ID!} />
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>

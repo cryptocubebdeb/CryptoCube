@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Sidebar from "../../../components/sidebar"
 import styles from '../../page.module.css'
+import { useSession } from "next-auth/react";
 
 // Define the User type
 type User = {
@@ -14,21 +15,29 @@ type User = {
     username: string;
 }
 
-const USER_ID = 1; // Replace with actual user ID
 
-export default function Page() 
-{
+export default function Page() {
+    const { data: session } = useSession();
+    const USER_ID = session?.user?.id ? Number(session.user.id) : null;
+
+    if (!USER_ID) {
+        return (
+            <div className="flex items-center justify-center h-screen text-white">
+                <p>Veuillez vous connecter pour accéder à vos paramètres</p>
+            </div>
+        );
+    }
     return (
-    <><div className="flex h-screen p-10">
-        <Sidebar userId={USER_ID}/>
-    
-        {/* Main Content Area */}
-        <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-            <h2 className={styles.title}>Mes Paramètres</h2>
-        
-            {/* Language + Light/Dark mode*/}
-        </main> 
-    </div>
-  </>
+        <><div className="flex h-screen p-10">
+            <Sidebar userId={USER_ID} />
+
+            {/* Main Content Area */}
+            <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
+                <h2 className={styles.title}>Mes Paramètres</h2>
+
+                {/* Language + Light/Dark mode*/}
+            </main>
+        </div>
+        </>
     );
 }
