@@ -39,10 +39,10 @@ export default function Page() {
   const [passwordError, setPasswordError] = useState("");
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
-  
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-      
+
     //gerer les erreurs
     setEmailError("");
     setPasswordError("");
@@ -60,23 +60,60 @@ export default function Page() {
     }
 
     if (hasError) return; //Pas besoin de continuer en cas d'erreur
-      
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password, 
-        callbackUrl: "/secure/dashboard",
-      });
 
-      if (result?.error) {
-        setMessage("Login failed");
-      } else {
-        router.push(result?.url ?? "/secure/dashboard");
-      }
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: "/secure/dashboard",
+    });
+
+    if (result?.error) {
+      setMessage("Login failed");
+    } else {
+      router.push(result?.url ?? "/secure/dashboard");
     }
+  }
 
-    return ( 
-     <div className={`h-screen flex flex-col ${geologica.className}`}>
+  // Fonctions OAuth
+  const handleGoogleSignUp = async () => {
+    try {
+      await signIn("google", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Erreur Google OAuth:", error);
+      alert("Erreur lors de la connexion avec Google");
+    }
+  };
+
+  const handleFacebookSignUp = async () => {
+    try {
+      await signIn("facebook", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Erreur Facebook OAuth:", error);
+      alert("Erreur lors de la connexion avec Facebook");
+    }
+  };
+
+  const handleRedditSignUp = async () => {
+    try {
+      await signIn("reddit", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Erreur Reddit OAuth:", error);
+      alert("Erreur lors de la connexion avec Reddit");
+    }
+  };
+
+  return (
+    <div className={`h-screen flex flex-col ${geologica.className}`}>
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
         <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
@@ -136,7 +173,7 @@ export default function Page() {
               }}
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
-            
+
             {/* Message d'erreur lors de la connexion */}
             {message && (
               <p className="text-red-500 text-sm text-center">{message}</p>
@@ -168,31 +205,34 @@ export default function Page() {
             {/* Icônes sociales */}
             <div className="flex justify-center gap-6">
               {/* Google */}
-              <a
-                href="#"
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-white"
-                aria-label="S'inscrire avec Google"
+              <button
+                type="button"
+                onClick={handleGoogleSignUp}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100"
+                aria-label="Se connecter avec Google"
               >
                 <FaGoogle className="w-7 h-7 text-orange-500" />
-              </a>
+              </button>
 
-              {/* Reddit*/}
-              <a
-                href="#"
+              {/* Reddit */}
+              <button
+                type="button"
+                onClick={handleRedditSignUp}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
-                aria-label="S'inscrire avec Reddit"
+                aria-label="Se connecter avec Reddit"
               >
                 <FaRedditAlien className="w-7 h-7 text-white" />
-              </a>
+              </button>
 
-              {/* Facebook*/}
-              <a
-                href="#"
+              {/* Facebook */}
+              <button
+                type="button"
+                onClick={handleFacebookSignUp}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
-                aria-label="S'inscrire avec Facebook"
+                aria-label="Se connecter avec Facebook"
               >
                 <FaFacebookF className="w-7 h-7 text-white" />
-              </a>
+              </button>
             </div>
 
             <p className="text-center text-sm mt-2 text-gray-300">
@@ -205,5 +245,5 @@ export default function Page() {
         </Box>
       </div>
     </div>
-    )
+  )
 }

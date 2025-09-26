@@ -45,6 +45,13 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     Reddit({
       clientId: process.env.REDDIT_CLIENT_ID!,
       clientSecret: process.env.REDDIT_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.id,
+          name: profile.name, 
+          email: profile.name + "@reddit.local",    
+        }
+      },
     }),
     Credentials({
       async authorize(credentials) {
@@ -73,6 +80,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
   ],
+  debug: true, 
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google" || account?.provider === "facebook" || account?.provider === "reddit") {
