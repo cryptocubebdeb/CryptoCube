@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Sidebar from "../../../components/sidebar"
-import styles from '../page.module.css'
+import styles from '../../page.module.css'
 
 // Define the User type
 type User = {
@@ -20,7 +20,7 @@ export default function Page()
 {
     return (
     <><div className="flex h-screen p-10">
-        <Sidebar />
+        <Sidebar userId={USER_ID}/>
     
         {/* Main Content Area */}
         <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
