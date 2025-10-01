@@ -2,6 +2,7 @@ import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
 import { User, Star, Bell, Settings, LogOut } from "lucide-react" // for icons
+import { signOut } from "next-auth/react"
 
 interface SidebarProps {
     userId: number;
@@ -14,6 +15,17 @@ const Sidebar = ({ userId }: SidebarProps) => {
         { href:`/secure/account/notifications/${userId}`,icon: <Bell size={20} />,  text: 'Notifications'},
         { href:`/secure/account/settings/${userId}`, icon: <Settings size={20} />, text: 'Paramètres'}
     ];
+
+    const handleSignOut = async () => {
+        try {
+            await signOut({
+                callbackUrl: '/', // Redirectionner vers page principale
+                redirect: true
+            });
+        } catch (error) {
+            console.error('Erreur déconnexion:', error);
+        }
+    };
     
     return (
         <aside className='sidebar w-64 min-h-screen text-white p-6 flex flex-col justify-between'>
@@ -32,10 +44,13 @@ const Sidebar = ({ userId }: SidebarProps) => {
             </div>
 
             <div className='mb-30'>
-                <Link href="" className='flex items-center gap-3 hover:text-red-500 transition-colors'>
+                <button 
+                    onClick={handleSignOut}
+                    className='flex items-center gap-3 hover:text-red-500 transition-colors bg-transparent border-none cursor-pointer text-white text-left'
+                >
                     <LogOut size={20} />
                     <span className='sidebar-text'>Déconnexion</span>
-                </Link>
+                </button>
             </div>
         </aside>
     );
