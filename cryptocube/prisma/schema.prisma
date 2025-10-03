@@ -21,5 +21,18 @@ model Utilisateur {
   prenom     String @db.VarChar(50)
   username   String @unique @db.VarChar(50)
 
+  resetToken PasswordResetToken?
+  
   @@map("utilisateur")
+}
+
+model PasswordResetToken {
+  userId          Int       @id
+  resetToken      String    @db.VarChar(255) // store hashed token
+  tokenValidFrom  DateTime  @default(now())
+  tokenValidUntil DateTime  @default(dbgenerated("now() + interval '1 hour'"))
+
+  user Utilisateur @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
 }
