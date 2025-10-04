@@ -19,6 +19,48 @@ interface CoinData {
     };
 }
 
+// Composant MiniChart pour afficher le sparkline
+const MiniChart = ({ data, isPositive }: { data: number[], isPositive: boolean }) => {
+    if (!data || data.length === 0) {
+        return (
+            <div className="w-20 h-8 bg-gray-100 rounded flex items-center justify-center text-xs">
+                No data
+            </div>
+        );
+    }
+
+    const width = 80;
+    const height = 32;
+    const padding = 4;
+
+    // Calculer min et max pour normaliser les données
+    const minPrice = Math.min(...data);
+    const maxPrice = Math.max(...data);
+    const priceRange = maxPrice - minPrice;
+
+    // Créer les points SVG
+    const points = data.map((price, index) => {
+        const x = padding + (index / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((price - minPrice) / priceRange) * (height - 2 * padding);
+        return `${x},${y}`;
+    }).join(' ');
+
+    return (
+        <div className="w-20 h-8">
+            <svg width={width} height={height} className="w-full h-full">
+                <polyline
+                    points={points}
+                    fill="none"
+                    stroke={isPositive ? "#10b981" : "#ef4444"}
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+        </div>
+    );
+};
+
 export default function Page() {
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [loading, setLoading] = useState(true);
@@ -235,9 +277,10 @@ export default function Page() {
                                                     {formatMarketCap(coin.market_cap)}
                                                 </td>
                                                 <td className="py-4 px-4 text-right">
-                                                    <div className="w-20 h-8 bg-gray-100 rounded flex items-center justify-center text-xs">
-                                                         Chart a venir
-                                                    </div>
+                                                    <MiniChart 
+                                                        data={coin.sparkline_in_7d?.price || []} 
+                                                        isPositive={(coin.price_change_percentage_7d_in_currency || 0) >= 0}
+                                                    />
                                                 </td>
                                             </tr>
                                         ))
