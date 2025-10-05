@@ -74,6 +74,12 @@ export default function Page({ params }: PageProps)
 
     const togglePopup = () => setIsPopupOpen(v => !v);
 
+    // Validation function for password strength (same as signup)
+    const validatePasswordStrength = (password: string) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     // Handler for changing password
     const handlePasswordChange = async () => {
         if (!user) return;
@@ -82,9 +88,9 @@ export default function Page({ params }: PageProps)
             setPasswordError("Tous les champs sont requis.");
             return;
         }
-
-        if (newPassword.trim().length < 8) {
-            setPasswordError("Le mot de passe doit contenir au moins 8 caractères.");
+        
+        if (!validatePasswordStrength(newPassword)) {
+            setPasswordError("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
             return;
         }
 
