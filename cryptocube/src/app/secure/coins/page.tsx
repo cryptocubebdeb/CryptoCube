@@ -11,11 +11,11 @@ interface CoinData {
     current_price: number;
     price_change_percentage_1h_in_currency?: number;
     price_change_percentage_24h: number;
-    price_change_percentage_7d_in_currency?: number;
+    price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
     market_cap: number;
     image: string;
     sparkline_in_7d?: {
-        price: number[];
+        price: number[];  //Données utilisées par MiniChart
     };
 }
 
@@ -28,7 +28,7 @@ const MiniChart = ({ data, isPositive }: { data: number[], isPositive: boolean }
             </div>
         );
     }
-
+    //dimensions du graphique 
     const width = 80;
     const height = 32;
     const padding = 4;
@@ -40,15 +40,15 @@ const MiniChart = ({ data, isPositive }: { data: number[], isPositive: boolean }
 
     // Créer les points SVG
     const points = data.map((price, index) => {
-        const x = padding + (index / (data.length - 1)) * (width - 2 * padding);
-        const y = height - padding - ((price - minPrice) / priceRange) * (height - 2 * padding);
+        const x = padding + (index / (data.length - 1)) * (width - 2 * padding); //Distribue uniformément les points horizontalement
+        const y = height - padding - ((price - minPrice) / priceRange) * (height - 2 * padding); // Convertit le prix en position verticale 
         return `${x},${y}`;
     }).join(' ');
 
     return (
         <div className="w-20 h-8">
             <svg width={width} height={height} className="w-full h-full">
-                <polyline
+                <polyline   //pour dessiner la ligne du graphique
                     points={points}
                     fill="none"
                     stroke={isPositive ? "#10b981" : "#ef4444"}
