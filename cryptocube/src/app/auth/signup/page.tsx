@@ -4,6 +4,7 @@ import Navbar from "@/app/secure/components/navbar"
 import { Geologica } from "next/font/google"
 import { useState } from "react"
 import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 // MUI
 import Button from "@mui/material/Button"
@@ -27,6 +28,7 @@ const geologica = Geologica({
 })
 
 export default function Page() {
+  const router = useRouter();
   const [form, setForm] = useState({
     nom: "",
     prenom: "",
@@ -110,18 +112,10 @@ export default function Page() {
 
         if (response.ok) {
           console.log("Inscription réussie:", data);
-          alert("Inscription réussie !");
-          alert("Inscription réussie");
+          alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
           
-          // Réinitialiser le formulaire
-          setForm({
-            nom: "",
-            prenom: "",
-            email: "",
-            username: "",
-            password: "",
-            confirmPassword: "",
-          });
+          // Rediriger vers la page de login
+          router.push('/auth/login');
           
         } else {
           console.error("Erreur d'inscription:", data.error);
