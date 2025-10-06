@@ -22,26 +22,26 @@ describe('Route Signup - Tests unitaires', () => {
 
     test('devrait valider la longueur du username', () => {
       const isValidUsernameLength = (username: string) => 
-        username.length >= 3 && username.length <= 20;
+        username.length >= 2 && username.length <= 20;
       
-      expect(isValidUsernameLength('ab')).toBe(false); // Trop court
-      expect(isValidUsernameLength('abc')).toBe(true); // Minimum valide
+      expect(isValidUsernameLength('a')).toBe(false); // Trop court
+      expect(isValidUsernameLength('ab')).toBe(true); // Minimum valide
       expect(isValidUsernameLength('validusername')).toBe(true); // Valide
       expect(isValidUsernameLength('a'.repeat(21))).toBe(false); // Trop long
     });
 
     test('devrait valider les caractères du username', () => {
-      const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-      
+      const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+
       // Usernames valides
       expect(usernameRegex.test('user123')).toBe(true);
       expect(usernameRegex.test('user_name')).toBe(true);
       expect(usernameRegex.test('user-name')).toBe(true);
-      
+      expect(usernameRegex.test('user.name')).toBe(true);
+
       // Usernames invalides
       expect(usernameRegex.test('user@name')).toBe(false);
       expect(usernameRegex.test('user name')).toBe(false);
-      expect(usernameRegex.test('user.name')).toBe(false);
     });
 
     test('devrait valider la longueur du mot de passe', () => {
@@ -172,7 +172,7 @@ describe('Route Signup - Tests d\'intégration simulés', () => {
     const validationSteps = {
       requiredFields: !!(userData.nom && userData.prenom && userData.email && userData.username && userData.password),
       emailFormat: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email),
-      usernameLength: userData.username.length >= 3 && userData.username.length <= 20,
+      usernameLength: userData.username.length >= 2 && userData.username.length <= 20,
       usernameChars: /^[a-zA-Z0-9_-]+$/.test(userData.username),
       passwordLength: userData.password.length >= 8,
       passwordComplexity: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(userData.password),
