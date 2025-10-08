@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
-import Paper from '@mui/material/Paper';
+import CircularMarketMeter from '../components/CircularMarketMeter';
 
 export default function DashboardContent() {
   return (
@@ -64,7 +64,7 @@ export default function DashboardContent() {
               marginLeft: 'auto',
               marginRight: 'auto',
               width: '90%',
-              height: '400px'
+              height: '500px'
           }}
       >
           <Typography variant="h4"
@@ -80,6 +80,23 @@ export default function DashboardContent() {
           <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
                Sans portefeuille. Sans risque.
           </Typography>
+
+          <Button
+                variant="contained"
+                href="/secure/simulator"
+                sx={{
+                    mt: 5,
+                    mb: 1,
+                    padding: '16px 40px',
+                    borderRadius: '15px',
+                    backgroundColor: '#FFDD00',
+                    color: '#000000',
+                    fontWeight: 'bold',
+                    '&:hover': { backgroundColor: '#e6c200' } 
+                }}
+            >
+                Essayez le simulateur
+            </Button>
       </div>
 
       <div
@@ -109,11 +126,18 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '300px',
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'center',
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
                 Market Status
             </Typography>
+            
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CircularMarketMeter />
+            </Box>
           </div>
 
           {/* Top winning coins */}
