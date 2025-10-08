@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
 
 .headline {
-    height: 100vh;
     display: flex;
     font-size: 1.8rem;
     flex-direction: column;
@@ -15,9 +14,10 @@
 .titreHeadline {
     font-family: 'Geologica', sans-serif; /* Explicitly set font */
     font-weight: 400;
-    margin-top: 2.5rem;
+    margin-top: 4rem;
     margin-left: 3rem;
     text-align: center;
+    font-size: larger;
 }
 
 .titreSubHeadline {
@@ -26,4 +26,5 @@
     margin-top: 1rem;
     margin-left: 3rem;
     text-align: center;
+    font-size: 25px;
 }

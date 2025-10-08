@@ -14,9 +14,9 @@ export default async function Page() {
       <h1 className={styles.titreHeadline}>
         Naviguez dans le monde de la cryptomonnaie en toute simplicité
       </h1>
-      <h3 className={styles.titreSubHeadline}>
+      <h1 className={styles.titreSubHeadline}>
         Simple. Rapide. Transparent.
-      </h3>
+      </h1>
 
       <DashboardContent />
     </div>
