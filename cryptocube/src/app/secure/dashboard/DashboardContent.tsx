@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import CircularMarketMeter from '../components/CircularMarketMeter';
+import TopWinningCoins from '../components/TopWinningCoins';
+import TopLoserCoins from '../components/TopLoserCoins';
 
 export default function DashboardContent() {
   return (
@@ -134,9 +136,9 @@ export default function DashboardContent() {
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
                 Market Status
             </Typography>
-            
+
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CircularMarketMeter />
+                <CircularMarketMeter /> {/* Dans components/CircularMarketMeter.tsx */}
             </Box>
           </div>
 
@@ -147,12 +149,15 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '400px',
+              height: '415px',
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
                 Top winning coins of the day
             </Typography>
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
+            </Box>
           </div>
         </div>
 
@@ -191,9 +196,12 @@ export default function DashboardContent() {
               height: '300px',
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
                 Top losing coins of the day
             </Typography>
+            <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
+                <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
+            </Box>
           </div>
         </div>
       </div>
