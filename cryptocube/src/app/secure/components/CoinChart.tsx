@@ -18,5 +18,5 @@ export default async function CoinChart({coinId, days = 30, currency = "cad",}: 
 
     const data: Point[] = raw.map(p => ({ x: p.time, y: p.price }));
 
-  return <LineChart width={500} height={300} data={data} />;
+  return <LineChart width={1500} height={500} data={data} />;
 }
