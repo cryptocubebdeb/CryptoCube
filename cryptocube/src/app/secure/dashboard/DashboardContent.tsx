@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import CircularMarketMeter from '../components/CircularMarketMeter';
 import TopWinningCoins from '../components/TopWinningCoins';
 import TopLoserCoins from '../components/TopLoserCoins';
+import DailyNews from '../components/DailyNews';
 
 export default function DashboardContent() {
   return (
@@ -178,12 +179,15 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '400px',
+              height: '430px',
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ mt: 2, textAlign: 'center' }}>
                 Daily News
             </Typography>
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                <DailyNews /> {/* Dans components/DailyNews.tsx */}
+            </Box>
           </div>
 
           {/* Top losing coins */}
@@ -193,7 +197,7 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '300px',
+              height: '285px',
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
