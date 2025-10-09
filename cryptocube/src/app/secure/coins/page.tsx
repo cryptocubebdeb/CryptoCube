@@ -123,8 +123,30 @@ export default function Page() {
         );
     };
 
-    // Filtrer les coins selon la recherche
-    const filteredCoins = coins.filter(coin =>
+    // Fonction pour filtrer selon l'onglet actif
+    const getFilteredCoinsByTab = (coins: CoinData[], tab: string) => {
+        switch (tab) {
+            case 'top':
+                return coins; // Par défaut, déjà trié par market cap
+            case 'trending':
+                //Coins avec le plus de changement de volume (simulation)
+                return [...coins].sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
+            case 'mostvisited':
+                //coins les plus populaires (par market cap pour l'instant)
+                return [...coins].sort((a, b) => b.market_cap - a.market_cap).slice(0, 20);
+            case 'gainers':
+                // Coins avec les meilleurs gains sur 24h
+                return [...coins]
+                    .filter(coin => coin.price_change_percentage_24h > 0)
+                    .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+            default:
+                return coins;
+        }
+    };
+
+    // Filtrer les coins selon l'onglet actif puis selon la recherche
+    const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
+    const filteredCoins = tabFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -168,24 +190,34 @@ export default function Page() {
             <div className="min-h-screen p-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Titre Overview */}
-                    <h2 className="text-3xl font-bold mb-8">Overview</h2>
+                    <h2 className="text-3xl font-bold mb-8">
+                        {activeTab === 'top' && 'Top Cryptocurrencies'}
+                        {activeTab === 'trending' && 'Trending Cryptocurrencies'}
+                        {activeTab === 'mostvisited' && 'Most Visited Cryptocurrencies'}
+                        {activeTab === 'gainers' && 'Top Gainers'}
+                    </h2>
                     
                     {/* Onglets de navigation */}
                     <div className="flex justify-between items-center mb-8 border-b border-gray-200">
                         <div className="flex space-x-8">
-                            {['Top', 'Trending', 'Most Visited', 'Gainers'].map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab.toLowerCase().replace(' ', ''))}
-                                    className={`pb-2 px-1 font-medium text-sm transition-colors ${
-                                        activeTab === tab.toLowerCase().replace(' ', '')
-                                            ? 'border-b-2 border-blue-500 text-blue-600'
-                                            : 'text-gray-500 hover:text-gray-700'
-                                    }`}
-                                >
-                                    {tab}
-                                </button>
-                            ))}
+                            {['Top', 'Trending', 'Most Visited', 'Gainers'].map((tab) => {
+                                const tabKey = tab.toLowerCase().replace(' ', '');
+                                const tabCount = getFilteredCoinsByTab(coins, tabKey).length;
+                                return (
+                                    <button
+                                        key={tab}
+                                        onClick={() => setActiveTab(tabKey)}
+                                        className={`pb-2 px-1 font-medium text-sm transition-colors ${
+                                            activeTab === tabKey
+                                                ? 'border-b-2 border-blue-500 text-blue-600'
+                                                : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    >
+                                        {tab}
+                                        <span className="ml-1 text-xs opacity-60">({tabCount})</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                         <button 
                             onClick={fetchCoins}
