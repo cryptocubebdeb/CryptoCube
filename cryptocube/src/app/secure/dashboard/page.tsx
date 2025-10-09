@@ -1,4 +1,6 @@
 import { auth } from '@/auth'
+import styles from './page.module.css'
+import DashboardContent from './DashboardContent';
 
 export default async function Page() {
   const session = await auth();
@@ -8,12 +10,15 @@ export default async function Page() {
   } 
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center space-y-6">
-      <h1 className="text-2xl text-center font-mono">
-        Hi, {session.user?.name || session.user?.email}!
+    <div className={styles.headline}>
+      <h1 className={styles.titreHeadline}>
+        Naviguez dans le monde de la cryptomonnaie en toute simplicité
       </h1>
-      <h1 className="text-xl text-center font-mono ">
-        This should be your dashboard. It is for now still under construction</h1>
-    </div> 
+      <h1 className={styles.titreSubHeadline}>
+        Simple. Rapide. Transparent.
+      </h1>
+
+      <DashboardContent />
+    </div>
   );
 }
