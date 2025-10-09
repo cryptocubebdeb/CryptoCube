@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
+
+.headline {
+    display: flex;
+    font-size: 1.8rem;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    font-family: 'Geologica', sans-serif; /* Add font family here too */
+}
+
+.titreHeadline {
+    font-family: 'Geologica', sans-serif; /* Explicitly set font */
+    font-weight: 400;
+    margin-top: 4rem;
+    margin-left: 3rem;
+    text-align: center;
+    font-size: larger;
+}
+
+.titreSubHeadline {
+    font-family: 'Geologica', sans-serif; /* Explicitly set font */
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-left: 3rem;
+    text-align: center;
+    font-size: 25px;
+}
