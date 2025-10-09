@@ -3,6 +3,7 @@ import { getCoin } from '../../../lib/getCoin';
 import { Geologica } from "next/font/google"
 import { getCoinChart } from "../../../lib/getCoinChart";
 import CoinChart from "../../../../app/secure/components/CoinChart";
+import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGauge";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -48,12 +49,27 @@ export default async function Page({
     const high24hDiff = ((currentPrice - low24h) / (high24h - low24h)) * 100; // position in the 24h range
     const fromHigh24h = ((currentPrice - high24h) / high24h) * 100; // how far from 24h high
     const fromLow24h = ((currentPrice - low24h) / low24h) * 100; // how far from 24h low
-    const PercentageChangeIn7d = coinData?.market_data?.price_change_percentage_7d ?? null;
-    const price7dAgo = currentPrice / (1 + PercentageChangeIn7d / 100);
-    const priceDifferenceIn7d = currentPrice - price7dAgo;
+    const PercentageChangeIn7d = coinData?.market_data?.price_change_percentage_7d ?? null; // % change in the past 7 days
+    const price7dAgo = currentPrice / (1 + PercentageChangeIn7d / 100); // Price 7 days ago, based on the % change
+    const priceDifferenceIn7d = currentPrice - price7dAgo; // Price diff
 
+    /*
+        This is a temporary risk score, it is only based on the percentage change of the past week. 
+        For now, we assume that a ±15% change corresponds to maximum volatility (100% risk).
+        So currently its only a volatility index, the logic needs to be improved to take more data into consideration (volume, market cap, etc.)
+    */
+    const riskScore = Math.min(100, (Math.abs(PercentageChangeIn7d) / 15) * 100); // Volatility-based risk score (0–100)
 
+    const globalRes = await fetch("https://api.coingecko.com/api/v3/global");
+    const globalData = await globalRes.json();
 
+    const marketCapChange = globalData.data.market_cap_change_percentage_24h_usd; // % change in total market cap over 24h (in USD) (Need to check if the USD is problematic)
+    const marketHealth = Math.min(100, Math.max(0, 50 + marketCapChange)); // Convert % change into a 0–100 “health” center is 50 → up = good, down = bad
+
+    const res = await fetch("https://api.alternative.me/fng/"); // Fetch global sentiment index (updated daily)
+    const { data } = await res.json();
+    const fearGreedValue = parseInt(data[0].value); // (0 = extreme fear, 100 = extreme greed)
+    const fearGreedLabel = data[0].value_classification; //  // Text label: Extreme_Fear:0–24  Fear:25–44  Neutral:45–54  Greed:55–74  Extreme_Greed:75–100
 
     // --- Supply metrics ---
     const circulatingSupply = coinData?.market_data?.circulating_supply; // Number of coins currently in circulation
@@ -64,12 +80,65 @@ export default async function Page({
         <div className={`h-screen flex flex-col ${geologica.className}`}>
             <div className="flex flex-1 justify-center">
                 {/* Main container */}
-                <div className="flex w-[95%] gap-2 items-start">
+                <div className="flex w-[95%] gap-6 items-start">
 
-                    {/* Left column - chart */}
-                    <div className="flex-[0.65] bg-[#15171E] text-white p-8 rounded-[2px] shadow-md">
-                        <CoinChart coinId={id} days={30} currency="cad" />
+                    {/* Left column - chart + risk analysis */}
+                    <div className="flex-[0.65] flex flex-col gap-6">
+
+                        {/* Chart container */}
+                        <div className="bg-[#15171E] text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
+                            <div className="w-full h-[420px]">
+                                <CoinChart coinId={id} days={30} currency="cad" />
+                            </div>
+                        </div>
+
+                        {/*------------- Gauges Section -------------*/}
+                        <div className="flex flex-wrap justify-between gap-6 w-full mt-6">
+
+                            {/* === Left: Specific Coin Volatility === */}
+                            <div className="bg-[#15171E] flex-1 min-w-[250px] p-6 rounded-[8px] shadow-md">
+                                <h2 className="text-2xl text-white mb-6 text-center">Volatility Index</h2>
+                                <div className="flex flex-col items-center">
+                                    <h3 className="text-lg text-white/80 mb-3">{name}</h3>
+                                    <RiskGauge value={Math.round(riskScore)} />
+                                    <p className="text-white/60 text-sm mt-3">
+                                        Based on 7-day change: {Math.round(PercentageChangeIn7d)}%
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* === Right: Market Overview (Fear & Greed + Global) === */}
+                            <div className="bg-[#15171E] flex-[1.9] min-w-[550px] p-6 rounded-[8px] shadow-md">
+                                <h2 className="text-2xl text-white mb-6 text-center">Market Overview</h2>
+
+                                <div className="flex justify-center gap-10 flex-wrap">
+                                    {/* Fear & Greed */}
+                                    <div className="flex flex-col items-center w-64">
+                                        <h3 className="text-lg text-white/80 mb-3">Market Sentiment</h3>
+                                        <RiskGauge value={Math.round(fearGreedValue)} />
+                                        <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
+                                    </div>
+
+                                    {/* Global Market */}
+                                    <div className="flex flex-col items-center w-64">
+                                        <h3 className="text-lg text-white/80 mb-3">Global Market</h3>
+                                        <RiskGauge value={Math.round(marketHealth)} />
+                                        <p className="text-sm text-white/60 mt-2">
+                                            {
+                                                marketHealth >= 55
+                                                    ? "Growing"   // If marketHealth ≥ 55 = market performing well
+                                                    : marketHealth <= 45
+                                                        ? "Cooling"   // If marketHealth ≤ 45 = market slowing down
+                                                        : "Stable"    // Otherwise (45–55) = neutral 
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
 
                     {/* Right column - details */}
                     <div className="flex-[0.35] bg-[#15171E] text-white p-8 text-xl rounded-[2px] shadow-md">
