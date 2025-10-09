@@ -71,7 +71,7 @@ export const LineChart = ({ width, height, data }: LineChartProps) => {
     return (
         <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
             <g transform={`translate(${MARGIN.left},${MARGIN.top})`} width={boundsWidth} height={boundsHeight}>
-                <path d={linePath} stroke="#9a6fb0" fill="none" strokeWidth={2} />
+                <path d={linePath} stroke="#e4af04ff" fill="none" strokeWidth={2} />
             </g>
             <g ref={axesRef} transform={`translate(${MARGIN.left},${MARGIN.top})`} width={boundsWidth} height={boundsHeight} />
         </svg>

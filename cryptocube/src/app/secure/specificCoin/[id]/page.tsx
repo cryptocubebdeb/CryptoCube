@@ -11,8 +11,8 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // ⬅️ params is a Promise — await it before using
-  const { id } = await params; // e.g., "bitcoin"
+
+  const { id } = await params; // id example "bitcoin"
 
   const [coinData, series] = await Promise.all([
     getCoin(id),
@@ -26,7 +26,6 @@ export default async function Page({
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
       <div className="flex flex-col flex-1 items-center">
-        <h1 className="w-full text-3xl font-mono mb-9 mt-12">{name}</h1>
         <div className="w-[85%]">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4 p-4">
