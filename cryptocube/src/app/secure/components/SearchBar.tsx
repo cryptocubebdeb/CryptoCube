@@ -5,8 +5,13 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
+interface SearchBarProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  placeholder?: string;
+}
 
-export default function SearchBar(): React.JSX.Element {
+export default function SearchBar({ searchTerm, onSearchChange, placeholder = "Explore la cryptomonnaie..." }: SearchBarProps): React.JSX.Element {
     return (
         <Box
         sx={{
@@ -21,7 +26,9 @@ export default function SearchBar(): React.JSX.Element {
       >
         <TextField
           variant="outlined"
-          placeholder="Explore la cryptomonnaie..."
+          placeholder={placeholder}
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
           sx={{
             width: '100%',
             maxWidth: '1050px',

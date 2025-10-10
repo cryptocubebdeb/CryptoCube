@@ -15,7 +15,7 @@ export default function DashboardContent() {
   return (
     <>
       {/* Search Bar */}
-      <SearchBar />
+      {/* <SearchBar /> */}
 
       <div
           style={{
