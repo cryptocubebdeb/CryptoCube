@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Box, Typography } from '@mui/material';
-import { getMarketData } from '../../lib/getMarketData';
+import { getMarketData } from '../../../lib/getMarketData';
 
 // Type for market data
 interface MarketData {

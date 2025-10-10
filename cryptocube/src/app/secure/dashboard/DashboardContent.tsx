@@ -5,53 +5,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
-import CircularMarketMeter from '../components/CircularMarketMeter';
-import TopWinningCoins from '../components/TopWinningCoins';
-import TopLoserCoins from '../components/TopLoserCoins';
-import DailyNews from '../components/DailyNews';
+import CircularMarketMeter from '../components/Dashboard/CircularMarketMeter';
+import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
+import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
+import DailyNews from '../components/Dashboard/DailyNews';
+import SearchBar from '../components/SearchBar';
 
 export default function DashboardContent() {
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          mt: 4,
-          width: '100%',
-          px: 2
-        }}
-      >
-        <TextField
-          variant="outlined"
-          placeholder="Explore la cryptomonnaie..."
-          sx={{
-            width: '70%',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '50px',
-              '& fieldset': {
-                borderColor: '#434344ff', // Change border color (default state)
-                borderWidth: '2px', // Make border thicker
-              },
-              '&:hover fieldset': {
-                borderColor: '#989898ff', // Border color on hover
-                borderWidth: '2px',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#989898ff', // Border color when focused
-                borderWidth: '2px',
-              },
-            }
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color='action' />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+      {/* Search Bar */}
+      <SearchBar />
 
       <div
           style={{

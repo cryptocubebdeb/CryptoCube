@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgress, Box, Avatar, Typography } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import { getTopCoins } from '../../lib/getTopCoins';
+import { getTopCoins } from '../../../lib/getTopCoins';
 
 interface Coin {
     id: string;
@@ -14,7 +14,7 @@ interface Coin {
     price_change_percentage_24h: number;
 }
 
-export default function TopLoserCoins(): React.JSX.Element {
+export default function TopWinningCoins(): React.JSX.Element {
     const [coins, setCoins] = useState<Coin[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -22,8 +22,8 @@ export default function TopLoserCoins(): React.JSX.Element {
         async function fetchCoins() {
             try {
                 const data = await getTopCoins();
-                // get top losing coins
-                const sortedData = data.sort((a: Coin, b: Coin) => a.price_change_percentage_24h - b.price_change_percentage_24h);
+                // get top winning coins
+                const sortedData = data.sort((a: Coin, b: Coin) => b.price_change_percentage_24h - a.price_change_percentage_24h);
                 setCoins(sortedData);
             } catch (error) {
                 console.error("Error fetching top coins:", error);
@@ -37,7 +37,7 @@ export default function TopLoserCoins(): React.JSX.Element {
     if (loading) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
-                Loading top losing coins...
+                Loading top winning coins...
             </Typography>
         );
     }
@@ -45,14 +45,14 @@ export default function TopLoserCoins(): React.JSX.Element {
     if (!coins.length) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'error.main' }}>
-                Failed to load top losing coins.
+                Failed to load top winning coins.
             </Typography>
         );
     }
 
     return (
         <Box sx={{ p: 1 }}>
-            {coins.slice(0, 3).map((coin, index) => (
+            {coins.slice(0, 5).map((coin, index) => (
                 <Box
                     key={coin.id}
                     sx={{
@@ -62,7 +62,7 @@ export default function TopLoserCoins(): React.JSX.Element {
                         justifyContent: 'space-between',
                         marginLeft: 1,
                         py: 2,
-                        borderBottom: index < 2 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                        borderBottom: index < 4 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
                     }}
                 >
                     {/* Logo, nom et symbole */}
