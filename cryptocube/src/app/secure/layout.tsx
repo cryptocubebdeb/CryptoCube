@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <>
        <Navbar />
-       <section>{children}</section>
+       <main className="pt-14 md:pt-16">{children}</main>
     </>
   );
 }
