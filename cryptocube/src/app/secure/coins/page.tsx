@@ -217,7 +217,13 @@ export default function Page() {
                         <div className="flex space-x-8">
                             {['Tout', 'Tendance', 'Plus Visitées', 'Gagnants'].map((tab) => {
                                 const tabKey = tab.toLowerCase().replace(' ', '');
-                                const tabCount = getFilteredCoinsByTab(allCoins, tabKey).length;
+                                // Count avec tab filter et search filter
+                                const tabFilteredCoins = getFilteredCoinsByTab(allCoins, tabKey);
+                                const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
+                                    coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+                                );
+                                const tabCount = searchAndTabFiltered.length;
                                 return (
                                     <button
                                         key={tab}
