@@ -4,14 +4,12 @@ import { Geologica } from "next/font/google"
 import { getCoinChart } from "../../../lib/getCoinChart";
 import CoinChart from "../../../../app/secure/components/CoinChart";
 import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGauge";
+import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
+import { getCoinNews } from "../../../lib/getCoinNews";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
-export default async function Page({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params, }: { params: Promise<{ id: string }>; }) {
 
     const { id } = await params; // id example "bitcoin"
 
@@ -20,11 +18,19 @@ export default async function Page({
         getCoinChart(id, 30, "cad"),
     ]);
 
+
     // --- Basic coin info ---
     const name = coinData?.name ?? id; // Name of the current crypto
     const logo = coinData?.image?.large as string | undefined; // Image of the crypto logo
     const symbole = coinData?.symbol ?? id; // Acronym of the crypto (ex: Bitcoin → BTC)
     const rank = coinData?.market_cap_rank; // Global market rank of the crypto
+
+    let news: Awaited<ReturnType<typeof getCoinNews>> = [];
+    try {
+        news = await getCoinNews(id);
+    } catch {
+        news = [];
+    }
 
     // --- Market data ---
     const currentPrice = coinData?.market_data?.current_price?.cad; // Current price in CAD
@@ -60,11 +66,12 @@ export default async function Page({
     */
     const riskScore = Math.min(100, (Math.abs(PercentageChangeIn7d) / 15) * 100); // Volatility-based risk score (0–100)
 
-    const globalRes = await fetch("https://api.coingecko.com/api/v3/global");
-    const globalData = await globalRes.json();
-
-    const marketCapChange = globalData.data.market_cap_change_percentage_24h_usd; // % change in total market cap over 24h (in USD) (Need to check if the USD is problematic)
-    const marketHealth = Math.min(100, Math.max(0, 50 + marketCapChange)); // Convert % change into a 0–100 “health” center is 50 → up = good, down = bad
+    const globalRes = await fetch("https://api.coingecko.com/api/v3/global", { cache: "no-store" });
+    const { data: g } = (await globalRes.json()) ?? {};
+    const marketCapChange = Number.isFinite(Number(g?.market_cap_change_percentage_24h_usd))
+        ? Number(g.market_cap_change_percentage_24h_usd)
+        : 0;
+    const marketHealth = Math.min(100, Math.max(0, 50 + marketCapChange));
 
     const res = await fetch("https://api.alternative.me/fng/"); // Fetch global sentiment index (updated daily)
     const { data } = await res.json();
@@ -137,8 +144,12 @@ export default async function Page({
                             </div>
                         </div>
 
-                    </div>
 
+                        <div className="bg-[#15171E] text-white p-6 rounded-[8px] shadow-md">
+                            <h2 className="text-2xl mb-4">Latest updates</h2>
+                            <CoinDailyNews coinId={id} />
+                        </div>
+                    </div>
 
                     {/* Right column - details */}
                     <div className="flex-[0.35] bg-[#15171E] text-white p-8 text-xl rounded-[2px] shadow-md">
