@@ -5,11 +5,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
-import CircularMarketMeter from '../components/Dashboard/CircularMarketMeter';
+import MarketOverviewGauges from '../components/Dashboard/MarketOverviewGauges';
 import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
-import SearchBar from '../components/Dashboard/SearchBar';
+import SearchBar from '../components/SearchBar';
 
 export default function DashboardContent() {
   return (
@@ -99,18 +99,18 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '300px',
+              height: '320px',
               display: 'flex',
               flexDirection: 'column',
               textAlign: 'center',
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
-                Market Status
+                Market Overview
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CircularMarketMeter /> {/* Dans components/CircularMarketMeter.tsx */}
+                <MarketOverviewGauges />
             </Box>
           </div>
 
@@ -121,7 +121,7 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '415px',
+              height: '400px',
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
@@ -150,7 +150,7 @@ export default function DashboardContent() {
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
-              height: '430px',
+              height: '435px',
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2, textAlign: 'center' }}>
