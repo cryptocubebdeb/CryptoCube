@@ -7,6 +7,7 @@ import MiniChart from '../components/Dashboard/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { getCoinsList } from '../../lib/getCoinsList';
 
 // Interface pour les données de cryptomonnaies
 interface CoinData {
@@ -28,66 +29,24 @@ interface CoinData {
 export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
-    const [allCoins, setAllCoins] = useState<CoinData[]>([]); // Store 800 coins
     const [loading, setLoading] = useState(true);
+    const [coins, setCoins] = useState<CoinData[]>([]);
     const [activeTab, setActiveTab] = useState('tout');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Fonction combinée pour récupérer tous les coins (800 au total)
-    const fetchAllCoins = async () => {
-        try {
-            setLoading(true);
-            console.log('Starting to fetch coins...');
-            
-            // Fetch 800 coins
-            // Limite de 250 par api fetch
-            const fetchPromises = [
-                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
-                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
-                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=3&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
-                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=4&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`)
-            ];
-
-            console.log('Fetching from API...');
-            const responses = await Promise.all(fetchPromises);
-            
-            // Vérification du fetch
-            for (let i = 0; i < responses.length; i++) {
-                if (!responses[i].ok) {
-                    console.error(`API Error for page ${i + 1}:`, responses[i].status, responses[i].statusText);
-                    throw new Error(`HTTP error! status: ${responses[i].status} for page ${i + 1}`);
-                }
-            }
-
-            console.log('All API calls successful, parsing data...');
-            // Parse tous les reponses
-            const dataPromises = responses.map(response => response.json());
-            const [data1, data2, data3, data4] = await Promise.all(dataPromises);
-            
-            console.log('Data lengths:', data1.length, data2.length, data3.length, data4.length);
-            
-            // Combine tout le data en un
-            const allData = [...data1, ...data2, ...data3, ...data4];
-            
-            // Enlève coins dupliqué avec coin ID
-            const uniqueCoins = allData.filter((coin, index, self) => 
-                index === self.findIndex(c => c.id === coin.id)
-            );
-            
-            console.log('Total coins fetched:', allData.length);
-            console.log('Unique coins after deduplication:', uniqueCoins.length);
-            setAllCoins(uniqueCoins);
+    const fetchCoins = async () => {
+         try {
+            const data = await getCoinsList();
+            setCoins(data);
         } catch (error) {
-            console.error('Erreur lors de la récupération des données:', error);
-            // Set some fallback data or empty array to prevent UI issues
-            setAllCoins([]);
+            console.error("Error fetching all coins:", error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchAllCoins();
+        fetchCoins();
     }, []);
 
     // Fonction pour formater les prix
@@ -129,12 +88,12 @@ export default function Page() {
         switch (tab) {
             case 'tout':
                 return coins; // Par défaut, déjà trié par market cap
-            case 'tendance':
-                // Coins avec plus de 2% de changement absolu sur 24h
-                return [...coins]
-                    .filter(coin => Math.abs(coin.price_change_percentage_24h) >= 2)
-                    .sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
-            case 'plusvisitées':
+            // case 'tendance':
+            //     // Coins avec plus de 2% de changement absolu sur 24h
+            //     return [...coins]
+            //         .filter(coin => Math.abs(coin.price_change_percentage_24h) >= 2)
+            //         .sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
+            case 'pluséchangées':
                 // Coins avec volume de trading élevé (top par volume)
                 return [...coins]
                     .filter(coin => coin.total_volume && coin.total_volume > 10000000) // Volume > 10M USD
@@ -150,7 +109,7 @@ export default function Page() {
     };
 
     // Filtrer les coins selon l'onglet actif puis selon la recherche
-    const tabFilteredCoins = getFilteredCoinsByTab(allCoins, activeTab);
+    const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
     const searchFilteredCoins = tabFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
@@ -169,7 +128,7 @@ export default function Page() {
     useEffect(() => {
         const totalResults = searchFilteredCoins.length;
         setTotalPages(Math.ceil(totalResults / 40));
-    }, [searchTerm, activeTab, allCoins.length]);
+    }, [searchTerm, activeTab, coins.length]);
 
     // Reset à page 1 quand recherche se fait
     useEffect(() => {
@@ -206,19 +165,19 @@ export default function Page() {
                 <div className="max-w-[85rem] mx-auto">
                     {/* Titre Overview */}
                     <h2 className="text-4xl font-bold mb-10">
-                        {activeTab === 'tout' && 'Tous cryptomonnaies'}
-                        {activeTab === 'tendance' && 'Cryptomonnaies en tendance'}
-                        {activeTab === 'plusvisitées' && 'Cryptomonnaies les plus visitées'}
-                        {activeTab === 'gagnants' && 'Top gagnants'}
+                        {activeTab === 'tout' && 'Liste des cryptomonnaies'}
+                        {/* {activeTab === 'tendance' && 'Cryptomonnaies en tendance'} */}
+                        {activeTab === 'pluséchangées' && 'Cryptomonnaies les plus échangées'}
+                        {activeTab === 'gagnants' && 'Top gagnants (24h)'}
                     </h2>
                     
                     {/* Onglets de navigation */}
                     <div className="flex justify-between items-center mb-5 border-b border-gray-400">
                         <div className="flex space-x-8">
-                            {['Tout', 'Tendance', 'Plus Visitées', 'Gagnants'].map((tab) => {
+                            {['Tout', 'Plus Échangées', 'Gagnants'].map((tab) => {
                                 const tabKey = tab.toLowerCase().replace(' ', '');
                                 // Count avec tab filter et search filter
-                                const tabFilteredCoins = getFilteredCoinsByTab(allCoins, tabKey);
+                                const tabFilteredCoins = getFilteredCoinsByTab(coins, tabKey);
                                 const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
                                     coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                     coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
@@ -242,7 +201,7 @@ export default function Page() {
                         </div>
                         <Button 
                             variant="outlined"
-                            onClick={() => fetchAllCoins()}
+                            onClick={() => fetchCoins()}
                             startIcon={
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgress, Box, Avatar, Typography } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import { getTopCoins } from '../../../lib/getTopCoins';
+import { getCoinsList } from '../../../lib/getCoinsList';
 import MiniChart from './MiniChart';
 
 interface Coin {
@@ -24,9 +24,11 @@ export default function TopWinningCoins(): React.JSX.Element {
     useEffect(() => {
         async function fetchCoins() {
             try {
-                const data = await getTopCoins();
+                const data = await getCoinsList();
+
                 // get top winning coins
-                const sortedData = data.sort((a: Coin, b: Coin) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+                const sortedData = data.sort((first: Coin, second: Coin) => second.price_change_percentage_24h - first.price_change_percentage_24h);
+
                 setCoins(sortedData);
             } catch (error) {
                 console.error("Error fetching top coins:", error);
