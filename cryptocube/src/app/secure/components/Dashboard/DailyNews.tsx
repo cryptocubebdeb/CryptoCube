@@ -97,7 +97,7 @@ export default function DailyNews(): React.JSX.Element {
                                 alt={currentNews.title}
                                 variant="rounded"
                                 sx={{ 
-                                    width: 580, 
+                                    width: 620, 
                                     height: 210, 
                                     borderRadius: 3,
                                     cursor: 'pointer',
@@ -132,7 +132,7 @@ export default function DailyNews(): React.JSX.Element {
                         }
                     }}>
 
-                    <Typography variant="body1" sx={{ fontSize: '1.1rem', marginLeft: 6, textAlign: 'start', lineHeight: '1.5', fontWeight: '500', color: 'white' }}>
+                    <Typography variant="body1" sx={{ fontSize: '1.1rem', marginLeft: 8, textAlign: 'start', lineHeight: '1.5', fontWeight: '500', color: 'white' }}>
                         {currentNews.title.length > 60 ?
                             `${currentNews.title.slice(0, 60)}...` :
                             currentNews.title
@@ -141,7 +141,7 @@ export default function DailyNews(): React.JSX.Element {
                 </Link>
 
                 {/* Article Outlet */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 6 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 8 }}>
                     <Typography variant='body2' sx={{ color: 'gray' }}>
                         {currentNews.news_site || currentNews.author || 'CoinGecko News'}
                     </Typography>
