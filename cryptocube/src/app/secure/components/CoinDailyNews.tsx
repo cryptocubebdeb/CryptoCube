@@ -6,6 +6,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { getCoinNews } from "../../lib/getCoinNews"
 
+// Simple shape for each news item (kept beginner-friendly)
 interface NewsItem {
   id: string
   title: string
@@ -18,23 +19,25 @@ interface NewsItem {
 
 export default function CoinDailyNews({
   coinId,
-  pageSize = 3,   // show 3 at a time
-  fetchSize = 9,  // fetch 9 total
+  pageSize = 3,   // show 3 items per page
+  fetchSize = 9,  // fetch up to 9 items total
 }: {
   coinId: string
   pageSize?: number
   fetchSize?: number
 }) {
-  const [news, setNews] = useState<NewsItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(0) // 0-based page index
 
+  const [news, setNews] = useState<NewsItem[]>([])     // all fetched items
+  const [loading, setLoading] = useState(true)         // loading flag
+  const [currentIndex, setCurrentIndex] = useState(0)  // page index (0-based)
+
+  // Load news when coin changes
   useEffect(() => {
     async function load() {
       try {
         const items = await getCoinNews(coinId, fetchSize)
-        setNews(items)
-        setPage(0) // reset to first page on coin change
+        setNews(items || [])
+        setCurrentIndex(0) // always start on first page for a new coin
       } catch (err) {
         console.error("Failed to load coin news:", err)
         setNews([])
@@ -45,6 +48,7 @@ export default function CoinDailyNews({
     load()
   }, [coinId, fetchSize])
 
+  // Loading + empty states
   if (loading) {
     return (
       <Typography variant="body2" sx={{ textAlign: "center", mt: 2, color: "white" }}>
@@ -61,17 +65,21 @@ export default function CoinDailyNews({
     )
   }
 
-  // Paging math
+  // Paging math (3 per page)
   const totalPages = Math.max(1, Math.ceil(news.length / pageSize))
-  const start = page * pageSize
+  const start = currentIndex * pageSize
   const visible = news.slice(start, start + pageSize)
 
-  const prev = () => setPage((page) => (page - 1 + totalPages) % totalPages)
-  const next = () => setPage((page) => (page + 1) % totalPages)
+  // Prev/Next handlers 
+  const prev = () => setCurrentIndex((i) => (i - 1 + totalPages) % totalPages)
+  const next = () => setCurrentIndex((i) => (i + 1) % totalPages)
+
+  // Build an array just to render one dot per page
+  const pageArray = Array.from({ length: totalPages })
 
   return (
     <Box sx={{ position: "relative" }}>
-      {/* Header row with arrows */}
+      {/* Header with arrows */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="h6" sx={{ color: "white" }}>Latest updates</Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -79,7 +87,7 @@ export default function CoinDailyNews({
             <ArrowBackIosIcon fontSize="inherit" />
           </IconButton>
           <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-            {page + 1} / {totalPages}
+            {currentIndex + 1} / {totalPages}
           </Typography>
           <IconButton onClick={next} size="small" sx={{ color: "white" }}>
             <ArrowForwardIosIcon fontSize="inherit" />
@@ -87,13 +95,13 @@ export default function CoinDailyNews({
         </Box>
       </Box>
 
-      {/* 3-up grid */}
       <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {visible.map((item) => (
           <Box
             key={item.id}
             className="bg-[#15171E] rounded-md p-3 border border-white/5 hover:border-white/20 transition-colors"
           >
+            {/* Image */}
             <Link href={item.url} target="_blank" sx={{ textDecoration: "none", cursor: "pointer" }}>
               <Avatar
                 src={item.thumbnail || "/default-news.png"}
@@ -114,6 +122,7 @@ export default function CoinDailyNews({
               />
             </Link>
 
+            {/* Title */}
             <Link href={item.url} target="_blank" underline="hover" sx={{ textDecoration: "none" }}>
               <Typography
                 variant="body1"
@@ -123,6 +132,7 @@ export default function CoinDailyNews({
               </Typography>
             </Link>
 
+            {/* Source • Date */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
               <Typography variant="body2" sx={{ color: "gray" }}>
                 {item.news_site || "CoinGecko"}
@@ -133,6 +143,7 @@ export default function CoinDailyNews({
               </Typography>
             </Box>
 
+            {/* Short description */}
             {item.description && (
               <Typography variant="body2" sx={{ mt: 1, color: "rgba(255,255,255,0.75)" }}>
                 {item.description.length > 120 ? item.description.slice(0, 120) + "…" : item.description}
@@ -142,24 +153,26 @@ export default function CoinDailyNews({
         ))}
       </Box>
 
-      {/* Optional dots under grid */}
-      {totalPages > 1 && (
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: 2 }}>
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <Box
-              key={i}
-              onClick={() => setPage(i)}
-              sx={{
-                width: 8, height: 8, borderRadius: "50%",
-                backgroundColor: i === page ? "#dadadaff" : "rgba(255,255,255,0.3)",
-                cursor: "pointer",
-                transition: "background-color 0.2s ease",
-                "&:hover": { backgroundColor: i === page ? "#bcbcbc" : "rgba(255,255,255,0.5)" },
-              }}
-            />
-          ))}
-        </Box>
-      )}
+      {/* Navigation Dots */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mt: 2 }}>
+        {pageArray.map((_, index) => (
+          <Box
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            sx={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: currentIndex === index ? '#dadadaff' : 'rgba(255, 255, 255, 0.3)',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease',
+              '&:hover': {
+                backgroundColor: currentIndex === index ? '#525252ff' : 'rgba(255, 255, 255, 0.5)',
+              },
+            }}
+          />
+        ))}
+      </Box>
     </Box>
   )
 }

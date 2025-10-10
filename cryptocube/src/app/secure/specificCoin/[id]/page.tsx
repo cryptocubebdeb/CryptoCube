@@ -24,6 +24,8 @@ export default async function Page({ params, }: { params: Promise<{ id: string }
     const logo = coinData?.image?.large as string | undefined; // Image of the crypto logo
     const symbole = coinData?.symbol ?? id; // Acronym of the crypto (ex: Bitcoin → BTC)
     const rank = coinData?.market_cap_rank; // Global market rank of the crypto
+    const coinDescription = coinData?.description?.en ?? "";
+    const websiteUrl = coinData?.links?.homepage?.[0] || null;
 
     let news: Awaited<ReturnType<typeof getCoinNews>> = [];
     try {
@@ -97,6 +99,38 @@ export default async function Page({ params, }: { params: Promise<{ id: string }
                             <div className="w-full h-[420px]">
                                 <CoinChart coinId={id} days={30} currency="cad" />
                             </div>
+                        </div>
+
+                        {/* ------------- Description ------------- */}
+                        <div className="mt-8">
+                            <div className="flex items-baseline justify-between mb-3">
+                                <h2 className="text-2xl text-white/90">Description</h2>
+                                {websiteUrl ? (
+                                    <a
+                                        href={websiteUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-md text-white/70 hover:underline"
+                                    >
+                                        Official site
+                                    </a>
+                                ) : null}
+                            </div>
+
+                            <details className="group bg-[#12141A] border border-white/10 rounded-md">
+                                <summary className="cursor-pointer list-none px-4 py-3 text-white/80 hover:text-white/95 select-none">
+                                    <span className="mr-2">About {name}</span>
+                                    <span className="text-white/50 group-open:hidden">· Show more</span>
+                                    <span className="text-white/50 hidden group-open:inline">· Show less</span>
+                                </summary>
+                                <div className="px-4 pb-4">
+                                    <div
+                                        className="text-white/85 leading-relaxed"
+                                        style={{ textAlign: "justify", textJustify: "inter-word" }}
+                                        dangerouslySetInnerHTML={{ __html: coinDescription }}
+                                    />
+                                </div>
+                            </details>
                         </div>
 
                         {/*------------- Gauges Section -------------*/}
@@ -292,6 +326,9 @@ export default async function Page({ params, }: { params: Promise<{ id: string }
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
 
                 </div>
