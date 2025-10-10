@@ -153,8 +153,8 @@ export default function DashboardContent() {
               height: '435px',
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ mt: 2, textAlign: 'center' }}>
-                Nouvelles du
+            <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
+                Nouvelles de la journée
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <DailyNews /> {/* Dans components/DailyNews.tsx */}
