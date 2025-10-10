@@ -14,6 +14,8 @@ export default function SearchBar(): React.JSX.Element {
           justifyContent: 'center',
           mt: 4,
           width: '100%',
+          maxWidth: '1050px',
+          mx: 'auto',
           px: 2
         }}
       >
@@ -21,7 +23,8 @@ export default function SearchBar(): React.JSX.Element {
           variant="outlined"
           placeholder="Explore la cryptomonnaie..."
           sx={{
-            width: '70%',
+            width: '100%',
+            maxWidth: '1050px',
             '& .MuiOutlinedInput-root': {
               borderRadius: '50px',
               '& fieldset': {

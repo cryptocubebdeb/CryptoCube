@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import SearchBar from '../components/SearchBar';
+
 
 // Interface pour les données de cryptomonnaies
 interface CoinData {
@@ -155,7 +157,7 @@ export default function Page() {
         <>
             {/* Hero Section */}
             <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
-                <div className="text-center max-w-4xl mx-auto space-y-8">
+                <div className="text-center mx-auto space-y-8">
                     {/* Main Title */}
                     <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                         Navigate the World of Crypto with Ease
@@ -167,27 +169,13 @@ export default function Page() {
                     </p>
                     
                     {/* Barre de recherche */}
-                    <div className="max-w-2xl mx-auto mt-8">
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg className="h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Explore crypto..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                        </div>
-                    </div>
+                    <SearchBar />
+
                 </div>
             </div>
 
             {/* Section des cryptomonnaies */}
-            <div className="min-h-screen p-8">
+            <div className="min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     {/* Titre Overview */}
                     <h2 className="text-3xl font-bold mb-8">

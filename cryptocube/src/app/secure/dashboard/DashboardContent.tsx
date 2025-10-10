@@ -21,7 +21,7 @@ export default function DashboardContent() {
           style={{
               borderRadius: '20px',
               padding: '16px',
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               textAlign: 'center',
               flexDirection: 'column',
               display: 'flex',
@@ -88,7 +88,7 @@ export default function DashboardContent() {
           {/* Market Status */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -110,7 +110,7 @@ export default function DashboardContent() {
           {/* Top winning coins */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -139,7 +139,7 @@ export default function DashboardContent() {
           {/* Daily News */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -157,7 +157,7 @@ export default function DashboardContent() {
           {/* Top losing coins */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
