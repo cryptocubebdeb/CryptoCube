@@ -6,7 +6,7 @@ export async function getCoin(id: string) {
         throw new Error("Missing COINGECKO_API_KEY in environment.");
     }
     const options = {
-        method: "GET", headers: { "x-cg-demo-api-key": API_KEY, },
+        method: "GET", headers: { "x-cg-demo-api-key": API_KEY },
     };
     const url = `${URL_API}/coins/${id}`;
 
