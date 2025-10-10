@@ -18,6 +18,7 @@ interface CoinData {
     price_change_percentage_24h: number;
     price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
     market_cap: number;
+    total_volume?: number; // Volume de trading sur 24h
     image: string;
     sparkline_in_7d?: {
         price: number[];  //Données utilisées par MiniChart
@@ -36,6 +37,7 @@ export default function Page() {
     const fetchAllCoins = async () => {
         try {
             setLoading(true);
+            console.log('Starting to fetch coins...');
             
             // Fetch 800 coins
             // Limite de 250 par api fetch
@@ -46,24 +48,39 @@ export default function Page() {
                 fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=4&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`)
             ];
 
+            console.log('Fetching from API...');
             const responses = await Promise.all(fetchPromises);
             
             // Vérification du fetch
             for (let i = 0; i < responses.length; i++) {
                 if (!responses[i].ok) {
+                    console.error(`API Error for page ${i + 1}:`, responses[i].status, responses[i].statusText);
                     throw new Error(`HTTP error! status: ${responses[i].status} for page ${i + 1}`);
                 }
             }
 
+            console.log('All API calls successful, parsing data...');
             // Parse tous les reponses
             const dataPromises = responses.map(response => response.json());
             const [data1, data2, data3, data4] = await Promise.all(dataPromises);
             
+            console.log('Data lengths:', data1.length, data2.length, data3.length, data4.length);
+            
             // Combine tout le data en un
             const allData = [...data1, ...data2, ...data3, ...data4];
-            setAllCoins(allData);
+            
+            // Enlève coins dupliqué avec coin ID
+            const uniqueCoins = allData.filter((coin, index, self) => 
+                index === self.findIndex(c => c.id === coin.id)
+            );
+            
+            console.log('Total coins fetched:', allData.length);
+            console.log('Unique coins after deduplication:', uniqueCoins.length);
+            setAllCoins(uniqueCoins);
         } catch (error) {
             console.error('Erreur lors de la récupération des données:', error);
+            // Set some fallback data or empty array to prevent UI issues
+            setAllCoins([]);
         } finally {
             setLoading(false);
         }
@@ -113,13 +130,17 @@ export default function Page() {
             case 'tout':
                 return coins; // Par défaut, déjà trié par market cap
             case 'tendance':
-                //Coins avec le plus de changement de volume (simulation)
-                return [...coins].sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
+                // Coins avec plus de 2% de changement absolu sur 24h
+                return [...coins]
+                    .filter(coin => Math.abs(coin.price_change_percentage_24h) >= 2)
+                    .sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
             case 'plusvisitées':
-                //coins les plus populaires (par market cap - maintenant tous les 800 coins)
-                return [...coins].sort((a, b) => b.market_cap - a.market_cap);
+                // Coins avec volume de trading élevé (top par volume)
+                return [...coins]
+                    .filter(coin => coin.total_volume && coin.total_volume > 10000000) // Volume > 10M USD
+                    .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0));
             case 'gagnants':
-                // Coins avec les meilleurs gains sur 24h
+                // Coins avec des gains sur 24h
                 return [...coins]
                     .filter(coin => coin.price_change_percentage_24h > 0)
                     .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
