@@ -18,6 +18,7 @@ interface CoinData {
     price_change_percentage_24h: number;
     price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
     market_cap: number;
+    total_volume?: number; // Volume de trading sur 24h
     image: string;
     sparkline_in_7d?: {
         price: number[];  //Données utilisées par MiniChart
@@ -26,38 +27,68 @@ interface CoinData {
 
 export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages] = useState(20); // 800 coins = 40 per page + 20 pages
-    const [coins, setCoins] = useState<CoinData[]>([]);
+    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
+    const [allCoins, setAllCoins] = useState<CoinData[]>([]); // Store 800 coins
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('top');
+    const [activeTab, setActiveTab] = useState('tout');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Fonction pour récupérer les données de l'API CoinGecko
-    const fetchCoins = async (page = 1) => {
+    // Fonction combinée pour récupérer tous les coins (800 au total)
+    const fetchAllCoins = async () => {
         try {
             setLoading(true);
-            const response = await fetch(
-                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=40&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`
+            console.log('Starting to fetch coins...');
+            
+            // Fetch 800 coins
+            // Limite de 250 par api fetch
+            const fetchPromises = [
+                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
+                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
+                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=3&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`),
+                fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=4&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`)
+            ];
+
+            console.log('Fetching from API...');
+            const responses = await Promise.all(fetchPromises);
+            
+            // Vérification du fetch
+            for (let i = 0; i < responses.length; i++) {
+                if (!responses[i].ok) {
+                    console.error(`API Error for page ${i + 1}:`, responses[i].status, responses[i].statusText);
+                    throw new Error(`HTTP error! status: ${responses[i].status} for page ${i + 1}`);
+                }
+            }
+
+            console.log('All API calls successful, parsing data...');
+            // Parse tous les reponses
+            const dataPromises = responses.map(response => response.json());
+            const [data1, data2, data3, data4] = await Promise.all(dataPromises);
+            
+            console.log('Data lengths:', data1.length, data2.length, data3.length, data4.length);
+            
+            // Combine tout le data en un
+            const allData = [...data1, ...data2, ...data3, ...data4];
+            
+            // Enlève coins dupliqué avec coin ID
+            const uniqueCoins = allData.filter((coin, index, self) => 
+                index === self.findIndex(c => c.id === coin.id)
             );
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            setCoins(data);
+            console.log('Total coins fetched:', allData.length);
+            console.log('Unique coins after deduplication:', uniqueCoins.length);
+            setAllCoins(uniqueCoins);
         } catch (error) {
             console.error('Erreur lors de la récupération des données:', error);
-            // En cas d'erreur, on peut afficher un message à l'utilisateur
+            // Set some fallback data or empty array to prevent UI issues
+            setAllCoins([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Appeler l'API au chargement du composant
     useEffect(() => {
-        fetchCoins(currentPage);
-    }, [currentPage]);
+        fetchAllCoins();
+    }, []);
 
     // Fonction pour formater les prix
     const formatPrice = (price: number) => {
@@ -96,16 +127,20 @@ export default function Page() {
     // Fonction pour filtrer selon l'onglet actif
     const getFilteredCoinsByTab = (coins: CoinData[], tab: string) => {
         switch (tab) {
-            case 'top':
+            case 'tout':
                 return coins; // Par défaut, déjà trié par market cap
             case 'tendance':
-                //Coins avec le plus de changement de volume (simulation)
-                return [...coins].sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
+                // Coins avec plus de 2% de changement absolu sur 24h
+                return [...coins]
+                    .filter(coin => Math.abs(coin.price_change_percentage_24h) >= 2)
+                    .sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
             case 'plusvisitées':
-                //coins les plus populaires (par market cap pour l'instant)
-                return [...coins].sort((a, b) => b.market_cap - a.market_cap).slice(0, 20);
+                // Coins avec volume de trading élevé (top par volume)
+                return [...coins]
+                    .filter(coin => coin.total_volume && coin.total_volume > 10000000) // Volume > 10M USD
+                    .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0));
             case 'gagnants':
-                // Coins avec les meilleurs gains sur 24h
+                // Coins avec des gains sur 24h
                 return [...coins]
                     .filter(coin => coin.price_change_percentage_24h > 0)
                     .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
@@ -115,11 +150,31 @@ export default function Page() {
     };
 
     // Filtrer les coins selon l'onglet actif puis selon la recherche
-    const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
-    const filteredCoins = tabFilteredCoins.filter(coin =>
+    const tabFilteredCoins = getFilteredCoinsByTab(allCoins, activeTab);
+    const searchFilteredCoins = tabFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Pagination - 40 coins par page
+    const getCurrentPageCoins = () => {
+        const startIndex = (currentPage - 1) * 40;
+        const endIndex = startIndex + 40;
+        return searchFilteredCoins.slice(startIndex, endIndex);
+    };
+
+    const filteredCoins = getCurrentPageCoins();
+
+    // Update le total des pages quand la recherche ou l'onglet change
+    useEffect(() => {
+        const totalResults = searchFilteredCoins.length;
+        setTotalPages(Math.ceil(totalResults / 40));
+    }, [searchTerm, activeTab, allCoins.length]);
+
+    // Reset à page 1 quand recherche se fait
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, activeTab]);
 
     return (
         <>
@@ -137,7 +192,11 @@ export default function Page() {
                     </p>
                     
                     {/* Barre de recherche */}
-                    <SearchBar />
+                    <SearchBar 
+                        searchTerm={searchTerm}
+                        onSearchChange={setSearchTerm}
+                        placeholder="Explore crypto..."
+                    />
 
                 </div>
             </div>
@@ -147,7 +206,7 @@ export default function Page() {
                 <div className="max-w-[85rem] mx-auto">
                     {/* Titre Overview */}
                     <h2 className="text-4xl font-bold mb-10">
-                        {activeTab === 'top' && 'Top cryptomonnaies'}
+                        {activeTab === 'tout' && 'Tous cryptomonnaies'}
                         {activeTab === 'tendance' && 'Cryptomonnaies en tendance'}
                         {activeTab === 'plusvisitées' && 'Cryptomonnaies les plus visitées'}
                         {activeTab === 'gagnants' && 'Top gagnants'}
@@ -156,9 +215,15 @@ export default function Page() {
                     {/* Onglets de navigation */}
                     <div className="flex justify-between items-center mb-5 border-b border-gray-400">
                         <div className="flex space-x-8">
-                            {['Top', 'Tendance', 'Plus Visitées', 'Gagnants'].map((tab) => {
+                            {['Tout', 'Tendance', 'Plus Visitées', 'Gagnants'].map((tab) => {
                                 const tabKey = tab.toLowerCase().replace(' ', '');
-                                const tabCount = getFilteredCoinsByTab(coins, tabKey).length;
+                                // Count avec tab filter et search filter
+                                const tabFilteredCoins = getFilteredCoinsByTab(allCoins, tabKey);
+                                const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
+                                    coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+                                );
+                                const tabCount = searchAndTabFiltered.length;
                                 return (
                                     <button
                                         key={tab}
@@ -177,7 +242,7 @@ export default function Page() {
                         </div>
                         <Button 
                             variant="outlined"
-                            onClick={() => fetchCoins(currentPage)}
+                            onClick={() => fetchAllCoins()}
                             startIcon={
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -230,7 +295,7 @@ export default function Page() {
                                             const actualRank = (currentPage - 1) * 40 + index + 1;
                                             return (
                                             <tr 
-                                                key={coin.id} 
+                                                key={`${coin.id}-${currentPage}-${index}`}
                                                 className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer"
                                                 onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
                                             >

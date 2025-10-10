@@ -114,14 +114,22 @@ export default function DailyNews(): React.JSX.Element {
                 {/* Article Title */}
                 <Link 
                     href={currentNews.url} 
-                    target="_blank" 
-                    underline="hover" 
+                    target="_blank"
                     sx={{ 
                         textDecoration: 'none', 
                         mt: 1.5,
                         mb: 1.5, 
                         alignItems: 'center', 
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        color: 'white',
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s ease, filter 0.2s ease, textDecoration 0.2s ease',
+                        transformOrigin: 'center',
+                        '&:hover': {
+                            transform: 'scale(1.02)',
+                            filter: 'brightness(1.1)',
+                            textDecoration: 'underline'
+                        }
                     }}>
 
                     <Typography variant="body1" sx={{ fontSize: '1.1rem', marginLeft: 6, textAlign: 'start', lineHeight: '1.5', fontWeight: '500', color: 'white' }}>
