@@ -124,7 +124,7 @@ export default function DashboardContent() {
               height: '400px',
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
                 Top winning coins of the day
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
