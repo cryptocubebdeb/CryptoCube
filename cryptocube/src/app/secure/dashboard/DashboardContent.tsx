@@ -154,7 +154,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2, textAlign: 'center' }}>
-                Daily News
+                Nouvelles du
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <DailyNews /> {/* Dans components/DailyNews.tsx */}
@@ -187,7 +187,7 @@ export default function DashboardContent() {
           margin: '24px auto',
         }}>
             {/* Ajout de boutton dans ce div dans le future */}
-            <div>
+            {/* <div>
                 <Typography variant="h5" gutterBottom sx={{ mb: 4 }}>
                     Watchlist
                 </Typography>
@@ -196,7 +196,7 @@ export default function DashboardContent() {
 
             <Typography variant="h6" gutterBottom>
                 Votre watchlist est vide.
-            </Typography>
+            </Typography> */}
         </div>
     </>
   );
