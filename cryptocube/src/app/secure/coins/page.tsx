@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import SearchBar from '../components/SearchBar';
+import MiniChart from '../components/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -23,51 +24,9 @@ interface CoinData {
     };
 }
 
-// Composant MiniChart pour afficher le sparkline
-const MiniChart = ({ data, isPositive }: { data: number[], isPositive: boolean }) => {
-    if (!data || data.length === 0) {
-        return (
-            <div className="w-20 h-8 bg-gray-100 rounded flex items-center justify-center text-xs">
-                No data
-            </div>
-        );
-    }
-    //dimensions du graphique 
-    const width = 80;
-    const height = 32;
-    const padding = 4;
-
-    // Calculer min et max pour normaliser les données
-    const minPrice = Math.min(...data);
-    const maxPrice = Math.max(...data);
-    const priceRange = maxPrice - minPrice;
-
-    // Créer les points SVG
-    const points = data.map((price, index) => {
-        const x = padding + (index / (data.length - 1)) * (width - 2 * padding); //Distribue uniformément les points horizontalement
-        const y = height - padding - ((price - minPrice) / priceRange) * (height - 2 * padding); // Convertit le prix en position verticale 
-        return `${x},${y}`;
-    }).join(' ');
-
-    return (
-        <div className="w-20 h-8">
-            <svg width={width} height={height} className="w-full h-full">
-                <polyline   //pour dessiner la ligne du graphique
-                    points={points}
-                    fill="none"
-                    stroke={isPositive ? "#10b981" : "#ef4444"}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </div>
-    );
-};
-
 export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages] = useState(20); // 400 coins = 20 per page + 20 pages
+    const [totalPages] = useState(20); // 800 coins = 40 per page + 20 pages
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('top');
@@ -78,7 +37,7 @@ export default function Page() {
         try {
             setLoading(true);
             const response = await fetch(
-                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`
+                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=40&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`
             );
             
             if (!response.ok) {
@@ -268,9 +227,13 @@ export default function Page() {
                                         </tr>
                                     ) : (
                                         filteredCoins.map((coin, index) => {
-                                            const actualRank = (currentPage - 1) * 20 + index + 1;
+                                            const actualRank = (currentPage - 1) * 40 + index + 1;
                                             return (
-                                            <tr key={coin.id} className="border-b border-gray-500 hover:bg-zinc-900 transition-colors">
+                                            <tr 
+                                                key={coin.id} 
+                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer"
+                                                onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                                            >
                                                 <td className="py-6 px-4">
                                                     <div className="flex items-center space-x-2">
                                                         <button className="text-gray-400 hover:text-yellow-500 transition-colors">

@@ -4,6 +4,7 @@ import { CircularProgress, Box, Avatar, Typography } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { getTopCoins } from '../../../lib/getTopCoins';
+import MiniChart from '../MiniChart';
 
 interface Coin {
     id: string;
@@ -12,6 +13,8 @@ interface Coin {
     image: string;
     current_price: number;
     price_change_percentage_24h: number;
+    price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
+    sparkline_in_7d?: { price: number[] }; // Pour MiniChart
 }
 
 export default function TopWinningCoins(): React.JSX.Element {
@@ -51,7 +54,7 @@ export default function TopWinningCoins(): React.JSX.Element {
     }
 
     return (
-        <Box sx={{ p: 1 }}>
+        <Box sx={{ pt: 1 }}>
             {coins.slice(0, 5).map((coin, index) => (
                 <Box
                     key={coin.id}
@@ -61,9 +64,17 @@ export default function TopWinningCoins(): React.JSX.Element {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         marginLeft: 1,
+                        paddingLeft: 2,
+                        paddingRight: 2,
                         py: 2,
                         borderBottom: index < 4 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                        cursor: 'pointer',
+                        '&:hover': {
+                            backgroundColor: '#1a1a20ff',
+                        },
+                        transition: 'background-color 0.2s ease',
                     }}
+                    onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
                 >
                     {/* Logo, nom et symbole */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -90,7 +101,7 @@ export default function TopWinningCoins(): React.JSX.Element {
                         ${coin.current_price.toFixed(2)}
                     </Typography>
                     
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 2.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 2, marginRight: 2 }}>
                         {coin.price_change_percentage_24h >= 0 ? (
                             <TrendingUpIcon sx={{ color: '#4caf50', fontSize: '1rem' }} />
                         ) : (
@@ -105,6 +116,12 @@ export default function TopWinningCoins(): React.JSX.Element {
                             {coin.price_change_percentage_24h.toFixed(2)}%
                         </Typography>
                     </Box>
+
+                    <MiniChart
+                        data={coin.sparkline_in_7d?.price || []}
+                        isPositive={(coin.price_change_percentage_24h || 0) >= 0}
+                        timeframe="24h"
+                    />
                 </Box>
             </Box>
         ))}
