@@ -13,13 +13,13 @@ export default async function Page() {
     <div className={styles.headline}>
       <div className="text-center mx-auto space-y-8">
           {/* Main Title */}
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Navigate the World of Crypto with Ease
+          <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
+              Naviguez dans le monde de la cryptomonnaie en toute simplicité.
           </h1>
           
           {/* Subtitle */}
           <p className="text-xl md:text-2xl font-light opacity-75">
-              Simple. Fast. Transparent.
+              Simple. Rapide. Transparent.
           </p>
       </div>
 
