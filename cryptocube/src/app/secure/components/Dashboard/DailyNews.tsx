@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Link, Avatar } from '@mui/material';
-import { getCryptoNews } from '../../lib/getCryptoNews';
+import { getCryptoNews } from '../../../lib/getCryptoNews';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 

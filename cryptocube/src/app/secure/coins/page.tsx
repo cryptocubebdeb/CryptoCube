@@ -2,6 +2,11 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import SearchBar from '../components/Dashboard/SearchBar';
+import MiniChart from '../components/Dashboard/MiniChart';
+import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 // Interface pour les données de cryptomonnaies
 interface CoinData {
@@ -19,60 +24,20 @@ interface CoinData {
     };
 }
 
-// Composant MiniChart pour afficher le sparkline
-const MiniChart = ({ data, isPositive }: { data: number[], isPositive: boolean }) => {
-    if (!data || data.length === 0) {
-        return (
-            <div className="w-20 h-8 bg-gray-100 rounded flex items-center justify-center text-xs">
-                No data
-            </div>
-        );
-    }
-    //dimensions du graphique 
-    const width = 80;
-    const height = 32;
-    const padding = 4;
-
-    // Calculer min et max pour normaliser les données
-    const minPrice = Math.min(...data);
-    const maxPrice = Math.max(...data);
-    const priceRange = maxPrice - minPrice;
-
-    // Créer les points SVG
-    const points = data.map((price, index) => {
-        const x = padding + (index / (data.length - 1)) * (width - 2 * padding); //Distribue uniformément les points horizontalement
-        const y = height - padding - ((price - minPrice) / priceRange) * (height - 2 * padding); // Convertit le prix en position verticale 
-        return `${x},${y}`;
-    }).join(' ');
-
-    return (
-        <div className="w-20 h-8">
-            <svg width={width} height={height} className="w-full h-full">
-                <polyline   //pour dessiner la ligne du graphique
-                    points={points}
-                    fill="none"
-                    stroke={isPositive ? "#10b981" : "#ef4444"}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </div>
-    );
-};
-
 export default function Page() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages] = useState(20); // 800 coins = 40 per page + 20 pages
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('top');
     const [searchTerm, setSearchTerm] = useState('');
 
     // Fonction pour récupérer les données de l'API CoinGecko
-    const fetchCoins = async () => {
+    const fetchCoins = async (page = 1) => {
         try {
             setLoading(true);
             const response = await fetch(
-                'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en'
+                `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=40&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`
             );
             
             if (!response.ok) {
@@ -91,8 +56,8 @@ export default function Page() {
 
     // Appeler l'API au chargement du composant
     useEffect(() => {
-        fetchCoins();
-    }, []);
+        fetchCoins(currentPage);
+    }, [currentPage]);
 
     // Fonction pour formater les prix
     const formatPrice = (price: number) => {
@@ -117,8 +82,13 @@ export default function Page() {
         if (percentage === undefined) return <span className="text-gray-400">N/A</span>;
         const isPositive = percentage >= 0;
         return (
-            <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
-                {isPositive ? '▲' : '▼'} {Math.abs(percentage).toFixed(2)}%
+            <span className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                {isPositive ? (
+                    <TrendingUpIcon sx={{ fontSize: '1rem' }} />
+                ) : (
+                    <TrendingDownIcon sx={{ fontSize: '1rem' }} />
+                )}
+                {Math.abs(percentage).toFixed(2)}%
             </span>
         );
     };
@@ -128,13 +98,13 @@ export default function Page() {
         switch (tab) {
             case 'top':
                 return coins; // Par défaut, déjà trié par market cap
-            case 'trending':
+            case 'tendance':
                 //Coins avec le plus de changement de volume (simulation)
                 return [...coins].sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
-            case 'mostvisited':
+            case 'plusvisitées':
                 //coins les plus populaires (par market cap pour l'instant)
                 return [...coins].sort((a, b) => b.market_cap - a.market_cap).slice(0, 20);
-            case 'gainers':
+            case 'gagnants':
                 // Coins avec les meilleurs gains sur 24h
                 return [...coins]
                     .filter(coin => coin.price_change_percentage_24h > 0)
@@ -155,62 +125,48 @@ export default function Page() {
         <>
             {/* Hero Section */}
             <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
-                <div className="text-center max-w-4xl mx-auto space-y-8">
+                <div className="text-center mx-auto space-y-8">
                     {/* Main Title */}
-                    <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                        Navigate the World of Crypto with Ease
+                    <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
+                        Naviguez dans le monde de la cryptomonnaie en toute simplicité.
                     </h1>
                     
                     {/* Subtitle */}
                     <p className="text-xl md:text-2xl font-light opacity-75">
-                        Simple. Fast. Transparent.
+                        Simple. Rapide. Transparent.
                     </p>
                     
                     {/* Barre de recherche */}
-                    <div className="max-w-2xl mx-auto mt-8">
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg className="h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Explore crypto..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                        </div>
-                    </div>
+                    <SearchBar />
+
                 </div>
             </div>
 
             {/* Section des cryptomonnaies */}
-            <div className="min-h-screen p-8">
-                <div className="max-w-7xl mx-auto">
+            <div className="min-h-screen">
+                <div className="max-w-[85rem] mx-auto">
                     {/* Titre Overview */}
-                    <h2 className="text-3xl font-bold mb-8">
-                        {activeTab === 'top' && 'Top Cryptocurrencies'}
-                        {activeTab === 'trending' && 'Trending Cryptocurrencies'}
-                        {activeTab === 'mostvisited' && 'Most Visited Cryptocurrencies'}
-                        {activeTab === 'gainers' && 'Top Gainers'}
+                    <h2 className="text-4xl font-bold mb-10">
+                        {activeTab === 'top' && 'Top cryptomonnaies'}
+                        {activeTab === 'tendance' && 'Cryptomonnaies en tendance'}
+                        {activeTab === 'plusvisitées' && 'Cryptomonnaies les plus visitées'}
+                        {activeTab === 'gagnants' && 'Top gagnants'}
                     </h2>
                     
                     {/* Onglets de navigation */}
-                    <div className="flex justify-between items-center mb-8 border-b border-gray-200">
+                    <div className="flex justify-between items-center mb-5 border-b border-gray-400">
                         <div className="flex space-x-8">
-                            {['Top', 'Trending', 'Most Visited', 'Gainers'].map((tab) => {
+                            {['Top', 'Tendance', 'Plus Visitées', 'Gagnants'].map((tab) => {
                                 const tabKey = tab.toLowerCase().replace(' ', '');
                                 const tabCount = getFilteredCoinsByTab(coins, tabKey).length;
                                 return (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tabKey)}
-                                        className={`pb-2 px-1 font-medium text-sm transition-colors ${
+                                        className={`pb-4 px-1 text-md transition-colors ${
                                             activeTab === tabKey
                                                 ? 'border-b-2 border-blue-500 text-blue-600'
-                                                : 'text-gray-500 hover:text-gray-700'
+                                                : 'text-gray-500 hover:text-gray-300'
                                         }`}
                                     >
                                         {tab}
@@ -219,15 +175,18 @@ export default function Page() {
                                 );
                             })}
                         </div>
-                        <button 
-                            onClick={fetchCoins}
-                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        <Button 
+                            variant="outlined"
+                            onClick={() => fetchCoins(currentPage)}
+                            startIcon={
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            }
+                            sx={{ mt: -1, mb: 1 }}
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            <span>Refresh</span>
-                        </button>
+                            Refresh
+                        </Button>
                     </div>
 
                     {/* Tableau des cryptomonnaies */}
@@ -240,15 +199,15 @@ export default function Page() {
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="border-b border-gray-200">
+                                    <tr className="border-b border-gray-400">
                                         <th className="text-left py-4 px-4 font-medium text-gray-500">#</th>
-                                        <th className="text-left py-4 px-4 font-medium text-gray-500">Name</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Price</th>
+                                        <th className="text-left py-4 px-4 font-medium text-gray-500">Nom</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Prix</th>
                                         <th className="text-right py-4 px-4 font-medium text-gray-500">1h %</th>
                                         <th className="text-right py-4 px-4 font-medium text-gray-500">24h %</th>
                                         <th className="text-right py-4 px-4 font-medium text-gray-500">7d %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Market Cap</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Last 7 Days</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Capitalisation</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Derniers 7 jours</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -267,17 +226,23 @@ export default function Page() {
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredCoins.map((coin, index) => (
-                                            <tr key={coin.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                                <td className="py-4 px-4">
+                                        filteredCoins.map((coin, index) => {
+                                            const actualRank = (currentPage - 1) * 40 + index + 1;
+                                            return (
+                                            <tr 
+                                                key={coin.id} 
+                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer"
+                                                onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                                            >
+                                                <td className="py-6 px-4">
                                                     <div className="flex items-center space-x-2">
                                                         <button className="text-gray-400 hover:text-yellow-500 transition-colors">
                                                             
                                                         </button>
-                                                        <span className="font-medium">{index + 1}</span>
+                                                        <span className="font-medium">{actualRank}</span>
                                                     </div>
                                                 </td>
-                                                <td className="py-4 px-4">
+                                                <td className="py-6 px-4">
                                                     <div className="flex items-center space-x-3">
                                                         <img 
                                                             src={coin.image} 
@@ -287,38 +252,127 @@ export default function Page() {
                                                                 e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==';
                                                             }}
                                                         />
-                                                        <div>
+                                                        <div className="flex flex-row items-baseline gap-2">
                                                             <div className="font-medium">{coin.name}</div>
                                                             <div className="text-sm text-gray-500 uppercase">{coin.symbol}</div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="py-4 px-4 text-right font-medium">
+                                                <td className="py-6 px-4 text-right font-medium">
                                                     {formatPrice(coin.current_price)}
                                                 </td>
-                                                <td className="py-4 px-4 text-right">
+                                                <td className="py-6 px-4 text-right">
                                                     {formatPercentage(coin.price_change_percentage_1h_in_currency)}
                                                 </td>
-                                                <td className="py-4 px-4 text-right">
+                                                <td className="py-6 px-4 text-right">
                                                     {formatPercentage(coin.price_change_percentage_24h)}
                                                 </td>
-                                                <td className="py-4 px-4 text-right">
+                                                <td className="py-6 px-4 text-right">
                                                     {formatPercentage(coin.price_change_percentage_7d_in_currency)}
                                                 </td>
-                                                <td className="py-4 px-4 text-right font-medium">
+                                                <td className="py-6 px-4 text-right font-medium">
                                                     {formatMarketCap(coin.market_cap)}
                                                 </td>
-                                                <td className="py-4 px-4 text-right">
-                                                    <MiniChart 
-                                                        data={coin.sparkline_in_7d?.price || []} 
-                                                        isPositive={(coin.price_change_percentage_7d_in_currency || 0) >= 0}
-                                                    />
+                                                <td className="py-6 px-4 text-center">
+                                                    <div className="flex justify-end">
+                                                        <MiniChart 
+                                                            data={coin.sparkline_in_7d?.price || []} 
+                                                            isPositive={(coin.price_change_percentage_7d_in_currency || 0) >= 0}
+                                                        />
+                                                    </div>
                                                 </td>
                                             </tr>
-                                        ))
+                                        )})
                                     )}
                                 </tbody>
                             </table>
+
+                            {/* Pagination */}
+                            <div className="flex justify-center items-center space-x-4 my-8">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className={`p-2 rounded transition-transform ${currentPage === 1 
+                                        ? 'text-gray-400 cursor-not-allowed' 
+                                        : 'text-white hover:scale-125'
+                                    }`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+
+                                {/* Page Numbers */}
+                                {(() => {
+                                    const pages = [];
+                                    const startPage = Math.max(1, currentPage - 2);
+                                    const endPage = Math.min(totalPages, currentPage + 2);
+
+                                    // Première page
+                                    if (startPage > 1) {
+                                        pages.push(
+                                            <button
+                                                key={1}
+                                                onClick={() => setCurrentPage(1)}
+                                                className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
+                                            >
+                                                1
+                                            </button>
+                                        );
+                                        if (startPage > 2) {
+                                            pages.push(<span key="dots1" className="px-2 text-gray-400">...</span>);
+                                        }
+                                    }
+
+                                    // Milieu
+                                    for (let i = startPage; i <= endPage; i++) {
+                                        pages.push(
+                                            <button
+                                                key={i}
+                                                onClick={() => setCurrentPage(i)}
+                                                className={`px-3 py-1 rounded border ${i === currentPage 
+                                                    ? 'bg-blue-500 text-white border-blue-500' 
+                                                    : 'text-blue-500 border-transparent hover:border-blue-500'
+                                                }`}
+                                            >
+                                                {i}
+                                            </button>
+                                        );
+                                    }
+
+                                    // Dernière page
+                                    if (endPage < totalPages) {
+                                        if (endPage < totalPages - 1) {
+                                            pages.push(<span key="dots2" className="px-2 text-gray-400">...</span>);
+                                        }
+
+                                        pages.push(
+                                            <button
+                                                key={totalPages}
+                                                onClick={() => setCurrentPage(totalPages)}
+                                                className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
+                                            >
+                                                {totalPages}
+                                            </button>
+                                        );
+                                    }
+
+                                    return pages;
+                                })()}
+
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className={`p-2 rounded transition-transform ${currentPage === totalPages 
+                                        ? 'text-gray-400 cursor-not-allowed' 
+                                        : 'text-white hover:scale-125'
+                                    }`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>

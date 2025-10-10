@@ -5,59 +5,23 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
-import CircularMarketMeter from '../components/CircularMarketMeter';
-import TopWinningCoins from '../components/TopWinningCoins';
-import TopLoserCoins from '../components/TopLoserCoins';
-import DailyNews from '../components/DailyNews';
+import CircularMarketMeter from '../components/Dashboard/CircularMarketMeter';
+import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
+import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
+import DailyNews from '../components/Dashboard/DailyNews';
+import SearchBar from '../components/Dashboard/SearchBar';
 
 export default function DashboardContent() {
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          mt: 4,
-          width: '100%',
-          px: 2
-        }}
-      >
-        <TextField
-          variant="outlined"
-          placeholder="Explore la cryptomonnaie..."
-          sx={{
-            width: '70%',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '50px',
-              '& fieldset': {
-                borderColor: '#434344ff', // Change border color (default state)
-                borderWidth: '2px', // Make border thicker
-              },
-              '&:hover fieldset': {
-                borderColor: '#989898ff', // Border color on hover
-                borderWidth: '2px',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#989898ff', // Border color when focused
-                borderWidth: '2px',
-              },
-            }
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color='action' />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+      {/* Search Bar */}
+      <SearchBar />
 
       <div
           style={{
               borderRadius: '20px',
               padding: '16px',
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               textAlign: 'center',
               flexDirection: 'column',
               display: 'flex',
@@ -85,17 +49,24 @@ export default function DashboardContent() {
           </Typography>
 
           <Button
-                variant="contained"
+                variant="outlined"
                 href="/secure/simulator"
                 sx={{
                     mt: 5,
                     mb: 1,
                     padding: '16px 40px',
                     borderRadius: '15px',
-                    backgroundColor: '#FFDD00',
-                    color: '#000000',
+                    borderColor: '#FFDD00',
+                    borderWidth: '1.5px',
+                    color: '#FFDD00',
                     fontWeight: 'bold',
-                    '&:hover': { backgroundColor: '#e6c200' } 
+                    transition: 'all 0.3s ease',
+                    '&:hover': { 
+                        backgroundColor: '#e6c200', 
+                        color: 'black',
+                        borderColor: '#e6c200',
+                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                    } 
                 }}
             >
                 Essayez le simulateur
@@ -124,7 +95,7 @@ export default function DashboardContent() {
           {/* Market Status */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -146,7 +117,7 @@ export default function DashboardContent() {
           {/* Top winning coins */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -175,7 +146,7 @@ export default function DashboardContent() {
           {/* Daily News */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -193,7 +164,7 @@ export default function DashboardContent() {
           {/* Top losing coins */}
           <div
             style={{
-              backgroundColor: '#15171E',
+              backgroundColor: '#141418ff',
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
