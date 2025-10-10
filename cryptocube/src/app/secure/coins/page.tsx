@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import SearchBar from '../components/SearchBar';
-import MiniChart from '../components/MiniChart';
+import SearchBar from '../components/Dashboard/SearchBar';
+import MiniChart from '../components/Dashboard/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';

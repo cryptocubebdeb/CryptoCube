@@ -9,7 +9,7 @@ import CircularMarketMeter from '../components/Dashboard/CircularMarketMeter';
 import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/Dashboard/SearchBar';
 
 export default function DashboardContent() {
   return (
@@ -49,17 +49,24 @@ export default function DashboardContent() {
           </Typography>
 
           <Button
-                variant="contained"
+                variant="outlined"
                 href="/secure/simulator"
                 sx={{
                     mt: 5,
                     mb: 1,
                     padding: '16px 40px',
                     borderRadius: '15px',
-                    backgroundColor: '#FFDD00',
-                    color: '#000000',
+                    borderColor: '#FFDD00',
+                    borderWidth: '1.5px',
+                    color: '#FFDD00',
                     fontWeight: 'bold',
-                    '&:hover': { backgroundColor: '#e6c200' } 
+                    transition: 'all 0.3s ease',
+                    '&:hover': { 
+                        backgroundColor: '#e6c200', 
+                        color: 'black',
+                        borderColor: '#e6c200',
+                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                    } 
                 }}
             >
                 Essayez le simulateur

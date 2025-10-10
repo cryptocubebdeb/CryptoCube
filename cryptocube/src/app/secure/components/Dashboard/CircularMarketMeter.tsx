@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Box, Typography } from '@mui/material';
+import { CircularProgress, Box, Typography, Divider } from '@mui/material';
 import { getMarketData } from '../../../lib/getMarketData';
 
 // Type for market data
@@ -65,50 +65,87 @@ export default function CircularMarketMeter(): React.JSX.Element {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
-             <Box sx={{ mr: 10 }}>
-                <Typography variant="body2" sx={{ fontSize: '1.1rem', mt: 2, textAlign: 'start', color: 'white' }}>
-                    Changement du market cap (24h): {marketCapChangePercentage.toFixed(2)}%
+        <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 3,
+            py: 2,
+            width: '100%',
+            }}
+        >
+            <Box sx={{ flex: 1, textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', mb: 2 }}>
+                    État du marché
                 </Typography>
 
-                <Typography variant="body2" sx={{ fontSize: '1.1rem', mt: 4, textAlign: 'start', color: 'white' }}>
-                    Total Market Cap: ${(marketData.data.total_market_cap?.usd / 1e12).toFixed(2)}T
-                </Typography>
+                {/* Variation de la capitalisation */}
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', mb: 0.5 }}>
+                        Variation de la capitalisation (24h)
+                    </Typography>
+
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: marketCapChangePercentage >= 0 ? '#4caf50' : '#ff4d4d' }}>
+                        {marketCapChangePercentage.toFixed(2)}%
+                    </Typography>
+                </Box>
+
+                {/* Capitalisation totale du marché */}
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', mb: 0.5 }}>
+                        Capitalisation totale du marché
+                    </Typography>
+
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: marketCapChangePercentage >= 0 ? '#4caf50' : '#ff4d4d' }}>
+                        ${(marketData.data.total_market_cap?.usd / 1e12).toFixed(2)}T
+                    </Typography>
+                </Box>
             </Box>
 
-            <Box sx={{ position: 'relative', display: 'inline-flex', mr: 4 }}>
-                <CircularProgress
-                    variant="determinate"
-                    value={sentiment}
-                    size={150}
-                    thickness={8}
-                    sx={{
-                        color: getColor(sentiment),
-                        '& .MuiCircularProgress-circle': {
-                            strokeLinecap: 'round',
-                        },
-                    }}
-                />
-                <Box
-                    sx={{
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        position: 'absolute',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column'
-                    }}
-                >
-                    <Typography variant="h6" component="div" color="white">
-                        {Math.round(sentiment)}%
-                    </Typography>
+            {/* Séparateur */}
+            <Divider 
+                orientation="vertical" 
+                flexItem 
+                sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', alignSelf: 'stretch', height: '200px' }} 
+            />
 
-                    <Typography variant="caption" sx={{ color: getColor(sentiment) }}>
-                        {getSentimentText(sentiment)}
-                    </Typography>
+            {/* Cercle de sentiment */}
+            <Box sx={{ flex: 1, mb: 3, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ position: 'relative', mr: 3, display: 'inline-flex' }}>
+                    <CircularProgress
+                        variant="determinate"
+                        value={sentiment}
+                        size={150}
+                        thickness={8}
+                        sx={{
+                            color: getColor(sentiment),
+                            '& .MuiCircularProgress-circle': {
+                                strokeLinecap: 'round',
+                            },
+                        }}
+                    />
+                    
+                    <Box
+                        sx={{
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+                            position: 'absolute',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column'
+                        }}
+                    >
+                        <Typography variant="h6" component="div" color="white">
+                            {Math.round(sentiment)}%
+                        </Typography>
+
+                        <Typography variant="caption" sx={{ color: getColor(sentiment) }}>
+                            {getSentimentText(sentiment)}
+                        </Typography>
+                    </Box>
                 </Box>
             </Box>
             

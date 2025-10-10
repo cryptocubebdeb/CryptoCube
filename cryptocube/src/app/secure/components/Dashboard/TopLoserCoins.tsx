@@ -4,7 +4,7 @@ import { CircularProgress, Box, Avatar, Typography } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { getTopCoins } from '../../../lib/getTopCoins';
-import MiniChart from '../MiniChart';
+import MiniChart from './MiniChart';
 
 interface Coin {
     id: string;
