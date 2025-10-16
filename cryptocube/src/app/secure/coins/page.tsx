@@ -220,18 +220,18 @@ export default function Page() {
                             <p className="mt-4 text-gray-500">Chargement des données...</p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
+                        <div className="overflow-x-auto min-h-[2920px]">
+                            <table className="w-full table-fixed">
                                 <thead>
                                     <tr className="border-b border-gray-400">
-                                        <th className="text-left py-4 px-4 font-medium text-gray-500">#</th>
-                                        <th className="text-left py-4 px-4 font-medium text-gray-500">Nom</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Prix</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">1h %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">24h %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">7d %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Capitalisation</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500">Derniers 7 jours</th>
+                                        <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
+                                        <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Nom</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Prix</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">1h %</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Capitalisation</th>
+                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Derniers 7 jours</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -250,15 +250,16 @@ export default function Page() {
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredCoins.map((coin, index) => {
-                                            const actualRank = (currentPage - 1) * 40 + index + 1;
-                                            return (
-                                            <tr 
-                                                key={`${coin.id}-${currentPage}-${index}`}
-                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer"
-                                                onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
-                                            >
-                                                <td className="py-6 px-4">
+                                        <>
+                                            {filteredCoins.map((coin, index) => {
+                                                const actualRank = (currentPage - 1) * 40 + index + 1;
+                                                return (
+                                                <tr 
+                                                    key={`${coin.id}-${currentPage}-${index}`}
+                                                    className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
+                                                    onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                                                >
+                                                <td className="py-6 px-4 w-16">
                                                     <div className="flex items-center space-x-2">
                                                         <button className="text-gray-400 hover:text-yellow-500 transition-colors">
                                                             
@@ -266,38 +267,42 @@ export default function Page() {
                                                         <span className="font-medium">{actualRank}</span>
                                                     </div>
                                                 </td>
-                                                <td className="py-6 px-4">
+                                                <td className="py-6 px-4 w-64">
                                                     <div className="flex items-center space-x-3">
                                                         <img 
                                                             src={coin.image} 
                                                             alt={coin.name}
-                                                            className="w-8 h-8 rounded-full"
+                                                            className="w-8 h-8 rounded-full flex-shrink-0"
                                                             onError={(e) => {
                                                                 e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==';
                                                             }}
                                                         />
-                                                        <div className="flex flex-row items-baseline gap-2">
-                                                            <div className="font-medium">{coin.name}</div>
-                                                            <div className="text-sm text-gray-500 uppercase">{coin.symbol}</div>
+                                                        <div className="flex flex-col min-w-0 flex-1">
+                                                            <div className="font-medium truncate max-w-[200px]" title={coin.name}>
+                                                                {coin.name}
+                                                            </div>
+                                                            <div className="text-sm text-gray-500 uppercase">
+                                                                {coin.symbol}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="py-6 px-4 text-right font-medium">
+                                                <td className="py-6 px-4 text-right font-medium w-32">
                                                     {formatPrice(coin.current_price)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right">
+                                                <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(coin.price_change_percentage_1h_in_currency)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right">
+                                                <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(coin.price_change_percentage_24h)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right">
+                                                <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(coin.price_change_percentage_7d_in_currency)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right font-medium">
+                                                <td className="py-6 px-4 text-right font-medium w-40">
                                                     {formatMarketCap(coin.market_cap)}
                                                 </td>
-                                                <td className="py-6 px-4 text-center">
+                                                <td className="py-6 px-4 text-center w-32">
                                                     <div className="flex justify-end">
                                                         <MiniChart 
                                                             data={coin.sparkline_in_7d?.price || []} 
@@ -306,7 +311,8 @@ export default function Page() {
                                                     </div>
                                                 </td>
                                             </tr>
-                                        )})
+                                        )})}
+                                        </>
                                     )}
                                 </tbody>
                             </table>
