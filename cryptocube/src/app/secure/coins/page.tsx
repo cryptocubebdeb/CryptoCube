@@ -220,8 +220,8 @@ export default function Page() {
                             <p className="mt-4 text-gray-500">Chargement des données...</p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
+                        <div className="overflow-x-auto min-h-[2920px]">
+                            <table className="w-full table-fixed">
                                 <thead>
                                     <tr className="border-b border-gray-400">
                                         <th className="text-left py-4 px-4 font-medium text-gray-500">#</th>
@@ -250,14 +250,15 @@ export default function Page() {
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredCoins.map((coin, index) => {
-                                            const actualRank = (currentPage - 1) * 40 + index + 1;
-                                            return (
-                                            <tr 
-                                                key={`${coin.id}-${currentPage}-${index}`}
-                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer"
-                                                onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
-                                            >
+                                        <>
+                                            {filteredCoins.map((coin, index) => {
+                                                const actualRank = (currentPage - 1) * 40 + index + 1;
+                                                return (
+                                                <tr 
+                                                    key={`${coin.id}-${currentPage}-${index}`}
+                                                    className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
+                                                    onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                                                >
                                                 <td className="py-6 px-4">
                                                     <div className="flex items-center space-x-2">
                                                         <button className="text-gray-400 hover:text-yellow-500 transition-colors">
@@ -306,7 +307,8 @@ export default function Page() {
                                                     </div>
                                                 </td>
                                             </tr>
-                                        )})
+                                        )})}
+                                        </>
                                     )}
                                 </tbody>
                             </table>
