@@ -13,6 +13,7 @@ export default function Navbar() {
   const Links = [
     { href: "/secure/dashboard", text: "Accueil" },
     { href: "/secure/coins", text: "Coins" },
+    { href: "/secure/categories", text: "Catégories" },
     { href: "/secure/simulator", text: "Simulateur" },
     { href: "/secure/community", text: "Communauté" },
     { href: "/secure/about", text: "À propos" },
