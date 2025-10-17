@@ -3,12 +3,6 @@ import styles from './page.module.css'
 import DashboardContent from './DashboardContent';
 
 export default async function Page() {
-  const session = await auth();
-    
-  if (!session) {
-    return <p>You must be signed in to view this page.</p>;
-  } 
-
   return (
     <div className={styles.headline}>
       <div className="text-center mx-auto space-y-8">
