@@ -29,7 +29,6 @@ interface CoinData {
 
 export default function Page() {
     const { data: session } = useSession();
-    const userKey = (session as any)?.user?.email || null; // used for localStorage key
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
     const [loading, setLoading] = useState(true);
@@ -120,38 +119,73 @@ export default function Page() {
 
     // Watchlist
     const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
+    const [watchlistLoading, setWatchlistLoading] = useState(false);
 
+    // Charger la watchlist depuis l'API
     useEffect(() => {
-        if (!userKey) return setUserWatchlist(new Set());
-        try {
-            const raw = localStorage.getItem(`watchlist:${userKey}`);
-            const arr = raw ? JSON.parse(raw) as string[] : [];
-            setUserWatchlist(new Set(arr));
-        } catch (e) {
+        if (!session?.user?.email) {
             setUserWatchlist(new Set());
+            return;
         }
-    }, [userKey]);
 
-    const saveWatchlist = (set: Set<string>) => {
-        if (!userKey) return;
-        const arr = Array.from(set);
-        localStorage.setItem(`watchlist:${userKey}`, JSON.stringify(arr));
-    };
+        const loadWatchlist = async () => {
+            try {
+                const response = await fetch('/api/watchlist');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserWatchlist(new Set(data.coinIds || []));
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement de la watchlist:', error);
+            }
+        };
 
-    const toggleWatch = (e: React.MouseEvent, coinId: string) => {
+        loadWatchlist();
+    }, [session?.user?.email]);
+
+    const toggleWatch = async (e: React.MouseEvent, coinId: string) => {
         e.stopPropagation(); // prevent row click navigation
-        if (!userKey) {
-            // optionally redirect to login
+        
+        if (!session?.user?.email) {
             window.location.href = '/auth/login';
             return;
         }
-        setUserWatchlist(prev => {
-            const next = new Set(prev);
-            if (next.has(coinId)) next.delete(coinId);
-            else next.add(coinId);
-            saveWatchlist(next);
-            return next;
-        });
+
+        if (watchlistLoading) return; // Empêcher les clics multiples
+
+        setWatchlistLoading(true);
+        
+        try {
+            const isInWatchlist = userWatchlist.has(coinId);
+            const method = isInWatchlist ? 'DELETE' : 'POST';
+            
+            const response = await fetch('/api/watchlist', {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ coinId }),
+            });
+
+            if (response.ok) {
+                // Mettre à jour l'état local
+                setUserWatchlist(prev => {
+                    const next = new Set(prev);
+                    if (isInWatchlist) {
+                        next.delete(coinId);
+                    } else {
+                        next.add(coinId);
+                    }
+                    return next;
+                });
+            } else {
+                console.error('Erreur lors de la mise à jour de la watchlist');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour de la watchlist:', error);
+        } finally {
+            setWatchlistLoading(false);
+        }
     };
 ////////
 
@@ -301,10 +335,12 @@ export default function Page() {
                                                 >
                                                 <td className="py-6 px-4 w-16">
                                                     <div className="flex items-center space-x-2">
-                                                        {userKey ? (
+                                                        {session?.user?.email ? (
                                                             <button
                                                                 onClick={(e) => toggleWatch(e, coin.id)}
-                                                                className={`transition-colors p-1 rounded ${userWatchlist.has(coin.id) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'}`}
+                                                                className={`transition-colors p-1 rounded ${userWatchlist.has(coin.id) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${
+                                                                    watchlistLoading ? 'opacity-50' : ''
+                                                                }`}
                                                                 aria-label={userWatchlist.has(coin.id) ? 'Remove from watchlist' : 'Add to watchlist'}
                                                             >
                                                                 {/* Star SVG */}
