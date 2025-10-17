@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { useSession } from 'next-auth/react';
 import SearchBar from '../components/SearchBar';
 import MiniChart from '../components/Dashboard/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
@@ -27,6 +28,8 @@ interface CoinData {
 }
 
 export default function Page() {
+    const { data: session } = useSession();
+    const userKey = (session as any)?.user?.email || null; // used for localStorage key
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
     const [loading, setLoading] = useState(true);
@@ -114,6 +117,43 @@ export default function Page() {
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Watchlist
+    const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
+
+    useEffect(() => {
+        if (!userKey) return setUserWatchlist(new Set());
+        try {
+            const raw = localStorage.getItem(`watchlist:${userKey}`);
+            const arr = raw ? JSON.parse(raw) as string[] : [];
+            setUserWatchlist(new Set(arr));
+        } catch (e) {
+            setUserWatchlist(new Set());
+        }
+    }, [userKey]);
+
+    const saveWatchlist = (set: Set<string>) => {
+        if (!userKey) return;
+        const arr = Array.from(set);
+        localStorage.setItem(`watchlist:${userKey}`, JSON.stringify(arr));
+    };
+
+    const toggleWatch = (e: React.MouseEvent, coinId: string) => {
+        e.stopPropagation(); // prevent row click navigation
+        if (!userKey) {
+            // optionally redirect to login
+            window.location.href = '/auth/login';
+            return;
+        }
+        setUserWatchlist(prev => {
+            const next = new Set(prev);
+            if (next.has(coinId)) next.delete(coinId);
+            else next.add(coinId);
+            saveWatchlist(next);
+            return next;
+        });
+    };
+////////
 
     // Pagination - 40 coins par page
     const getCurrentPageCoins = () => {
@@ -261,9 +301,26 @@ export default function Page() {
                                                 >
                                                 <td className="py-6 px-4 w-16">
                                                     <div className="flex items-center space-x-2">
-                                                        <button className="text-gray-400 hover:text-yellow-500 transition-colors">
-                                                            
-                                                        </button>
+                                                        {userKey ? (
+                                                            <button
+                                                                onClick={(e) => toggleWatch(e, coin.id)}
+                                                                className={`transition-colors p-1 rounded ${userWatchlist.has(coin.id) ? 'text-blue-500' : 'text-gray-400 hover:text-blue-400'}`}
+                                                                aria-label={userWatchlist.has(coin.id) ? 'Remove from watchlist' : 'Add to watchlist'}
+                                                            >
+                                                                {/* Heart SVG */}
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
+                                                                    <path 
+                                                                        strokeLinecap="round" 
+                                                                        strokeLinejoin="round" 
+                                                                        stroke="currentColor"
+                                                                        fill={userWatchlist.has(coin.id) ? "currentColor" : "none"}
+                                                                        d="M21 8.5c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 4 3 6.015 3 8.5c0 7.5 9 11.5 9 11.5s9-4 9-11.5z"
+                                                                    />
+                                                                </svg>
+                                                            </button>
+                                                        ) : (
+                                                            <div className="w-5" />
+                                                        )}
                                                         <span className="font-medium">{actualRank}</span>
                                                     </div>
                                                 </td>
