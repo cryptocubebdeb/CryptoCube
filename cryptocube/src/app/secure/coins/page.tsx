@@ -8,6 +8,7 @@ import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { getCoinsList } from '../../lib/getCoinsList';
+import { getFormatPrix, getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
 
 // Interface pour les données de cryptomonnaies
 interface CoinData {
@@ -49,36 +50,20 @@ export default function Page() {
         fetchCoins();
     }, []);
 
-    // Fonction pour formater les prix
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: price < 1 ? 6 : 2
-        }).format(price);
-    };
-
-    // Fonction pour formater la market cap
-    const formatMarketCap = (marketCap: number) => {
-        if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`;
-        if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`;
-        if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`;
-        return `$${marketCap.toLocaleString()}`;
-    };
-
     // Fonction pour formater les pourcentages avec couleurs
     const formatPercentage = (percentage: number | undefined) => {
-        if (percentage === undefined) return <span className="text-gray-400">N/A</span>;
-        const isPositive = percentage >= 0;
+        const result = getFormatPercentage(percentage);
+
+        if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
+        
         return (
-            <span className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                {isPositive ? (
+            <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                {result.isPositive ? (
                     <TrendingUpIcon sx={{ fontSize: '1rem' }} />
                 ) : (
                     <TrendingDownIcon sx={{ fontSize: '1rem' }} />
                 )}
-                {Math.abs(percentage).toFixed(2)}%
+                {result.value}
             </span>
         );
     };
@@ -288,7 +273,7 @@ export default function Page() {
                                                     </div>
                                                 </td>
                                                 <td className="py-6 px-4 text-right font-medium w-32">
-                                                    {formatPrice(coin.current_price)}
+                                                    {getFormatPrix(coin.current_price)}
                                                 </td>
                                                 <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(coin.price_change_percentage_1h_in_currency)}
@@ -300,7 +285,7 @@ export default function Page() {
                                                     {formatPercentage(coin.price_change_percentage_7d_in_currency)}
                                                 </td>
                                                 <td className="py-6 px-4 text-right font-medium w-40">
-                                                    {formatMarketCap(coin.market_cap)}
+                                                    {getFormatMarketCap(coin.market_cap)}
                                                 </td>
                                                 <td className="py-6 px-4 text-center w-32">
                                                     <div className="flex justify-end">
