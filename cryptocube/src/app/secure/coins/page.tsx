@@ -1,31 +1,13 @@
 'use client'
 
-import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useSession } from 'next-auth/react';
-import SearchBar from '../components/SearchBar';
-import MiniChart from '../components/Dashboard/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import SearchBar from '../components/SearchBar';
+import CoinsTable from '../components/CoinsTable';
+import { CoinData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
-
-// Interface pour les données de cryptomonnaies
-interface CoinData {
-    id: string;
-    name: string;
-    symbol: string;
-    current_price: number;
-    price_change_percentage_1h_in_currency?: number;
-    price_change_percentage_24h: number;
-    price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
-    market_cap: number;
-    total_volume?: number; // Volume de trading sur 24h
-    image: string;
-    sparkline_in_7d?: {
-        price: number[];  //Données utilisées par MiniChart
-    };
-}
+import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 
 export default function Page() {
     const { data: session } = useSession();
@@ -35,6 +17,8 @@ export default function Page() {
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [activeTab, setActiveTab] = useState('tout');
     const [searchTerm, setSearchTerm] = useState('');
+    const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
+    const [watchlistLoading, setWatchlistLoading] = useState(false);
 
     const fetchCoins = async () => {
          try {
@@ -51,143 +35,30 @@ export default function Page() {
         fetchCoins();
     }, []);
 
-    // Fonction pour formater les prix
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: price < 1 ? 6 : 2
-        }).format(price);
-    };
-
-    // Fonction pour formater la market cap
-    const formatMarketCap = (marketCap: number) => {
-        if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`;
-        if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`;
-        if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`;
-        return `$${marketCap.toLocaleString()}`;
-    };
-
-    // Fonction pour formater les pourcentages avec couleurs
-    const formatPercentage = (percentage: number | undefined) => {
-        if (percentage === undefined) return <span className="text-gray-400">N/A</span>;
-        const isPositive = percentage >= 0;
-        return (
-            <span className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                {isPositive ? (
-                    <TrendingUpIcon sx={{ fontSize: '1rem' }} />
-                ) : (
-                    <TrendingDownIcon sx={{ fontSize: '1rem' }} />
-                )}
-                {Math.abs(percentage).toFixed(2)}%
-            </span>
-        );
-    };
-
-    // Fonction pour filtrer selon l'onglet actif
-    const getFilteredCoinsByTab = (coins: CoinData[], tab: string) => {
+    // Tabs filtering
+    const getFilteredCoinsByTab = (coinsList: CoinData[], tab: string) => {
         switch (tab) {
             case 'tout':
-                return coins; // Par défaut, déjà trié par market cap
-            // case 'tendance':
-            //     // Coins avec plus de 2% de changement absolu sur 24h
-            //     return [...coins]
-            //         .filter(coin => Math.abs(coin.price_change_percentage_24h) >= 2)
-            //         .sort((a, b) => Math.abs(b.price_change_percentage_24h) - Math.abs(a.price_change_percentage_24h));
+                return coinsList;
             case 'pluséchangées':
-                // Coins avec volume de trading élevé (top par volume)
-                return [...coins]
-                    .filter(coin => coin.total_volume && coin.total_volume > 10000000) // Volume > 10M USD
+                return [...coinsList]
+                    .filter(coin => coin.total_volume && coin.total_volume > 10000000)
                     .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0));
             case 'gagnants':
-                // Coins avec des gains sur 24h
-                return [...coins]
+                return [...coinsList]
                     .filter(coin => coin.price_change_percentage_24h > 0)
                     .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
             default:
-                return coins;
+                return coinsList;
         }
     };
 
-    // Filtrer les coins selon l'onglet actif puis selon la recherche
+    // Filtrage combiné onglet + recherche (doit être défini avant la pagination)
     const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
     const searchFilteredCoins = tabFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    // Watchlist
-    const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
-    const [watchlistLoading, setWatchlistLoading] = useState(false);
-
-    // Charger la watchlist depuis l'API
-    useEffect(() => {
-        if (!session?.user?.email) {
-            setUserWatchlist(new Set());
-            return;
-        }
-
-        const loadWatchlist = async () => {
-            try {
-                const response = await fetch('/api/watchlist');
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserWatchlist(new Set(data.coinIds || []));
-                }
-            } catch (error) {
-                console.error('Erreur lors du chargement de la watchlist:', error);
-            }
-        };
-
-        loadWatchlist();
-    }, [session?.user?.email]);
-
-    const toggleWatch = async (e: React.MouseEvent, coinId: string) => {
-        e.stopPropagation(); // prevent row click navigation
-        
-        if (!session?.user?.email) {
-            window.location.href = '/auth/login';
-            return;
-        }
-
-        if (watchlistLoading) return; // Empêcher les clics multiples
-
-        setWatchlistLoading(true);
-        
-        try {
-            const isInWatchlist = userWatchlist.has(coinId);
-            const method = isInWatchlist ? 'DELETE' : 'POST';
-            
-            const response = await fetch('/api/watchlist', {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ coinId }),
-            });
-
-            if (response.ok) {
-                // Mettre à jour l'état local
-                setUserWatchlist(prev => {
-                    const next = new Set(prev);
-                    if (isInWatchlist) {
-                        next.delete(coinId);
-                    } else {
-                        next.add(coinId);
-                    }
-                    return next;
-                });
-            } else {
-                console.error('Erreur lors de la mise à jour de la watchlist');
-            }
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour de la watchlist:', error);
-        } finally {
-            setWatchlistLoading(false);
-        }
-    };
-////////
 
     // Pagination - 40 coins par page
     const getCurrentPageCoins = () => {
@@ -208,6 +79,50 @@ export default function Page() {
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, activeTab]);
+
+    // Charger la watchlist
+    useEffect(() => {
+        if (!session?.user?.email) {
+            setUserWatchlist(new Set());
+            return;
+        }
+        const loadWatchlist = async () => {
+            try {
+                const ids = await fetchWatchlistIds();
+                setUserWatchlist(new Set(ids));
+            } catch (e) {
+                console.error('Erreur lors du chargement de la watchlist:', e);
+            }
+        };
+        loadWatchlist();
+    }, [session?.user?.email]);
+
+    const toggleWatch = async (e: React.MouseEvent, coinId: string) => {
+        e.stopPropagation();
+        if (!session?.user?.email) {
+            window.location.href = '/auth/login';
+            return;
+        }
+        if (watchlistLoading) return;
+        setWatchlistLoading(true);
+        try {
+            const isIn = userWatchlist.has(coinId);
+            const ok = isIn ? await removeFromWatchlist(coinId) : await addToWatchlist(coinId);
+            if (ok) {
+                setUserWatchlist(prev => {
+                    const next = new Set(prev);
+                    isIn ? next.delete(coinId) : next.add(coinId);
+                    return next;
+                });
+            }
+        } catch (err) {
+            console.error('Erreur lors de la mise à jour de la watchlist:', err);
+        } finally {
+            setWatchlistLoading(false);
+        }
+    };
+
+    
 
     return (
         <>
@@ -294,121 +209,40 @@ export default function Page() {
                             <p className="mt-4 text-gray-500">Chargement des données...</p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto min-h-[2920px]">
-                            <table className="w-full table-fixed">
-                                <thead>
-                                    <tr className="border-b border-gray-400">
-                                        <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
-                                        <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Nom</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Prix</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">1h %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Capitalisation</th>
-                                        <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Derniers 7 jours</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredCoins.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={8} className="py-20 text-center text-gray-500">
-                                                <div className="flex flex-col items-center space-y-4">
-                                                    <div className="text-4xl"></div>
-                                                    <p className="text-xl">
-                                                        {searchTerm ? 'Aucun résultat trouvé' : 'Aucune donnée disponible'}
-                                                    </p>
-                                                    <p className="text-sm">
-                                                        {searchTerm ? 'Essayez un autre terme de recherche' : 'Les cryptomonnaies s\'afficheront ici'}
-                                                    </p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        <>
-                                            {filteredCoins.map((coin, index) => {
-                                                const actualRank = (currentPage - 1) * 40 + index + 1;
-                                                return (
-                                                <tr 
-                                                    key={`${coin.id}-${currentPage}-${index}`}
-                                                    className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
-                                                    onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                        <>
+                            <div className="min-h-[2920px]">
+                                {filteredCoins.length === 0 ? (
+                                    <div className="text-center py-20 text-gray-500">Aucun résultat trouvé</div>
+                                ) : (
+                                    <CoinsTable
+                                        coins={filteredCoins}
+                                        rankOffset={(currentPage - 1) * 40}
+                                        showSparkline={true}
+                                        onRowClick={(coinId) => { window.location.href = `/secure/specificCoin/${coinId}`; }}
+                                        renderStar={(coinId: string) => (
+                                            session?.user?.email ? (
+                                                <button
+                                                    onClick={(e) => toggleWatch(e, coinId)}
+                                                    className={`transition-colors p-1 rounded ${userWatchlist.has(coinId) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${watchlistLoading ? 'opacity-50' : ''}`}
+                                                    aria-label={userWatchlist.has(coinId) ? 'Remove from watchlist' : 'Add to watchlist'}
                                                 >
-                                                <td className="py-6 px-4 w-16">
-                                                    <div className="flex items-center space-x-2">
-                                                        {session?.user?.email ? (
-                                                            <button
-                                                                onClick={(e) => toggleWatch(e, coin.id)}
-                                                                className={`transition-colors p-1 rounded ${userWatchlist.has(coin.id) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${
-                                                                    watchlistLoading ? 'opacity-50' : ''
-                                                                }`}
-                                                                aria-label={userWatchlist.has(coin.id) ? 'Remove from watchlist' : 'Add to watchlist'}
-                                                            >
-                                                                {/* Star SVG */}
-                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
-                                                                    <path 
-                                                                        strokeLinecap="round" 
-                                                                        strokeLinejoin="round" 
-                                                                        stroke="currentColor"
-                                                                        fill={userWatchlist.has(coin.id) ? "currentColor" : "none"}
-                                                                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-                                                                    />
-                                                                </svg>
-                                                            </button>
-                                                        ) : (
-                                                            <div className="w-5" />
-                                                        )}
-                                                        <span className="font-medium">{actualRank}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-6 px-4 w-64">
-                                                    <div className="flex items-center space-x-3">
-                                                        <img 
-                                                            src={coin.image} 
-                                                            alt={coin.name}
-                                                            className="w-8 h-8 rounded-full flex-shrink-0"
-                                                            onError={(e) => {
-                                                                e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==';
-                                                            }}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
+                                                        <path 
+                                                            strokeLinecap="round" 
+                                                            strokeLinejoin="round" 
+                                                            stroke="currentColor"
+                                                            fill={userWatchlist.has(coinId) ? 'currentColor' : 'none'}
+                                                            d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
                                                         />
-                                                        <div className="flex flex-col min-w-0 flex-1">
-                                                            <div className="font-medium truncate max-w-[200px]" title={coin.name}>
-                                                                {coin.name}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500 uppercase">
-                                                                {coin.symbol}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="py-6 px-4 text-right font-medium w-32">
-                                                    {formatPrice(coin.current_price)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(coin.price_change_percentage_1h_in_currency)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(coin.price_change_percentage_24h)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(coin.price_change_percentage_7d_in_currency)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right font-medium w-40">
-                                                    {formatMarketCap(coin.market_cap)}
-                                                </td>
-                                                <td className="py-6 px-4 text-center w-32">
-                                                    <div className="flex justify-end">
-                                                        <MiniChart 
-                                                            data={coin.sparkline_in_7d?.price || []} 
-                                                            isPositive={(coin.price_change_percentage_7d_in_currency || 0) >= 0}
-                                                        />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )})}
-                                        </>
-                                    )}
-                                </tbody>
-                            </table>
+                                                    </svg>
+                                                </button>
+                                            ) : (
+                                                <div className="w-5" />
+                                            )
+                                        )}
+                                    />
+                                )}
+                            </div>
 
                             {/* Pagination */}
                             <div className="flex justify-center items-center space-x-4 my-8">
@@ -496,7 +330,7 @@ export default function Page() {
                                     </svg>
                                 </button>
                             </div>
-                        </div>
+                        </>
                     )}
                 </div>
             </div>
