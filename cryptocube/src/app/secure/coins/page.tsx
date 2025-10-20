@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { useSession } from 'next-auth/react';
 import SearchBar from '../components/SearchBar';
 import MiniChart from '../components/Dashboard/MiniChart';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
@@ -27,6 +28,7 @@ interface CoinData {
 }
 
 export default function Page() {
+    const { data: session } = useSession();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
     const [loading, setLoading] = useState(true);
@@ -114,6 +116,78 @@ export default function Page() {
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Watchlist
+    const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
+    const [watchlistLoading, setWatchlistLoading] = useState(false);
+
+    // Charger la watchlist depuis l'API
+    useEffect(() => {
+        if (!session?.user?.email) {
+            setUserWatchlist(new Set());
+            return;
+        }
+
+        const loadWatchlist = async () => {
+            try {
+                const response = await fetch('/api/watchlist');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserWatchlist(new Set(data.coinIds || []));
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement de la watchlist:', error);
+            }
+        };
+
+        loadWatchlist();
+    }, [session?.user?.email]);
+
+    const toggleWatch = async (e: React.MouseEvent, coinId: string) => {
+        e.stopPropagation(); // prevent row click navigation
+        
+        if (!session?.user?.email) {
+            window.location.href = '/auth/login';
+            return;
+        }
+
+        if (watchlistLoading) return; // Empêcher les clics multiples
+
+        setWatchlistLoading(true);
+        
+        try {
+            const isInWatchlist = userWatchlist.has(coinId);
+            const method = isInWatchlist ? 'DELETE' : 'POST';
+            
+            const response = await fetch('/api/watchlist', {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ coinId }),
+            });
+
+            if (response.ok) {
+                // Mettre à jour l'état local
+                setUserWatchlist(prev => {
+                    const next = new Set(prev);
+                    if (isInWatchlist) {
+                        next.delete(coinId);
+                    } else {
+                        next.add(coinId);
+                    }
+                    return next;
+                });
+            } else {
+                console.error('Erreur lors de la mise à jour de la watchlist');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour de la watchlist:', error);
+        } finally {
+            setWatchlistLoading(false);
+        }
+    };
+////////
 
     // Pagination - 40 coins par page
     const getCurrentPageCoins = () => {
@@ -261,9 +335,28 @@ export default function Page() {
                                                 >
                                                 <td className="py-6 px-4 w-16">
                                                     <div className="flex items-center space-x-2">
-                                                        <button className="text-gray-400 hover:text-yellow-500 transition-colors">
-                                                            
-                                                        </button>
+                                                        {session?.user?.email ? (
+                                                            <button
+                                                                onClick={(e) => toggleWatch(e, coin.id)}
+                                                                className={`transition-colors p-1 rounded ${userWatchlist.has(coin.id) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${
+                                                                    watchlistLoading ? 'opacity-50' : ''
+                                                                }`}
+                                                                aria-label={userWatchlist.has(coin.id) ? 'Remove from watchlist' : 'Add to watchlist'}
+                                                            >
+                                                                {/* Star SVG */}
+                                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
+                                                                    <path 
+                                                                        strokeLinecap="round" 
+                                                                        strokeLinejoin="round" 
+                                                                        stroke="currentColor"
+                                                                        fill={userWatchlist.has(coin.id) ? "currentColor" : "none"}
+                                                                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                                                                    />
+                                                                </svg>
+                                                            </button>
+                                                        ) : (
+                                                            <div className="w-5" />
+                                                        )}
                                                         <span className="font-medium">{actualRank}</span>
                                                     </div>
                                                 </td>

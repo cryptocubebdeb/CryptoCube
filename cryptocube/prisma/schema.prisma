@@ -22,6 +22,7 @@ model Utilisateur {
   username   String @unique @db.VarChar(50)
 
   resetToken PasswordResetToken?
+  watchlistItems WatchlistItem[]
   
   @@map("utilisateur")
 }
@@ -35,4 +36,16 @@ model PasswordResetToken {
   user Utilisateur @relation(fields: [userId], references: [id])
 
   @@map("password_reset_tokens")
+}
+
+model WatchlistItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  coinId    String   @map("coin_id") @db.VarChar(100)
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  user Utilisateur @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, coinId]) // Un utilisateur ne peut pas avoir le même coin deux fois
+  @@map("watchlist_items")
 }
