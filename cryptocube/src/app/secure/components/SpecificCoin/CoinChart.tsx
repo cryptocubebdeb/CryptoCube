@@ -1,6 +1,6 @@
 // /app/secure/components/CoinChart.tsx
-import { getCoinChart } from "../../../app/lib/getCoinChart";
-import { LineChart } from "../../../app/secure/components/LineChart";
+import { getCoinChart } from "../../../lib/getCoinChart";
+import LineChart from "./LineChart";
 
 type RawPoint = { time: number; price: number };
 type Point = { x: number; y: number }; //each point in the graphic must have a price for a specific time
@@ -20,3 +20,5 @@ export default async function CoinChart({coinId, days = 30, currency = "cad",}: 
 
   return <LineChart width={1500} height={500} data={data} />;
 }
+
+

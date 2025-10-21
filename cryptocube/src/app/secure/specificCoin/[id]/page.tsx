@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getCoin } from '../../../lib/getCoin';
 import { Geologica } from "next/font/google"
 import { getCoinChart } from "../../../lib/getCoinChart";
-import CoinChart from "../../../../app/secure/components/CoinChart";
+import CoinChart from "../../components/SpecificCoin/CoinChart";
 import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGauge";
 import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
 import { getCoinNews } from "../../../lib/getCoinNews";

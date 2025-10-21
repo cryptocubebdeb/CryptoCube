@@ -1,78 +1,113 @@
 "use client";
 
-import Link from "next/link";
-import { useState, FormEvent } from "react";
+import Link from "next/link"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { FormEvent } from 'react'
 import { signIn } from "next-auth/react";
-import Navbar from "@/app/secure/components/navbar";
-import { Geologica } from "next/font/google";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa";
+import Navbar from "@/app/secure/components/navbar"
+import { Geologica } from "next/font/google"
+
+// MUI
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import TextField from "@mui/material/TextField"
+import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+import IconButton from "@mui/material/IconButton"
+import InputAdornment from "@mui/material/InputAdornment"
+
+// Icônes MUI
+import Visibility from "@mui/icons-material/Visibility"
+import VisibilityOff from "@mui/icons-material/VisibilityOff"
+
+// Icônes sociales
+import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa"
 
 const geologica = Geologica({
   subsets: ["latin"],
   weight: ["400", "700"],
-});
+})
 
 export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
+  const router = useRouter();
+  const [message, setMessage] = useState("")
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
-  // ✅ Simplified and fixed
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    event.preventDefault()
+
+    //gerer les erreurs
     setEmailError("");
     setPasswordError("");
     setMessage("");
 
-    if (!email) return setEmailError("Une adresse email est requise");
-    if (!password) return setPasswordError("Un mot de passe est obligatoire");
+    let hasError = false;
 
-    const result = (await signIn("credentials", {
+    if (!email) {
+      setEmailError("Une adresse email est requise");
+      hasError = true;
+    }
+    if (!password) {
+      setPasswordError("Un mot de passe est obligatoire");
+      hasError = true;
+    }
+
+    if (hasError) return; //Pas besoin de continuer en cas d'erreur
+
+    const result = await signIn("credentials", {
+      redirect: false,
       email,
       password,
-      redirect: true, //Let NextAuth handle redirection + cookie
       callbackUrl: "/secure/dashboard",
-    })) as any;
+    });
 
     if (result?.error) {
-      setMessage(result.error || "Échec de la connexion");
+      setMessage("Login failed");
+    } else {
+      router.push(result?.url ?? "/secure/dashboard");
     }
   }
 
+  // Fonctions OAuth
   const handleGoogleSignUp = async () => {
     try {
-      await signIn("google", { callbackUrl: "/secure/dashboard", redirect: true });
+      await signIn("google", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
     } catch (error) {
+      console.error("Erreur Google OAuth:", error);
       alert("Erreur lors de la connexion avec Google");
     }
   };
 
   const handleFacebookSignUp = async () => {
     try {
-      await signIn("facebook", { callbackUrl: "/secure/dashboard", redirect: true });
+      await signIn("facebook", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
     } catch (error) {
+      console.error("Erreur Facebook OAuth:", error);
       alert("Erreur lors de la connexion avec Facebook");
     }
   };
 
   const handleRedditSignUp = async () => {
     try {
-      await signIn("reddit", { callbackUrl: "/secure/dashboard", redirect: true });
+      await signIn("reddit", {
+        callbackUrl: "/secure/dashboard",
+        redirect: true,
+      });
     } catch (error) {
+      console.error("Erreur Reddit OAuth:", error);
       alert("Erreur lors de la connexion avec Reddit");
     }
   };
@@ -81,7 +116,7 @@ export default function Page() {
     <div className={`h-screen flex flex-col ${geologica.className}`}>
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl font-mono mb-9 mt-12">Connexion</h1>
+        <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -101,6 +136,7 @@ export default function Page() {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
               fullWidth
               variant="outlined"
               error={!!emailError}
@@ -115,6 +151,7 @@ export default function Page() {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
               fullWidth
               variant="outlined"
               error={!!passwordError}
@@ -137,8 +174,12 @@ export default function Page() {
               InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
             />
 
-            {message && <p className="text-red-500 text-sm text-center">{message}</p>}
+            {/* Message d'erreur lors de la connexion */}
+            {message && (
+              <p className="text-red-500 text-sm text-center">{message}</p>
+            )}
 
+            {/* Bouton de connexion */}
             <Box display="flex" justifyContent="center">
               <Button
                 type="submit"
@@ -151,16 +192,19 @@ export default function Page() {
                   color: "black",
                   width: "210px",
                   mx: "auto",
-                  "&:hover": { bgcolor: "#d1d5db" },
+                  "&:hover": { bgcolor: "#d1d5db" }
                 }}
               >
                 Se connecter
               </Button>
             </Box>
 
+            {/* Séparateur */}
             <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>Ou se connecter avec</Divider>
 
+            {/* Icônes sociales */}
             <div className="flex justify-center gap-6">
+              {/* Google */}
               <button
                 type="button"
                 onClick={handleGoogleSignUp}
@@ -170,6 +214,7 @@ export default function Page() {
                 <FaGoogle className="w-7 h-7 text-orange-500" />
               </button>
 
+              {/* Reddit */}
               <button
                 type="button"
                 onClick={handleRedditSignUp}
@@ -179,6 +224,7 @@ export default function Page() {
                 <FaRedditAlien className="w-7 h-7 text-white" />
               </button>
 
+              {/* Facebook */}
               <button
                 type="button"
                 onClick={handleFacebookSignUp}
@@ -199,5 +245,5 @@ export default function Page() {
         </Box>
       </div>
     </div>
-  );
+  )
 }
