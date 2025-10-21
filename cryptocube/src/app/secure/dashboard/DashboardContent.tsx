@@ -1,4 +1,6 @@
 "use client"
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,8 +12,11 @@ import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
 import SearchBar from '../components/SearchBar';
+import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
 
 export default function DashboardContent() {
+  const { data: session } = useSession();
+
   return (
     <>
       {/* Search Bar */}
@@ -181,23 +186,48 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      <div
-        style={{
-          width: '90%',
-          margin: '24px auto',
-        }}>
-            {/* Ajout de boutton dans ce div dans le future */}
-            {/* <div>
-                <Typography variant="h5" gutterBottom sx={{ mb: 4 }}>
-                    Watchlist
-                </Typography>
-            </div>
-            
+      {/* Watchlist Section - Only shown when user is logged in */}
+      {session?.user?.email && (
+        <div
+          style={{
+            width: '90%',
+            margin: '24px auto',
+            backgroundColor: '#141418ff',
+            borderRadius: '16px',
+            padding: '24px',
+          }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            marginBottom: '24px'
+          }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+              Watchlist
+            </Typography>
+            <Button
+              variant="outlined"
+              href="/secure/account/watchlist/main"
+              sx={{
+                borderRadius: '12px',
+                borderColor: '#3B82F6',
+                color: '#3B82F6',
+                padding: '8px 20px',
+                textTransform: 'none',
+                fontSize: '0.95rem',
+                '&:hover': {
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                  borderColor: '#3B82F6',
+                }
+              }}
+            >
+              View more
+            </Button>
+          </div>
 
-            <Typography variant="h6" gutterBottom>
-                Votre watchlist est vide.
-            </Typography> */}
+          <WatchlistCarousel />
         </div>
+      )}
     </>
   );
 }
