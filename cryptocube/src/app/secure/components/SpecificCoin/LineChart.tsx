@@ -1,4 +1,10 @@
-//For more information, refer to this tutorial: https://www.react-graph-gallery.com/line-chart
+/*
+This code is adapted from the D3 example:
+  "Line Chart with Tooltip" — https://observablehq.com/@d3/line-with-tooltip
+
+  For more information and related tutorials:
+  - React Graph Gallery Line Chart: https://www.react-graph-gallery.com/line-chart
+*/
 "use client";
 import { use, useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
