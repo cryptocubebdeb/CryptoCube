@@ -9,9 +9,9 @@ import { getCoinNews } from "../../../lib/getCoinNews";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
-export default async function Page({ params, }: { params: Promise<{ id: string }>; }) {
+export default async function Page({ params }: { params: { id: string } }) {
 
-    const { id } = await params; // id example "bitcoin"
+    const { id } = params; // id example "bitcoin"
 
     const [coinData, series] = await Promise.all([
         getCoin(id),
@@ -97,7 +97,7 @@ export default async function Page({ params, }: { params: Promise<{ id: string }
                         {/* Chart container */}
                         <div className="bg-[#15171E] text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
                             <div className="w-full h-[420px]">
-                                <CoinChart coinId={id} days={30} currency="cad" />
+                                <CoinChart coinId={params.id} currency="cad" />
                             </div>
                         </div>
 
