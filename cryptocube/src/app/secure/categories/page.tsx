@@ -204,7 +204,7 @@ export default function Page()
                         }}
                     >
                         <h3 className="font-semibold">{category.name}</h3>
-                        {/* Add more details here if needed */}
+                        <h4>{getFormatMarketCap(category.volume_24h)}</h4>
                     </div>
                 ))}
             </div>
