@@ -33,6 +33,7 @@ export default function Page()
     const [totalPages, setTotalPages] = useState(16); // 624 catégories / 40 par page  = 16 pages
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<CategoryData[]>([]);
+    const [activeTopTab, setActiveTopTab] = useState('populaires');
 
     const fetchCategories = async () => {
         try {
@@ -72,6 +73,48 @@ export default function Page()
         );
     };
 
+    const getFilteredCategoriesByTab = (categories: CategoryData[], tab: string) => {
+        switch (tab) {
+            case 'populaires':
+                return [...categories]
+                    .sort((first, second) => second.market_cap - first.market_cap)
+                    .slice(0, 4);
+            case 'gainers':
+                return [...categories]
+                    .sort((first, second) => second.market_cap_change_24h - first.market_cap_change_24h)
+                    .slice(0, 4);
+            case 'losers':
+                return [...categories]
+                    .sort((first, second) => first.market_cap_change_24h - second.market_cap_change_24h)
+                    .slice(0, 4);
+            default:
+                return categories;
+        }
+    };
+
+    const topPopulaires = getFilteredCategoriesByTab(categories, 'populaires');
+    const topGainers = getFilteredCategoriesByTab(categories, 'gainers');
+    const topLosers = getFilteredCategoriesByTab(categories, 'losers');
+
+    const topSections = [
+        {
+            title: 'Populaires',
+            icon: <LocalFireDepartmentOutlinedIcon style={{ width: '35px', height: '35px' }}/>,
+            data: topPopulaires
+        },
+        {
+            title: 'Gainers',
+            icon: <TrendingUpIcon style={{ width: '35px', height: '35px' }}/>,
+            data: topGainers
+        },
+        {
+            title: 'Losers',
+            icon: <TrendingDownIcon style={{ width: '35px', height: '35px' }}/>,
+            data: topLosers
+        }
+    ];
+
+
     // Pagination - 40 catégories par page
     const getCurrentPageCategories = () => {
         const startIndex = (currentPage - 1) * 40;
@@ -93,148 +136,77 @@ export default function Page()
             </h1>
         </div>
 
-        {/* ======= Filtre de catégories =======*/}
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '3em',
-                justifyContent: 'center',
-                marginBottom: '4rem',
-            }}
-        >
+        {/* ======= Filtre de catégories & Top catégories =======*/}
+        <div>
+            {/* Filter Tabs */}
             <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
                 style={{
-                    backgroundColor: '#232330ff',
-                    height: '100px',
-                    width: '150px',
-                    borderRadius: '10px',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
+                    gap: '3em',
                     justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem',      
+                    marginBottom: '4rem',
                 }}
             >
-                <LocalFireDepartmentOutlinedIcon style={{ width: '35px', height: '35px' }}/>
-                <h2 className="font-semibold">Populaires</h2>
+                {topSections.map((section) => {
+                    const isActive = activeTopTab === section.title.toLowerCase();
+                    return(
+                        <div
+                            key={section.title}
+                            className={`hover:scale-105 transform transition-transform duration-200 cursor-pointer`}
+                            style={{
+                                backgroundColor: isActive ? '#232330ff' : '#303039ff',
+                                color: isActive ? 'white' : 'gray',
+                                borderColor: isActive ? '#2d2d3fff' : 'transparent',
+                                borderWidth: isActive ? '3px' : '0px',
+                                height: '100px',
+                                width: '150px',
+                                borderRadius: '10px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onClick={() => setActiveTopTab(section.title.toLowerCase())}
+                        >
+                            {section.icon}
+                            <h2 className="font-semibold">{section.title}</h2>
+                        </div>
+                    );
+                })}
             </div>
 
+            {/* Top Categories for Selected Tab */}
             <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
                 style={{
-                    backgroundColor: '#232330ff',
-                    height: '100px',
-                    width: '150px',
-                    borderRadius: '10px',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
+                    gap: '3em',
                     justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem'
+                    marginBottom: '6rem'
                 }}
             >
-                <TrendingUpIcon style={{ width: '35px', height: '35px' }}/>
-                <h2 className="font-semibold">Gainers</h2>
-            </div>
-
-            <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
-                style={{
-                    backgroundColor: '#232330ff',
-                    height: '100px',
-                    width: '150px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                }}
-            >
-                <TrendingDownIcon style={{ width: '35px', height: '35px' }}/>
-                <h2 className="font-semibold">Losers</h2>
-            </div>
-        </div>
-
-
-        {/* ======= Top catégories =======*/}
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '3em',
-                justifyContent: 'center',
-                marginBottom: '6rem'
-            }}
-        >
-            <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
-                style={{
-                    backgroundColor: '#2d2d3fff',
-                    height: '350px',
-                    width: '350px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem',      
-                }}
-            >
-                {/* Placeholder for future content */}
-            </div>
-
-            <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
-                style={{
-                    backgroundColor: '#2d2d3fff',
-                    height: '350px',
-                    width: '350px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem',      
-                }}
-            >
-                {/* Placeholder for future content */}
-            </div>
-
-            <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
-                style={{
-                    backgroundColor: '#2d2d3fff',
-                    height: '350px',
-                    width: '350px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem',      
-                }}
-            >
-                {/* Placeholder for future content */}
-            </div>
-
-            <div
-                className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
-                style={{
-                    backgroundColor: '#2d2d3fff',
-                    height: '350px',
-                    width: '350px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '0.5rem',      
-                }}
-            >
-                {/* Placeholder for future content */}
+                {topSections.find(section => section.title.toLowerCase() === activeTopTab)?.data.map((category) => (
+                    <div
+                        key={category.id}
+                        className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
+                        style={{
+                            backgroundColor: '#2d2d3fff',
+                            height: '350px',
+                            width: '350px',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                        }}
+                    >
+                        <h3 className="font-semibold">{category.name}</h3>
+                        {/* Add more details here if needed */}
+                    </div>
+                ))}
             </div>
         </div>
 
