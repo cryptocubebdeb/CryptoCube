@@ -40,10 +40,10 @@ function createLineChart(data: any[], {
     title, // given d in data, returns the title text
     defined, // for gaps in data
     curve = d3.curveLinear, // method of interpolation between points
-    marginTop = 20, // top margin, in pixels
-    marginRight = 30, // right margin, in pixels
-    marginBottom = 30, // bottom margin, in pixels
-    marginLeft = 40, // left margin, in pixels
+    marginTop = 10, // top margin, in pixels
+    marginRight = 20, // right margin, in pixels
+    marginBottom = 20, // bottom margin, in pixels
+    marginLeft = 30, // left margin, in pixels
     width = 640, // outer width, in pixels
     height = 400, // outer height, in pixels
     xType = d3.scaleUtc, // type of x-scale
@@ -127,7 +127,7 @@ function createLineChart(data: any[], {
         .attr("width", width)
         .attr("height", height)
         .attr("viewBox", [0, 0, width, height])
-        .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
+        .attr("style", "max-width: 100%; height: 100%;")
         .attr("font-family", "sans-serif")
         .attr("font-size", 10)
         .style("-webkit-tap-highlight-color", "transparent")
