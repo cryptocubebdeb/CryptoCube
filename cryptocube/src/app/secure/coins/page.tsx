@@ -29,7 +29,7 @@ interface CoinData {
 
 export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
+    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page * 20 pages
     const [loading, setLoading] = useState(true);
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [activeTab, setActiveTab] = useState('tout');
@@ -55,7 +55,7 @@ export default function Page() {
         const result = getFormatPercentage(percentage);
 
         if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
-        
+
         return (
             <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                 {result.isPositive ? (

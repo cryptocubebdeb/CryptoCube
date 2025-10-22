@@ -5,81 +5,84 @@ import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepart
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useState, useEffect } from "react";
-import { getCoinsList } from '../../lib/getCoinsList';
+import { getCategories, getCategoryAssetCount } from '../../lib/getCategories';
 import MiniChart from '../components/Dashboard/MiniChart';
+import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
+
 
 // Interface pour les données de cryptomonnaies
-interface CoinData {
+interface CategoryData {
     id: string;
     name: string;
-    symbol: string;
-    current_price: number;
-    price_change_percentage_1h_in_currency?: number;
-    price_change_percentage_24h: number;
-    price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
+    top_3_coins: string[];
+    asset_count?: number;
+    market_cap_change_24h: number;
+    market_cap_change_7d?: number;
+    market_cap_change_30d?: number;
+    volume_24h: number;
     market_cap: number;
-    total_volume?: number; // Volume de trading sur 24h
-    image: string;
-    sparkline_in_7d?: {
-        price: number[];  //Données utilisées par MiniChart
+    sparkline_in_30d?: {
+        price: number[];  // Pour chart data
     };
 }
+
 
 export default function Page() 
 {
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
+    const [totalPages, setTotalPages] = useState(16); // 624 catégories / 40 par page  = 16 pages
     const [loading, setLoading] = useState(true);
-    const [coins, setCoins] = useState<CoinData[]>([]);
+    const [categories, setCategories] = useState<CategoryData[]>([]);
 
-    const fetchCoins = async () => {
+    const fetchCategories = async () => {
         try {
-            const data = await getCoinsList();
-            setCoins(data);
+            const data = await getCategories();
+
+            // Filtrer les catégories avec aucun data
+            const filtered = data.filter((category: any) => {
+                return !(category.market_cap === null || category.volume_24h === null || (!category.top_3_coins || category.top_3_coins.length === 0));
+            });
+            setCategories(filtered);
         } catch (error) {
-            console.error("Error fetching all coins:", error);
+            console.error("Error fetching coin categories:", error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCoins();
+        fetchCategories();
     }, []);
-
-    // Fonction pour formater les prix
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: price < 1 ? 6 : 2
-        }).format(price);
-    };
-
-    // Fonction pour formater la market cap
-    const formatMarketCap = (marketCap: number) => {
-        if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`;
-        if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`;
-        if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`;
-        return `$${marketCap.toLocaleString()}`;
-    };
 
     // Fonction pour formater les pourcentages avec couleurs
     const formatPercentage = (percentage: number | undefined) => {
-        if (percentage === undefined) return <span className="text-gray-400">N/A</span>;
-        const isPositive = percentage >= 0;
+        const result = getFormatPercentage(percentage);
+
+        if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
+        
         return (
-            <span className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                {isPositive ? (
+            <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                {result.isPositive ? (
                     <TrendingUpIcon sx={{ fontSize: '1rem' }} />
                 ) : (
                     <TrendingDownIcon sx={{ fontSize: '1rem' }} />
                 )}
-                {Math.abs(percentage).toFixed(2)}%
+                {result.value}
             </span>
         );
     };
+
+    // Pagination - 40 catégories par page
+    const getCurrentPageCategories = () => {
+        const startIndex = (currentPage - 1) * 40;
+        const endIndex = startIndex + 40;
+        return categories.slice(startIndex, endIndex);
+    }
+
+    useEffect(() => {
+        const total = Math.ceil(categories.length / 40);
+        setTotalPages(total);
+    }, [categories]);
 
     return ( 
     <>
@@ -163,7 +166,7 @@ export default function Page()
                 flexDirection: 'row',
                 gap: '3em',
                 justifyContent: 'center',
-                marginBottom: '4rem'
+                marginBottom: '6rem'
             }}
         >
             <div
@@ -237,116 +240,133 @@ export default function Page()
 
 
         {/* ======= Liste de catégories =======*/}
-        <h1 className="text-xl md:text-2xl font-bold ml-35">
-            XX Catégories
-        </h1>
+        <div className="min-h-screen">
+            <div className="max-w-[95rem] mx-auto">
+                <h1 className="text-xl md:text-2xl font-bold mb-10">
+                     {categories.length} Catégories
+                </h1>
 
-        {/* Tableau des cryptomonnaies */}
-        {loading ? (
-            <div className="text-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-4 text-gray-500">Chargement des données...</p>
-            </div>
-        ) : (
-            <div className="overflow-x-auto min-h-[2920px]">
-                <table className="w-full table-fixed">
-                    <thead>
-                        <tr className="border-b border-gray-400">
-                            <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
-                            <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Nom</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Prix</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">1h %</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Capitalisation</th>
-                            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Derniers 7 jours</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {coins.length === 0 ? (
-                            <tr>
-                                <td colSpan={8} className="py-20 text-center text-gray-500">
-                                    <div className="flex flex-col items-center space-y-4">
-                                        <div className="text-4xl"></div>
-                                        <p className="text-xl">
-                                            Aucune donnée disponible
-                                        </p>
-                                        <p className="text-sm">
-                                            Les cryptomonnaies s'afficheront ici
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                        ) : (
-                            <>
-                                {coins.map((coin, index) => {
-                                    const actualRank = (currentPage - 1) * 40 + index + 1;
-                                    return (
-                                    <tr 
-                                        key={`${coin.id}-${currentPage}-${index}`}
-                                        className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
-                                        onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
-                                    >
-                                    <td className="py-6 px-4 w-16">
-                                        <div className="flex items-center space-x-2">
-                                            <button className="text-gray-400 hover:text-yellow-500 transition-colors">
-                                                
-                                            </button>
-                                            <span className="font-medium">{actualRank}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-6 px-4 w-64">
-                                        <div className="flex items-center space-x-3">
-                                            <img 
-                                                src={coin.image} 
-                                                alt={coin.name}
-                                                className="w-8 h-8 rounded-full flex-shrink-0"
-                                                onError={(e) => {
-                                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==';
-                                                }}
-                                            />
-                                            <div className="flex flex-col min-w-0 flex-1">
-                                                <div className="font-medium truncate max-w-[200px]" title={coin.name}>
-                                                    {coin.name}
-                                                </div>
-                                                <div className="text-sm text-gray-500 uppercase">
-                                                    {coin.symbol}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="py-6 px-4 text-right font-medium w-32">
-                                        {formatPrice(coin.current_price)}
-                                    </td>
-                                    <td className="py-6 px-4 text-right w-24">
-                                        {formatPercentage(coin.price_change_percentage_1h_in_currency)}
-                                    </td>
-                                    <td className="py-6 px-4 text-right w-24">
-                                        {formatPercentage(coin.price_change_percentage_24h)}
-                                    </td>
-                                    <td className="py-6 px-4 text-right w-24">
-                                        {formatPercentage(coin.price_change_percentage_7d_in_currency)}
-                                    </td>
-                                    <td className="py-6 px-4 text-right font-medium w-40">
-                                        {formatMarketCap(coin.market_cap)}
-                                    </td>
-                                    <td className="py-6 px-4 text-center w-32">
-                                        <div className="flex justify-end">
-                                            <MiniChart 
-                                                data={coin.sparkline_in_7d?.price || []} 
-                                                isPositive={(coin.price_change_percentage_7d_in_currency || 0) >= 0}
-                                            />
-                                        </div>
-                                    </td>
+                {/* Tableau des cryptomonnaies */}
+                {loading ? (
+                    <div className="text-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                        <p className="mt-4 text-gray-500">Chargement des données...</p>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto min-h-[2920px]">
+                            <table className="w-full table-fixed">
+                            <thead>
+                                <tr className="border-b border-gray-400">
+                                    <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
+                                    <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top coins</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32"># de contenus</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">30d %</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Volume 24h</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Market Cap</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Dernier 30 jours</th>
                                 </tr>
-                            )})}
-                            </>
-                        )}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {categories.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={10} className="py-20 text-center text-gray-500">
+                                            <div className="flex flex-col items-center space-y-4">
+                                                <div className="text-4xl"></div>
+                                                <p className="text-xl">
+                                                    Aucune donnée disponible
+                                                </p>
+                                                <p className="text-sm">
+                                                    Les catégories s'afficheront ici
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    <>
+                                        {getCurrentPageCategories().map((category, index) => {
+                                            const actualRank = (currentPage - 1) * 40 + index + 1;
+                                            return (
+                                            <tr 
+                                                key={`${category.id}-${currentPage}-${index}`}
+                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
+                                                // onClick={() => window.location.href = `/secure/coins`}
+                                            >
+                                            <td className="py-6 px-4 w-16">
+                                                <div className="flex items-center space-x-2">
+                                                    <button className="text-gray-400 hover:text-yellow-500 transition-colors">
+                                                        
+                                                    </button>
+                                                    <span className="font-medium">{actualRank}</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-6 px-4 w-64">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="font-medium truncate max-w-[300px]" title={category.name}>
+                                                        {category.name}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-6 px-4 text-right w-40">
+                                                <div className="flex justify-end items-center">
+                                                    {category.top_3_coins && category.top_3_coins.length > 0 ? (
+                                                        <div className="flex -space-x-2">
+                                                            {category.top_3_coins.slice(0, 3).map((coinUrl, index) => (
+                                                                <img
+                                                                    key={index}
+                                                                    src={coinUrl}
+                                                                    alt={`Coin ${index + 1}`}
+                                                                    className="w-8 h-8 rounded-full border-2 border-gray-800 bg-gray-900"
+                                                                    style={{ zIndex: 3 - index }}
+                                                                    onError={(e) => {
+                                                                        e.currentTarget.style.display = 'none';
+                                                                    }}                                                          
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-gray-500">No coins</span>
+                                                    )}
+                                                </div>
+                                            </td>
 
-                {/* Pagination */}
-                <div className="flex justify-center items-center space-x-4 my-8">
+                                            <td className="py-6 px-4 text-right w-24">
+                                                {category.asset_count !== undefined ? category.asset_count : 'N/A'}
+                                            </td>
+                                            <td className="py-6 px-4 text-right w-24">
+                                                {formatPercentage(category.market_cap_change_24h)}
+                                            </td>
+                                            <td className="py-6 px-4 text-right w-24">
+                                                {formatPercentage(category.market_cap_change_7d)}
+                                            </td>
+                                            <td className="py-6 px-4 text-right w-24">
+                                                {formatPercentage(category.market_cap_change_30d)}
+                                            </td>
+                                            <td className="py-6 px-4 text-right w-32">
+                                                {getFormatMarketCap(category.volume_24h)}
+                                            </td>
+                                            <td className="py-6 px-4 text-right font-medium w-32">
+                                                {getFormatMarketCap(category.market_cap)}
+                                            </td>
+                                            <td className="py-6 px-4 text-center w-40">
+                                                <div className="flex justify-end">
+                                                    <MiniChart
+                                                        data={category.sparkline_in_30d?.price || []}
+                                                        isPositive={(category.market_cap_change_30d || 0) >= 0}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )})}
+                                    </>
+                                )}
+                            </tbody>
+                        </table>
+
+                        {/* Pagination */}
+                        <div className="flex justify-center items-center space-x-4 my-8">
                     <button
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
@@ -431,8 +451,10 @@ export default function Page()
                         </svg>
                     </button>
                 </div>
+                    </div>
+                )}
             </div>
-        )}
+        </div>
      </>
     )
 }
