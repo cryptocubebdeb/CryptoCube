@@ -96,13 +96,16 @@ function createLineChart(data: any[], {
 
     // Compute default domains.
     if (xDomain === undefined) xDomain = d3.extent(X);
-    if (yDomain === undefined) yDomain = [0, d3.max(Y)];
+    const minY = d3.min(Y);
+    const maxY = d3.max(Y);
+    const padding = (maxY - minY) * 0.1; // add 10% breathing room
+    yDomain = [minY - padding, maxY + padding];
 
     // Construct scales and axes.
     const xScale = xType(xDomain, xRange);
     const yScale = yType(yDomain, yRange);
     const xAxis = d3.axisBottom(xScale).ticks(6).tickSizeOuter(0);
-    const yAxis = d3.axisLeft(yScale).ticks(6, yFormat).tickPadding(5);
+    const yAxis = d3.axisLeft(yScale).ticks(6).tickFormat((d) => formatAbbrev(Number(d)).replace("G", "B") as unknown as string);
 
     // Compute titles.
     if (title === undefined) {
@@ -141,14 +144,25 @@ function createLineChart(data: any[], {
         .attr("stroke", "#e4af04")        // yellow line accent
         .attr("color", "#e5e7eb");        // light gray text for axes
 
+    const formatAbbrev = d3.format(".2s");
+
     svg.append("g")
         .attr("class", "x-axis")
         .attr("transform", `translate(0,${height - marginBottom})`)
         .call(xAxis);
 
+    svg.selectAll(".x-axis text")
+        .attr("fill", "#e4e4e4")     // light gray text color
+        .style("font-size", "14px")  // larger text
+        .style("font-weight", "500");
+
     svg.append("g")
         .attr("class", "y-axis")
-        .attr("transform", `translate(${marginLeft},0)`)
+        .attr("transform", `translate(${width - marginRight + 20},0)`)
+        .call(d3.axisRight(yScale)                                // axis on right side
+            .ticks(6)
+            .tickFormat((d: any) => formatAbbrev(Number(d)).replace("G", "B"))
+        )
         .call(yAxis)
         .call(g => g.select(".domain").remove())
         .call(g => g.selectAll(".tick line").clone()
@@ -160,6 +174,11 @@ function createLineChart(data: any[], {
             .attr("fill", "currentColor")
             .attr("text-anchor", "start")
             .text(yLabel ?? ""));
+
+    svg.selectAll(".y-axis text")
+        .attr("fill", "#e4e4e4")
+        .style("font-size", "14px")
+        .style("font-weight", "500");
 
     // === Create a vertical color gradient for the area under the line ===
 
@@ -201,8 +220,8 @@ function createLineChart(data: any[], {
         .attr("fill", "none")
         .attr("stroke", "#e4af04")
         .attr("stroke-width", 2.5)
-        .attr("d", line); 
-    
+        .attr("d", line);
+
     const tooltip = svg.append("g")
         .style("pointer-events", "none");
 
