@@ -69,7 +69,7 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
       {loading ? (
         <p className="text-white/60">Loading chart...</p>
       ) : (
-        <LineChart width={window.innerWidth * 1.3} height={window.innerHeight * 0.7} data={data} />
+        <LineChart width={window.innerWidth * 0.9} height={window.innerHeight} data={data} />
       )}
     </div>
   );

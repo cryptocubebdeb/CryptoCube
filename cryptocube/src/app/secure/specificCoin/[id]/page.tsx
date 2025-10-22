@@ -92,7 +92,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="flex w-[95%] gap-6 items-start">
 
                     {/* Right column - details */}
-                    <div className="flex-[0.27] bg-[#15171E] text-white p-8 text-xl rounded-[2px] shadow-md">
+                    <div className="flex-[0.27] text-white p-8 text-xl rounded-[2px] shadow-md">
 
                         {/* Crypto Name and Logo */}
                         <div className="flex items-center gap-4 p-4">
@@ -279,7 +279,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <div className="flex flex-wrap justify-between gap-6 w-full mt-6">
 
                             {/* === Left: Specific Coin Volatility === */}
-                            <div className="bg-[#15171E] flex-1 min-w-[250px] p-6 rounded-[8px] shadow-md">
+                            <div className="flex-1 min-w-[250px] p-6 rounded-[8px] shadow-md">
                                 <h2 className="text-2xl text-white mb-6 text-center">Volatility Index</h2>
                                 <div className="flex flex-col items-center">
                                     <h3 className="text-lg text-white/80 mb-3">{name}</h3>
@@ -291,7 +291,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
 
                             {/* === Right: Market Overview (Fear & Greed + Global) === */}
-                            <div className="bg-[#15171E] flex-[1.9] min-w-[550px] p-6 rounded-[8px] shadow-md">
+                            <div className="flex-[1.9] min-w-[550px] p-6 rounded-[8px] shadow-md">
                                 <h2 className="text-2xl text-white mb-6 text-center">Market Overview</h2>
 
                                 <div className="flex justify-center gap-10 flex-wrap">
@@ -321,7 +321,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="bg-[#15171E] text-white p-6 rounded-[8px] shadow-md">
+                        <div className="text-white p-6 rounded-[8px] shadow-md">
                             <h2 className="text-2xl mb-4">Latest updates</h2>
                             <CoinDailyNews coinId={id} />
                         </div>
