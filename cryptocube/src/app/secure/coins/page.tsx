@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import SearchBar from '../components/SearchBar';
 import CoinsTable from '../components/CoinsTable';
+import AdvancedFiltersModal from '../components/AdvancedFiltersModal';
 import { CoinData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
@@ -19,6 +20,7 @@ export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
     const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
     const [watchlistLoading, setWatchlistLoading] = useState(false);
+    const [filtersModalOpen, setFiltersModalOpen] = useState(false);
 
     const fetchCoins = async () => {
          try {
@@ -191,7 +193,7 @@ export default function Page() {
                         <div className="flex items-center gap-3">
                             <Button
                                 variant="outlined"
-                                onClick={() => {}}
+                                onClick={() => setFiltersModalOpen(true)}
                                 startIcon={
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
@@ -348,6 +350,12 @@ export default function Page() {
                     )}
                 </div>
             </div>
+
+            {/* Modal des filtres avancés */}
+            <AdvancedFiltersModal 
+                open={filtersModalOpen}
+                onClose={() => setFiltersModalOpen(false)}
+            />
         </>
     )
 }
