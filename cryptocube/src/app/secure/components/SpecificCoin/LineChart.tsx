@@ -101,8 +101,8 @@ function createLineChart(data: any[], {
     // Construct scales and axes.
     const xScale = xType(xDomain, xRange);
     const yScale = yType(yDomain, yRange);
-    const xAxis = d3.axisBottom(xScale).ticks(width / 80).tickSizeOuter(0);
-    const yAxis = d3.axisLeft(yScale).ticks(height / 40, yFormat);
+    const xAxis = d3.axisBottom(xScale).ticks(6).tickSizeOuter(0);
+    const yAxis = d3.axisLeft(yScale).ticks(6, yFormat).tickPadding(5);
 
     // Compute titles.
     if (title === undefined) {
@@ -122,7 +122,7 @@ function createLineChart(data: any[], {
         .x(d => xScale(d.Date))
         .y(d => yScale(d.Close));
 
-
+    // Create the SVG container. An SVG is a Scalable Vector Graphic, an XML-based image format for two-dimensional graphics.
     const svg = d3.create("svg")
         .attr("width", width)
         .attr("height", height)
@@ -139,13 +139,15 @@ function createLineChart(data: any[], {
     svg
         .style("background", "transparent")   // dark navy background
         .attr("stroke", "#e4af04")        // yellow line accent
-        .attr("color", "#cfd8dc");        // light gray text for axes
+        .attr("color", "#e5e7eb");        // light gray text for axes
 
     svg.append("g")
+        .attr("class", "x-axis")
         .attr("transform", `translate(0,${height - marginBottom})`)
         .call(xAxis);
 
     svg.append("g")
+        .attr("class", "y-axis")
         .attr("transform", `translate(${marginLeft},0)`)
         .call(yAxis)
         .call(g => g.select(".domain").remove())
@@ -154,19 +156,53 @@ function createLineChart(data: any[], {
             .attr("stroke-opacity", 0.1))
         .call(g => g.append("text")
             .attr("x", -marginLeft)
-            .attr("y", 10)
+            .attr("y", 20)
             .attr("fill", "currentColor")
             .attr("text-anchor", "start")
             .text(yLabel ?? ""));
 
-    svg.append("path")
-        .attr("fill", "none")
-        .attr("stroke", color)
-        .attr("stroke-width", strokeWidth)
-        .attr("stroke-linejoin", strokeLinejoin)
-        .attr("stroke-linecap", strokeLinecap)
-        .attr("d", line(data)!);
+    // === Create a vertical color gradient for the area under the line ===
 
+    //Here we create a definition, which is a reusable SVG element we will reference later
+    const gradient = svg.append("defs")
+        .append("linearGradient") // Create a linear gradient (smooth color transition)
+        .attr("id", "chart-gradient") // Give it an ID so we can reference it later (as a fill)
+        .attr("x1", "0%") // Start of the gradient (horizontal position)
+        .attr("y1", "0%") // Start of the gradient (vertical position, top)
+        .attr("x2", "0%")  // End horizontally — still at 0%, so vertical gradient only
+        .attr("y2", "100%"); // End vertically at the bottom of the chart (100% down)
+
+    // Slightly below top — still bright but slightly less
+    gradient.append("stop")
+        .attr("offset", "30%")
+        .attr("stop-color", "#e4af04")
+        .attr("stop-opacity", 0.3);  // 80% visible
+
+    gradient.append("stop") //end color at the bottom
+        .attr("offset", "100%") //fully transparent at the bottom for fade effect
+        .attr("stop-color", "#e4af04") //yellow
+        .attr("stop-opacity", 0); //fully transparent
+
+    // Area generator: it will convert the data so that SVG can draw it
+    const area = d3.area<{ Date: Date; Close: number }>()
+        .x(d => xScale(d.Date)) //Converts the date to a pixel position on the chart (ex.: Jan 2020 => 34px)
+        .y0(height - marginBottom) //Bottom of the area, shows where to start filling (at the bottom of the chart)
+        .y1(d => yScale(d.Close)); //Converts the closing price to a pixel position on the chart
+
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "url(#chart-gradient)") // Use the gradient defined earlier as the fill color
+        .attr("stroke", "none") //to not have borders
+        .attr("d", area); // Generate the fade fill area
+
+    //Here we generate the line path
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "#e4af04")
+        .attr("stroke-width", 2.5)
+        .attr("d", line); 
+    
     const tooltip = svg.append("g")
         .style("pointer-events", "none");
 
@@ -190,7 +226,7 @@ function createLineChart(data: any[], {
                 .join("tspan")
                 .attr("x", 0)
                 .attr("y", (_, i) => `${i * 1.1}em`)
-                .attr("font-weight", (_, i) => i ? null : "bold")
+                .attr("font-weight", "bold")
                 .text(d => d));
 
         const { x, y, width: w, height: h } = (text.node() as SVGTextElement)?.getBBox();
@@ -204,84 +240,3 @@ function createLineChart(data: any[], {
 
     return svg.node();
 }
-
-/*const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
-
-type DataPoint = { x: number; y: number };
-
-type LineChartProps = {
-    width: number;
-    height: number;
-    data: DataPoint[];
-};
-
-export const LineChart = ({ width, height, data }: LineChartProps) => {
-    const coinData = data.map(dataPoint => ({
-        Date: new Date(dataPoint.x), // Timestamp is in milliseconds since epoch (1970), convert to Date object
-        Close: dataPoint.y // Price
-    }));
-
-    const chartRef = useRef<HTMLDivElement | null>(null);
-
-    const axesRef = useRef<SVGGElement | null>(null);
-    const boundsWidth = width - MARGIN.right - MARGIN.left;
-    const boundsHeight = height - MARGIN.top - MARGIN.bottom;
-
-    if (!data || data.length < 2) {
-        return <svg width={width} height={height} />;
-    }
-
-    // Y scale
-    const [yMin, yMax] = d3.extent(data, d => d.y) as [number, number];
-    const yScale = useMemo(() => {
-        const min = yMin ?? 0;
-        const max = yMax ?? 0;
-        return d3.scaleLinear()
-            .domain([min, max])
-            .range([boundsHeight, 0])
-            .nice();
-    }, [yMin, yMax, boundsHeight]);
-
-    // X scale
-    const [xMin, xMax] = d3.extent(data, d => d.x) as [number, number];
-    const xScale = useMemo(() => {
-        const min = xMin ?? 0;
-        const max = xMax ?? 0;
-        return d3
-            .scaleTime() //To use actual dates
-            .domain([new Date(min), new Date(max)])
-            .range([0, boundsWidth]);
-    }, [xMin, xMax, boundsWidth]);
-
-    // Axes
-    useEffect(() => {
-        const svgElement = d3.select(axesRef.current);
-        svgElement.selectAll("*").remove();
-
-        const xAxisGenerator = d3.axisBottom(xScale);
-        svgElement
-            .append("g")
-            .attr("transform", "translate(0," + boundsHeight + ")")
-            .call(xAxisGenerator);
-
-        const yAxisGenerator = d3.axisLeft(yScale);
-        svgElement.append("g").call(yAxisGenerator);
-    }, [xScale, yScale, boundsHeight]);
-
-    // Line path
-    const lineBuilder = d3.line<DataPoint>()
-        .x((d) => xScale(d.x))
-        .y((d) => yScale(d.y));
-
-    const linePath = lineBuilder(data);
-    if (!linePath) return null;
-
-    return (
-        <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet">
-            <g transform={`translate(${MARGIN.left},${MARGIN.top})`} width={boundsWidth} height={boundsHeight}>
-                <path d={linePath} stroke="#e4af04ff" fill="none" strokeWidth={2} />
-            </g>
-            <g ref={axesRef} transform={`translate(${MARGIN.left},${MARGIN.top})`} width={boundsWidth} height={boundsHeight} />
-        </svg>
-    );
-};*/
