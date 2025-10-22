@@ -153,7 +153,7 @@ function createLineChart(data: any[], {
 
     svg.selectAll(".x-axis text")
         .attr("fill", "#e4e4e4")     // light gray text color
-        .style("font-size", "14px")  // larger text
+        .style("font-size", "20px")  // larger text
         .style("font-weight", "500");
 
     svg.append("g")
@@ -177,7 +177,7 @@ function createLineChart(data: any[], {
 
     svg.selectAll(".y-axis text")
         .attr("fill", "#e4e4e4")
-        .style("font-size", "14px")
+        .style("font-size", "20px")
         .style("font-weight", "500");
 
     // === Create a vertical color gradient for the area under the line ===
