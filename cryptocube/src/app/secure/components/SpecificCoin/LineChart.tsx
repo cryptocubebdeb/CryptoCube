@@ -137,7 +137,7 @@ function createLineChart(data: any[], {
         .on("touchstart", event => event.preventDefault());
 
     svg
-        .style("background", "#0c111d")   // dark navy background
+        .style("background", "transparent")   // dark navy background
         .attr("stroke", "#e4af04")        // yellow line accent
         .attr("color", "#cfd8dc");        // light gray text for axes
 

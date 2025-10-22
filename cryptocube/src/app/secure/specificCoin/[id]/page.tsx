@@ -86,7 +86,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     const maxSupply = coinData?.market_data?.max_supply; // Maximum possible number of coins
 
     return (
-        <div className={`h-screen flex flex-col ${geologica.className}`}>
+          <div className={`bg-gray-950 min-h-screen w-full flex flex-col ${geologica.className}`}>
             <div className="flex flex-1 justify-center">
                 {/* Main container */}
                 <div className="flex w-[95%] gap-6 items-start">
@@ -95,7 +95,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className="flex-[0.65] flex flex-col gap-6">
 
                         {/* Chart container */}
-                        <div className="bg-[#15171E] text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
+                        <div className="text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
                             <div className="w-full h-[420px]">
                                 <CoinChart coinId={params.id} currency="cad" />
                             </div>
