@@ -383,7 +383,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
 
           {/* Market Cap */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Market Cap</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Capitalisation</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 value={marketCapMin}
