@@ -6,6 +6,7 @@ import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-
 import SearchBar from '../components/SearchBar';
 import CoinsTable from '../components/CoinsTable';
 import AdvancedFiltersModal from '../components/AdvancedFiltersModal';
+import { applyAdvancedFilters, defaultFilters, type FiltersState } from '@/app/lib/filters';
 import { CoinData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
@@ -21,10 +22,11 @@ export default function Page() {
     const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
     const [watchlistLoading, setWatchlistLoading] = useState(false);
     const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+    const [advancedFilters, setAdvancedFilters] = useState<FiltersState>(defaultFilters);
 
-    const fetchCoins = async () => {
+    const fetchCoins = async (category?: string) => {
          try {
-            const data = await getCoinsList();
+            const data = await getCoinsList(category);
             setCoins(data);
         } catch (error) {
             console.error("Error fetching all coins:", error);
@@ -34,8 +36,8 @@ export default function Page() {
     };
 
     useEffect(() => {
-        fetchCoins();
-    }, []);
+        fetchCoins(advancedFilters.category);
+    }, [advancedFilters.category]);
 
     // Tabs filtering
     const getFilteredCoinsByTab = (coinsList: CoinData[], tab: string) => {
@@ -55,9 +57,10 @@ export default function Page() {
         }
     };
 
-    // Filtrage combiné onglet + recherche (doit être défini avant la pagination)
+    // Filtrage combiné onglet + recherche + filtres avancés (doit être défini avant la pagination)
     const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
-    const searchFilteredCoins = tabFilteredCoins.filter(coin =>
+    const advancedFilteredCoins = applyAdvancedFilters(tabFilteredCoins, advancedFilters, userWatchlist);
+    const searchFilteredCoins = advancedFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -75,7 +78,7 @@ export default function Page() {
     useEffect(() => {
         const totalResults = searchFilteredCoins.length;
         setTotalPages(Math.ceil(totalResults / 40));
-    }, [searchTerm, activeTab, coins.length]);
+    }, [searchTerm, activeTab, coins.length, advancedFilters]);
 
     // Reset à page 1 quand recherche se fait
     useEffect(() => {
@@ -355,6 +358,8 @@ export default function Page() {
             <AdvancedFiltersModal 
                 open={filtersModalOpen}
                 onClose={() => setFiltersModalOpen(false)}
+                initialValues={advancedFilters}
+                onApply={(vals) => setAdvancedFilters(vals)}
             />
         </>
     )

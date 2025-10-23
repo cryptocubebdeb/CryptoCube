@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,7 +10,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -21,12 +20,16 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import SortIcon from '@mui/icons-material/Sort';
 import TuneIcon from '@mui/icons-material/Tune';
 
+import type { FiltersState } from '@/app/lib/filters';
+
 interface AdvancedFiltersModalProps {
   open: boolean;
   onClose: () => void;
+  initialValues?: Partial<FiltersState>;
+  onApply?: (values: FiltersState) => void;
 }
 
-export default function AdvancedFiltersModal({ open, onClose }: AdvancedFiltersModalProps) {
+export default function AdvancedFiltersModal({ open, onClose, initialValues, onApply }: AdvancedFiltersModalProps) {
   // Performance
   const [topGainers, setTopGainers] = useState(false);
   const [topLosers, setTopLosers] = useState(false);
@@ -54,33 +57,34 @@ export default function AdvancedFiltersModal({ open, onClose }: AdvancedFiltersM
   const [marketCapMin, setMarketCapMin] = useState('');
   const [marketCapMax, setMarketCapMax] = useState('');
   const [volumeMin, setVolumeMin] = useState('');
+  const [volumeMax, setVolumeMax] = useState('');
+  const [change24hMin, setChange24hMin] = useState('');
+  const [change24hMax, setChange24hMax] = useState('');
 
   // Options
   const [excludeStablecoins, setExcludeStablecoins] = useState(false);
   const [onlyWatchlist, setOnlyWatchlist] = useState(false);
 
-  // Category and Blockchain
+  // Category
   const [category, setCategory] = useState('all');
-  const [blockchain, setBlockchain] = useState('all');
-
-  // Selected tags
-  const [categoryTags, setCategoryTags] = useState<string[]>([]);
-  const [blockchainTags, setBlockchainTags] = useState<string[]>([]);
-
-  const categories = ['NFTs', 'DeFi', 'Stablecoins', 'Meme Coins', 'Jetons IA'];
-  const blockchains = ['Bitcoin', 'Ethereum', 'BNB Chain', 'Solana', 'Polygon', 'Avalanche'];
-
-  const toggleCategoryTag = (tag: string) => {
-    setCategoryTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const toggleBlockchainTag = (tag: string) => {
-    setBlockchainTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
+  const categories = [
+    { value: 'all', label: 'Toutes les Catégories' },
+    { value: 'decentralized-finance-defi', label: 'DeFi' },
+    { value: 'non-fungible-tokens-nft', label: 'NFTs' },
+    { value: 'stablecoins', label: 'Stablecoins' },
+    { value: 'meme-token', label: 'Meme Coins' },
+    { value: 'artificial-intelligence', label: 'Intelligence Artificielle' },
+    { value: 'centralized-exchange-token-cex', label: 'Tokens d\'Exchange (BNB, OKB...)' },
+    { value: 'decentralized-exchange', label: 'DEX (Exchanges Décentralisés)' },
+    { value: 'layer-1', label: 'Layer 1 (BTC, ETH, SOL...)' },
+    { value: 'layer-2', label: 'Layer 2 (Polygon, Arbitrum...)' },
+    { value: 'smart-contract-platform', label: 'Plateformes Smart Contracts' },
+    { value: 'binance-smart-chain', label: 'Binance Smart Chain (BSC)' },
+    { value: 'solana-ecosystem', label: 'Écosystème Solana' },
+    { value: 'polygon-ecosystem', label: 'Écosystème Polygon' },
+    { value: 'avalanche-ecosystem', label: 'Écosystème Avalanche' },
+    { value: 'arbitrum-ecosystem', label: 'Écosystème Arbitrum' },
+  ];
 
   const handleReset = () => {
     setTopGainers(false);
@@ -93,14 +97,37 @@ export default function AdvancedFiltersModal({ open, onClose }: AdvancedFiltersM
     setPriceMax('');
     setMarketCapMin('');
     setMarketCapMax('');
-    setVolumeMin('');
+  setVolumeMin('');
+  setVolumeMax('');
+    setChange24hMin('');
+    setChange24hMax('');
     setExcludeStablecoins(false);
     setOnlyWatchlist(false);
     setCategory('all');
-    setBlockchain('all');
-    setCategoryTags([]);
-    setBlockchainTags([]);
   };
+
+  // Hydrate depuis initialValues quand on ouvre le modal
+  
+  useEffect(() => {
+    if (!open || !initialValues) return;
+    if (initialValues.topGagnants !== undefined) setTopGainers(initialValues.topGagnants);
+    if (initialValues.topPerdants !== undefined) setTopLosers(initialValues.topPerdants);
+    if (initialValues.faibleVolatilite !== undefined) setLowVolatility(initialValues.faibleVolatilite);
+    if (initialValues.hauteVolatilite !== undefined) setHighVolatility(initialValues.hauteVolatilite);
+    if (initialValues.sortKey) setSortKey(initialValues.sortKey as any);
+    if (initialValues.sortDirection) setSortDirection(initialValues.sortDirection);
+    if (initialValues.priceMin !== undefined) setPriceMin(String(initialValues.priceMin ?? ''));
+    if (initialValues.priceMax !== undefined) setPriceMax(String(initialValues.priceMax ?? ''));
+    if (initialValues.marketCapMin !== undefined) setMarketCapMin(String(initialValues.marketCapMin ?? ''));
+    if (initialValues.marketCapMax !== undefined) setMarketCapMax(String(initialValues.marketCapMax ?? ''));
+  if (initialValues.volumeMin !== undefined) setVolumeMin(String(initialValues.volumeMin ?? ''));
+  if (initialValues.volumeMax !== undefined) setVolumeMax(String(initialValues.volumeMax ?? ''));
+    if (initialValues.change24hMin !== undefined) setChange24hMin(String(initialValues.change24hMin ?? ''));
+    if (initialValues.change24hMax !== undefined) setChange24hMax(String(initialValues.change24hMax ?? ''));
+    if (initialValues.exclureStablecoins !== undefined) setExcludeStablecoins(initialValues.exclureStablecoins);
+    if (initialValues.seulementWatchlist !== undefined) setOnlyWatchlist(initialValues.seulementWatchlist);
+    if (initialValues.category) setCategory(initialValues.category);
+  }, [open]);
 
   return (
     <Dialog
@@ -294,8 +321,29 @@ export default function AdvancedFiltersModal({ open, onClose }: AdvancedFiltersM
           </Box>
         </Box>
 
+        {/* Category Filter */}
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Catégorie</Typography>
+          <Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            fullWidth
+            sx={{
+              backgroundColor: '#2d3240',
+              color: '#D1D5DB',
+              borderRadius: '8px',
+              '.MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '.MuiSvgIcon-root': { color: '#9CA3AF' }
+            }}
+          >
+            {categories.map(cat => (
+              <MenuItem key={cat.value} value={cat.value}>{cat.label}</MenuItem>
+            ))}
+          </Select>
+        </Box>
+
         {/* Filtres numériques */}
-        <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
+  <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
           {/* Prix */}
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Prix</Typography>
@@ -365,123 +413,94 @@ export default function AdvancedFiltersModal({ open, onClose }: AdvancedFiltersM
           {/* Volume 24h */}
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Volume (24h)</Typography>
-            <TextField
-              value={volumeMin}
-              onChange={(e) => setVolumeMin(e.target.value)}
-              placeholder="Min"
-              type="number"
-              fullWidth
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
-            />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <TextField
+                value={volumeMin}
+                onChange={(e) => setVolumeMin(e.target.value)}
+                placeholder="Min"
+                type="number"
+                fullWidth
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+              />
+              <TextField
+                value={volumeMax}
+                onChange={(e) => setVolumeMax(e.target.value)}
+                placeholder="Max"
+                type="number"
+                fullWidth
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+              />
+            </Box>
+          </Box>
+
+          {/* Variation (24h) */}
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Variation (24h)</Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <TextField
+                value={change24hMin}
+                onChange={(e) => setChange24hMin(e.target.value)}
+                placeholder="Min %"
+                type="number"
+                fullWidth
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                }}
+                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+              />
+              <TextField
+                value={change24hMax}
+                onChange={(e) => setChange24hMax(e.target.value)}
+                placeholder="Max %"
+                type="number"
+                fullWidth
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                }}
+                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+              />
+            </Box>
           </Box>
         </Box>
 
-        {/* Category and Blockchain Section */}
-        <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
-          {/* Category */}
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#FFFFFF' }}>
-                Catégorie :
-              </Typography>
-              <Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                sx={{
-                  flex: 1,
-                  backgroundColor: '#2d3240',
-                  color: '#D1D5DB',
-                  borderRadius: '8px',
-                  '.MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '.MuiSvgIcon-root': { color: '#9CA3AF' }
-                }}
-              >
-                <MenuItem value="all">Toutes les Catégories</MenuItem>
-                {categories.map(cat => (
-                  <MenuItem key={cat} value={cat.toLowerCase()}>{cat}</MenuItem>
-                ))}
-              </Select>
-            </Box>
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-              {categories.map(tag => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  onClick={() => toggleCategoryTag(tag)}
-                  onDelete={categoryTags.includes(tag) ? () => toggleCategoryTag(tag) : undefined}
-                  sx={{
-                    backgroundColor: categoryTags.includes(tag) ? '#3B82F6' : '#4B5563',
-                    color: '#FFFFFF',
-                    fontWeight: 500,
-                    '&:hover': {
-                      backgroundColor: categoryTags.includes(tag) ? '#2563EB' : '#6B7280',
-                    },
-                    '.MuiChip-deleteIcon': {
-                      color: '#FFFFFF'
-                    }
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
-
-          {/* Blockchain */}
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Typography variant="body1" sx={{ fontWeight: 600, color: '#FFFFFF' }}>
-                Blockchain :
-              </Typography>
-              <Select
-                value={blockchain}
-                onChange={(e) => setBlockchain(e.target.value)}
-                sx={{
-                  flex: 1,
-                  backgroundColor: '#2d3240',
-                  color: '#D1D5DB',
-                  borderRadius: '8px',
-                  '.MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '.MuiSvgIcon-root': { color: '#9CA3AF' }
-                }}
-              >
-                <MenuItem value="all">Toutes les Blockchains</MenuItem>
-                {blockchains.map(chain => (
-                  <MenuItem key={chain} value={chain.toLowerCase()}>{chain}</MenuItem>
-                ))}
-              </Select>
-            </Box>
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-              {blockchains.map(tag => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  onClick={() => toggleBlockchainTag(tag)}
-                  onDelete={blockchainTags.includes(tag) ? () => toggleBlockchainTag(tag) : undefined}
-                  sx={{
-                    backgroundColor: blockchainTags.includes(tag) ? '#3B82F6' : '#4B5563',
-                    color: '#FFFFFF',
-                    fontWeight: 500,
-                    '&:hover': {
-                      backgroundColor: blockchainTags.includes(tag) ? '#2563EB' : '#6B7280',
-                    },
-                    '.MuiChip-deleteIcon': {
-                      color: '#FFFFFF'
-                    }
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
-        </Box>
+        
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #2d3240' }}>
         <Button onClick={handleReset} sx={{ color: '#9CA3AF' }}>Réinitialiser</Button>
-        <Button variant="contained" onClick={onClose} sx={{ backgroundColor: '#3B82F6', '&:hover': { backgroundColor: '#2563EB' } }}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            const values: FiltersState = {
+              topGagnants: topGainers,
+              topPerdants: topLosers,
+              faibleVolatilite: lowVolatility,
+              hauteVolatilite: highVolatility,
+              sortKey: sortKey as any,
+              sortDirection,
+              priceMin: priceMin === '' ? '' : Number(priceMin),
+              priceMax: priceMax === '' ? '' : Number(priceMax),
+              marketCapMin: marketCapMin === '' ? '' : Number(marketCapMin),
+              marketCapMax: marketCapMax === '' ? '' : Number(marketCapMax),
+              volumeMin: volumeMin === '' ? '' : Number(volumeMin),
+              volumeMax: volumeMax === '' ? '' : Number(volumeMax),
+              change24hMin: change24hMin === '' ? '' : Number(change24hMin),
+              change24hMax: change24hMax === '' ? '' : Number(change24hMax),
+              exclureStablecoins: excludeStablecoins,
+              seulementWatchlist: onlyWatchlist,
+              category,
+            };
+            onApply?.(values);
+            onClose();
+          }}
+          sx={{ backgroundColor: '#3B82F6', '&:hover': { backgroundColor: '#2563EB' } }}
+        >
           Appliquer
         </Button>
       </DialogActions>
