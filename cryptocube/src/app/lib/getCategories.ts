@@ -1,6 +1,7 @@
+import { CategoryData } from "./definitions";
 const URL_API = "https://api.coingecko.com/api/v3";
 
-export const getCategories = async () => {
+export const getCategories = async (): Promise<CategoryData[]> => {
     const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     if (!API_KEY) {
         throw new Error("Missing NEXT_PUBLIC_COINGECKO_API_KEY in environment.");
@@ -21,7 +22,7 @@ export const getCategories = async () => {
             throw new Error(`CoinGecko server error ${response.status}`);
         }
 
-        const data = await response.json();
+        const data: CategoryData[] = await response.json();
         return data;
     } catch (error) {
         console.error("Error fetching categories:", error);

@@ -2,14 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import SearchBar from '../components/SearchBar';
 import CoinsTable from '../components/CoinsTable';
 import AdvancedFiltersModal from '../components/AdvancedFiltersModal';
 import { applyAdvancedFilters, defaultFilters, type FiltersState } from '@/app/lib/filters';
-import { CoinData } from '@/app/lib/definitions';
+import { CoinData, CategoryData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
+import { getCategories } from '../../lib/getCategories';
+import { getFormatPrix, getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 export default function Page() {
     const { data: session } = useSession();
@@ -23,6 +28,9 @@ export default function Page() {
     const [watchlistLoading, setWatchlistLoading] = useState(false);
     const [filtersModalOpen, setFiltersModalOpen] = useState(false);
     const [advancedFilters, setAdvancedFilters] = useState<FiltersState>(defaultFilters);
+    const [categoryDetails, setCategoryDetails] = useState<CategoryData | null>(null);
+    const searchParams = useSearchParams();
+    const category = searchParams.get('category');
 
     const fetchCoins = async (category?: string) => {
          try {
@@ -36,8 +44,42 @@ export default function Page() {
     };
 
     useEffect(() => {
-        fetchCoins(advancedFilters.category);
-    }, [advancedFilters.category]);
+        fetchCoins(category || advancedFilters.category);
+    }, [category, advancedFilters.category]);
+
+    // Pour fetch info du catégorie
+    useEffect(() => {
+        if (!category) {
+            setCategoryDetails(null);
+            return;
+        }
+
+        const fetchCategoryDetails = async () => {
+            const allCategories: CategoryData[] = await getCategories();
+            const matchCategory = allCategories.find((cat: CategoryData) => cat.id === category);
+            setCategoryDetails(matchCategory || null);
+        };
+
+        fetchCategoryDetails();
+    }, [category]);
+
+    // Fonction pour formater les pourcentages avec couleurs
+    const formatPercentage = (value: number | undefined) => {
+        const result = getFormatPercentage(value);
+
+        if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
+        
+        return (
+            <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                {result.isPositive ? (
+                    <TrendingUpIcon sx={{ fontSize: '1rem' }} />
+                ) : (
+                    <TrendingDownIcon sx={{ fontSize: '1rem' }} />
+                )}
+                {result.value}
+            </span>
+        );
+    };
 
     // Tabs filtering
     const getFilteredCoinsByTab = (coinsList: CoinData[], tab: string) => {
@@ -131,31 +173,119 @@ export default function Page() {
 
     return (
         <>
-            {/* Hero Section */}
-            <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
-                <div className="text-center mx-auto space-y-8">
-                    {/* Main Title */}
-                    <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
-                        Naviguez dans le monde de la cryptomonnaie en toute simplicité.
-                    </h1>
-                    
-                    {/* Subtitle */}
-                    <p className="text-xl md:text-2xl font-light opacity-75">
-                        Simple. Rapide. Transparent.
-                    </p>
-                    
-                    {/* Barre de recherche */}
-                    <SearchBar 
-                        searchTerm={searchTerm}
-                        onSearchChange={setSearchTerm}
-                        placeholder="Explore crypto..."
-                    />
+            {categoryDetails ? (
+                <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
+                    <div 
+                        style={{
+                            width: '70%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '1.5rem',
+                            marginTop: '2rem'
+                        }}
+                    >
+                        {/* Main Title */}
+                        <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
+                            {categoryDetails.name}
+                        </h1>
+                        {/* Subtitle */}
+                        <p className="text-xl md:text-2xl font-light opacity-75">
+                            {categoryDetails.content}
+                        </p>
 
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '2rem',
+                                marginTop: '1rem',
+                            }}
+                        >
+                            {/* Market Cap */}
+                            <div
+                                style={{
+                                    backgroundColor: '#232330ff',
+                                    color: 'white',
+                                    height: '110px',
+                                    width: '290px',
+                                    borderRadius: '10px',
+                                    padding: '1rem',
+                                    paddingLeft: '1.5rem',
+                                }}
+                            >
+                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Market Cap</h1>
+                                <div
+                                    style={{
+                                        marginTop: '0.5rem',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        gap: '1rem',
+                                        fontSize: '1.4rem',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <h2>{getFormatMarketCap(categoryDetails.market_cap)}</h2>
+                                    <h2 style={{ fontSize: '0.9rem' }}>{formatPercentage(categoryDetails.market_cap_change_24h)}</h2>
+                                </div>
+                            </div>
+
+                            {/* Volume 24h */}
+                            <div
+                                style={{
+                                    backgroundColor: '#232330ff',
+                                    color: 'white',
+                                    height: '110px',
+                                    width: '290px',
+                                    borderRadius: '10px',
+                                    padding: '1rem',
+                                    paddingLeft: '1.5rem',
+                                }}
+                            >
+                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Volume 24h</h1>
+                                <h2
+                                    style={{
+                                        marginTop: '0.5rem',
+                                        fontSize: '1.4rem'
+                                    }}
+                                >{getFormatMarketCap(categoryDetails.volume_24h)}</h2>
+                            </div>
+                        </div>
+
+                        {/* Barre de recherche */}
+                        <SearchBar 
+                            searchTerm={searchTerm}
+                            onSearchChange={setSearchTerm}
+                            placeholder="Explore crypto..."
+                        />
+                    </div>
                 </div>
-            </div>
+            ) : (
+                (
+                    <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
+                        <div className="text-center mx-auto space-y-8">
+                            {/* Main Title */}
+                            <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
+                                Naviguez dans le monde de la cryptomonnaie en toute simplicité.
+                            </h1>
+                            {/* Subtitle */}
+                            <p className="text-xl md:text-2xl font-light opacity-75">
+                                Simple. Rapide. Transparent.
+                            </p>
+                            {/* Barre de recherche */}
+                            <SearchBar 
+                                searchTerm={searchTerm}
+                                onSearchChange={setSearchTerm}
+                                placeholder="Explore crypto..."
+                            />
+                        </div>
+                    </div>
+                )
+            )}
 
             {/* Section des cryptomonnaies */}
-            <div className="min-h-screen">
+            <div className="min-h-screen mt-10">
                 <div className="max-w-[85rem] mx-auto">
                     {/* Titre Overview */}
                     <h2 className="text-4xl font-bold mb-10">
