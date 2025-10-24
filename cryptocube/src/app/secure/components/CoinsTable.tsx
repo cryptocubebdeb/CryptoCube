@@ -5,6 +5,7 @@ import { CoinData } from '@/app/lib/definitions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import MiniChart from './Dashboard/MiniChart';
+import { getFormatPrix, getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
 
 export interface CoinsTableProps {
   coins: CoinData[];
@@ -23,35 +24,22 @@ export default function CoinsTable({
 }: CoinsTableProps) {
   const isClickable = typeof onRowClick === 'function';
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: price < 1 ? 6 : 2,
-    }).format(price);
-  };
+  // Fonction pour formater les pourcentages avec couleurs
+  const formatPercentage = (value: number | undefined) => {
+      const result = getFormatPercentage(value);
 
-  const formatMarketCap = (marketCap: number) => {
-    if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`;
-    if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`;
-    if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`;
-    return `$${marketCap.toLocaleString()}`;
-  };
-
-  const Percent = ({ value }: { value: number | undefined }) => {
-    if (value === undefined) return <span className="text-gray-400">N/A</span>;
-    const positive = value >= 0;
-    return (
-      <span className={`flex items-center justify-end gap-1 ${positive ? 'text-green-500' : 'text-red-500'}`}>
-        {positive ? (
-          <TrendingUpIcon sx={{ fontSize: '1rem' }} />
-        ) : (
-          <TrendingDownIcon sx={{ fontSize: '1rem' }} />
-        )}
-        {Math.abs(value).toFixed(2)}%
-      </span>
-    );
+      if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
+      
+      return (
+          <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+              {result.isPositive ? (
+                  <TrendingUpIcon sx={{ fontSize: '1rem' }} />
+              ) : (
+                  <TrendingDownIcon sx={{ fontSize: '1rem' }} />
+              )}
+              {result.value}
+          </span>
+      );
   };
 
   return (
@@ -111,17 +99,17 @@ export default function CoinsTable({
                     </div>
                   </div>
                 </td>
-                <td className="py-6 px-4 text-right font-medium w-32">{formatPrice(coin.current_price)}</td>
+                <td className="py-6 px-4 text-right font-medium w-32">{getFormatPrix(coin.current_price)}</td>
                 <td className="py-6 px-4 text-right w-24">
-                  <Percent value={coin.price_change_percentage_1h_in_currency} />
+                  {formatPercentage(coin.price_change_percentage_1h_in_currency)}
                 </td>
                 <td className="py-6 px-4 text-right w-24">
-                  <Percent value={coin.price_change_percentage_24h} />
+                  {formatPercentage(coin.price_change_percentage_24h)}
                 </td>
                 <td className="py-6 px-4 text-right w-24">
-                  <Percent value={coin.price_change_percentage_7d_in_currency} />
+                  {formatPercentage(coin.price_change_percentage_7d_in_currency)}
                 </td>
-                <td className="py-6 px-4 text-right font-medium w-40">{formatMarketCap(coin.market_cap)}</td>
+                <td className="py-6 px-4 text-right font-medium w-40">{getFormatMarketCap(coin.market_cap)}</td>
                 <td className="py-6 px-4 text-center w-32">
                   {showSparkline && (
                     <div className="flex justify-end">
