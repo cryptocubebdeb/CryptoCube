@@ -1,6 +1,6 @@
 const URL_API = "https://api.coingecko.com/api/v3";
 
-export async function getCoinsList()
+export async function getCoinsList(category?: string)
 {
     const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     if (!API_KEY) {
@@ -13,10 +13,13 @@ export async function getCoinsList()
     };
 
     try {
-        const response = await fetch(
-            `${URL_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`,
-            options
-        );
+        // Build URL with optional category parameter
+        let url = `${URL_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`;
+        if (category && category !== 'all') {
+            url += `&category=${encodeURIComponent(category)}`;
+        }
+
+        const response = await fetch(url, options);
 
         if (!response.ok) {
             throw new Error(`CoinGecko server error ${response.status}`);
