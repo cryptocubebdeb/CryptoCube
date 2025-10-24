@@ -8,6 +8,7 @@ import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
 import { getCoinNews } from "../../../lib/getCoinNews";
 import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
 import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
+import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -89,6 +90,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     return (
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
             <div className="flex flex-1 justify-center">
+
                 {/* Main container */}
                 <div className="flex w-[95%] gap-6 items-start">
 
@@ -113,6 +115,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-3xl font-semibold text-white">{id.toUpperCase()}</h2>
+                            <WatchlistButton coinId={id} />
+                        </div>
+                        
                         {/* Current price */}
                         <div className="p-4 border-b border-white/10">
                             <span className="text-3xl">
@@ -332,7 +339,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="mt-6 w-[95%] mx-auto mb-12">
                 <CoinMarkets coinId={id} />
             </div>
-            
+
             {/*------------- Treasuries Section -------------*/}
             <div className="mt-6 w-[95%] mx-auto mb-12">
                 <CoinTreasuries coinId={id} />

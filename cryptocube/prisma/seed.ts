@@ -47,7 +47,7 @@ async function main() {
   console.log("[SEED] Successfully created users", { alice, john, jane });
 
   // --- WATCHLIST ITEMS ---
-  await prisma.watchlistItem.createMany({
+  await (prisma as any).watchlistItem.createMany({
     data: [
       // Alice’s watchlist
       { userId: alice.id, coinId: "bitcoin" },
