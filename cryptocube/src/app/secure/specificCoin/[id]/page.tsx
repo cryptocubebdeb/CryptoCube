@@ -276,7 +276,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className="flex-[0.73] flex flex-col gap-6 pl-6">
 
                         {/* Chart container */}
-                        <div className="text-white rounded-[4px] shadow-md overflow-hidden relative">
+                        <div className="text-white rounded-[4px] shadow-md relative">
                             <div className="w-full min-h-[700px]">
                                 <CoinChart coinId={params.id} currency="cad" />
                             </div>
@@ -386,8 +386,6 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </p>
                         </div>
 
-
-
                         {/* ------------- News section ------------- */}
                         <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
                             <CoinDailyNews coinId={id} />
@@ -408,9 +406,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
     );
 }
-
-
-
 
 /*
 Notes 
