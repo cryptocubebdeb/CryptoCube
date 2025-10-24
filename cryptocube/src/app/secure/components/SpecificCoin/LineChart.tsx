@@ -88,6 +88,8 @@ function createLineChart(data: any[], {
     const Y = d3.map(data, y);
     const O = d3.map(data, d => d);
     const I = d3.map(data, (_, i) => i);
+    
+
 
     // Compute which data points are considered defined.
     if (defined === undefined) defined = (_: { Date: Date; Close: number }, i: number) =>
@@ -151,7 +153,7 @@ function createLineChart(data: any[], {
         .call(xAxis);
 
     svg.selectAll(".x-axis text")
-        .attr("fill", "#e4af04")     // light gray text color
+        .attr("fill", "#ffffff40")     // light gray text color
         .style("font-size", "20px")  // larger text
         .style("font-weight", "500");
 
@@ -191,11 +193,14 @@ function createLineChart(data: any[], {
 
 
     svg.selectAll(".y-axis text")
-        .attr("fill", "#e4af04")
+        .attr("fill", "#ffffff40")
         .style("font-size", "20px")
         .style("font-weight", "500");
 
     // === Create a vertical color gradient for the area under the line ===
+
+    const isGrowing = Y[Y.length - 1] > Y[0];
+    const lineColor = isGrowing ? "#16a34a" : "#dc2626"; // green / red
 
     //Here we create a definition, which is a reusable SVG element we will reference later
     const gradient = svg.append("defs")
@@ -209,12 +214,12 @@ function createLineChart(data: any[], {
     // Slightly below top — still bright but slightly less
     gradient.append("stop")
         .attr("offset", "30%")
-        .attr("stop-color", "#e4af04")
+        .attr("stop-color", lineColor)
         .attr("stop-opacity", 0.3);  // 80% visible
 
     gradient.append("stop") //end color at the bottom
         .attr("offset", "100%") //fully transparent at the bottom for fade effect
-        .attr("stop-color", "#e4af04") //yellow
+        .attr("stop-color", lineColor) //green or red depending on growth
         .attr("stop-opacity", 0); //fully transparent
 
     // Area generator: it will convert the data so that SVG can draw it
@@ -233,7 +238,7 @@ function createLineChart(data: any[], {
     svg.append("path")
         .datum(data)
         .attr("fill", "none")
-        .attr("stroke", "#e4af04")
+        .attr("stroke", lineColor)
         .attr("stroke-width", 2.5)
         .attr("d", line);
 

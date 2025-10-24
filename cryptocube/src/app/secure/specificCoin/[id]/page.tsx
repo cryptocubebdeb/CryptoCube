@@ -92,7 +92,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="flex w-[95%] gap-6 items-start">
 
                     {/* Right column - details */}
-                    <div className="flex-[0.27] text-white p-8 text-xl rounded-[2px] shadow-md">
+                    <div className="flex-[0.27] text-white p-8 text-xl rounded-[2px] shadow-md border-r border-white/20">
 
                         {/* Crypto Name and Logo */}
                         <div className="flex items-center gap-4 p-4">
@@ -100,21 +100,21 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <Image
                                     src={logo}
                                     alt={`${name} logo`}
-                                    width={50}
-                                    height={50}
+                                    width={40}
+                                    height={40}
                                     className="rounded"
                                     priority
                                 />
                             )}
                             <div className="flex items-baseline gap-2">
-                                <h1 className="text-4xl">{name}</h1>
+                                <h1 className="text-3xl">{name}</h1>
                                 <span className="text-lg text-white/60 uppercase">{symbole}</span>
                             </div>
                         </div>
 
                         {/* Current price */}
                         <div className="p-4 border-b border-white/10">
-                            <span className="text-5xl">
+                            <span className="text-3xl">
                                 ${currentPrice?.toLocaleString("en-CA", { minimumFractionDigits: 2 })}
                             </span>
                             <span
@@ -233,6 +233,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
                         </div>
                     </div>
+
                     {/* Left column - chart + risk analysis */}
                     <div className="flex-[0.73] flex flex-col gap-6">
 
