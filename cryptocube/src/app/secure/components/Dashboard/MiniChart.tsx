@@ -2,12 +2,14 @@ interface MiniChartProps {
     data: number[];
     isPositive: boolean;
     timeframe?: '24h' | '7d'; // Add timeframe option
+    width?: number; // width in pixels (defaults to 80)
+    height?: number; // height in pixels (defaults to 32)
 }
 
-const MiniChart = ({ data, isPositive, timeframe = '7d' }: MiniChartProps) => {
+const MiniChart = ({ data, isPositive, timeframe = '7d', width: widthProp, height: heightProp }: MiniChartProps) => {
     if (!data || data.length === 0) {
         return (
-            <div className="w-20 h-8 bg-gray-900 rounded flex items-center justify-center text-xs">
+            <div className="bg-gray-900 rounded flex items-center justify-center text-xs" style={{ width: widthProp ?? 80, height: heightProp ?? 32 }}>
                 Aucun data
             </div>
         );
@@ -16,9 +18,9 @@ const MiniChart = ({ data, isPositive, timeframe = '7d' }: MiniChartProps) => {
     // Si timeframe a 24h, prendre seulement les 24 derniers points de données (environ les dernières 24 heures)
     const chartData = timeframe === '24h' ? data.slice(-24) : data;
     
-    // Dimensions du graphique 
-    const width = 80;
-    const height = 32;
+    // Dimensions du graphique
+    const width = widthProp ?? 80;
+    const height = heightProp ?? 32;
     const padding = 4;
 
     // Calculer min et max pour normaliser les données
@@ -34,9 +36,9 @@ const MiniChart = ({ data, isPositive, timeframe = '7d' }: MiniChartProps) => {
     }).join(' ');
 
     return (
-        <div className="w-20 h-8">
+        <div style={{ width, height }}>
             <svg width={width} height={height} className="w-full h-full">
-                <polyline   // Pour dessiner la ligne du graphique
+                <polyline // Pour dessiner la ligne du graphique
                     points={points}
                     fill="none"
                     stroke={isPositive ? "#10b981" : "#ef4444"}

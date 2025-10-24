@@ -226,10 +226,12 @@ export default function WatchlistCarousel() {
 
               {/* Mini Chart */}
               {coin.sparkline_in_7d?.price && (
-                <Box sx={{ mb: 2, height: 80 }}>
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
                   <MiniChart
                     data={coin.sparkline_in_7d.price}
                     isPositive={isPositive}
+                    width={400}
+                    height={85}
                   />
                 </Box>
               )}
