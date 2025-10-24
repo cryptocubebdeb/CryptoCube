@@ -1,7 +1,6 @@
 const URL_API = "https://api.coingecko.com/api/v3";
 
-export async function getCoinsList(category?: string)
-{
+export const getCategories = async () => {
     const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     if (!API_KEY) {
         throw new Error("Missing NEXT_PUBLIC_COINGECKO_API_KEY in environment.");
@@ -13,13 +12,10 @@ export async function getCoinsList(category?: string)
     };
 
     try {
-        // Build URL with optional category parameter
-        let url = `${URL_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d&locale=en`;
-        if (category && category !== 'all') {
-            url += `&category=${encodeURIComponent(category)}`;
-        }
-
-        const response = await fetch(url, options);
+        const response = await fetch(
+            `${URL_API}/coins/categories?order=market_cap_desc&per_page=50`,
+            options
+        );
 
         if (!response.ok) {
             throw new Error(`CoinGecko server error ${response.status}`);
@@ -28,7 +24,16 @@ export async function getCoinsList(category?: string)
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("Error fetching list of coins:", error);
+        console.error("Error fetching categories:", error);
         throw error;
     }
+}
+
+export const getCategoryAssetCount = async (categoryId: string): Promise<number> => {
+    const response = await fetch(`/api/categories?categoryId=${categoryId}`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch asset count");
+    }
+    const { count } = await response.json();
+    return count;
 }
