@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { getCategories, getCategoryAssetCount } from '../../lib/getCategories';
 import MiniChart from '../components/Dashboard/MiniChart';
 import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
+import Button from '@mui/material/Button';
 
 
 // Interface pour les données de cryptomonnaies
@@ -15,6 +16,7 @@ interface CategoryData {
     id: string;
     name: string;
     top_3_coins: string[];
+    top_3_coins_id?: string[];
     asset_count?: number;
     market_cap_change_24h: number;
     market_cap_change_7d?: number;
@@ -151,10 +153,11 @@ export default function Page()
                 {topSections.map((section) => {
                     const isActive = activeTopTab === section.title.toLowerCase();
                     return(
-                        <div
+                        <Button
                             key={section.title}
-                            className={`hover:scale-105 transform transition-transform duration-200 cursor-pointer`}
-                            style={{
+                            variant="contained"
+                            onClick={() => setActiveTopTab(section.title.toLowerCase())}
+                            sx={{
                                 backgroundColor: isActive ? '#232330ff' : '#303039ff',
                                 color: isActive ? 'white' : 'gray',
                                 borderColor: isActive ? '#2d2d3fff' : 'transparent',
@@ -166,13 +169,17 @@ export default function Page()
                                 flexDirection: 'column',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                gap: '0.5rem'
+                                gap: '0.5rem',
+                                transition: 'all 0.2s ease',
+                                '&:hover': { 
+                                    backgroundColor: '#232330ff',
+                                    transform: 'scale(1.07)'
+                                }
                             }}
-                            onClick={() => setActiveTopTab(section.title.toLowerCase())}
                         >
                             {section.icon}
                             <h2 className="font-semibold">{section.title}</h2>
-                        </div>
+                        </Button>
                     );
                 })}
             </div>
@@ -190,7 +197,6 @@ export default function Page()
                 {topSections.find(section => section.title.toLowerCase() === activeTopTab)?.data.map((category) => (
                     <div
                         key={category.id}
-                        className="hover:scale-105 transform transition-transform duration-200 cursor-pointer"
                         style={{
                             backgroundColor: '#2d2d3fff',
                             height: '350px',
@@ -198,13 +204,66 @@ export default function Page()
                             borderRadius: '10px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: '0.5rem',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            gap: '1rem',
+                            padding: '2rem'
                         }}
                     >
-                        <h3 className="font-semibold">{category.name}</h3>
-                        <h4>{getFormatMarketCap(category.volume_24h)}</h4>
+                        <h1 style={{fontSize: '1.2rem', color: '#f1f1feff', fontWeight: 'bold'}}>{category.name}</h1>
+
+                        {/* Volume 24h */}
+                        <div>
+                            <h4 style={{fontSize: '2rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
+                            <h4 style={{fontSize: '1rem', opacity: 0.7}}>Volume échangé sur 24 h</h4>
+                        </div>
+                        
+                        {/* Top 3 coins */}
+                        <div className="flex justify-end items-center mt-3">
+                            {category.top_3_coins && category.top_3_coins.length > 0 ? (
+                                <div className="flex -space-x-2">
+                                    {category.top_3_coins_id && category.top_3_coins_id.length > 0 ? (
+                                        <>
+                                            {category.top_3_coins_id.slice(0, 3).map((coinId, index) => (
+                                                <img
+                                                    key={coinId}
+                                                    src={category.top_3_coins[index]}
+                                                    alt={`Coin ${index + 1}`}
+                                                    className="w-15 h-15 rounded-full border-2 border-gray-800 bg-gray-900 hover:scale-125 transform transition-transform duration-200"
+                                                    style={{ zIndex: 3 - index }}
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                    onClick={() => window.location.href = `/secure/specificCoin/${coinId}`}
+                                                />
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <span className="text-gray-500">No coins</span>
+                                    )}
+                                </div>
+                            ) : (
+                                <span className="text-gray-500">No coins</span>
+                            )}
+                        </div>
+
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                borderColor: '#8b8bc2ff',
+                                marginTop: 'auto',
+                                color: '#8b8bc2ff',
+                                fontWeight: 'bold',
+                                transition: 'all 0.3s ease',
+                                '&:hover': { 
+                                    backgroundColor: '#42425cff',
+                                }
+                            }}
+                        >
+                            Voir plus
+                        </Button>
+                        
+
                     </div>
                 ))}
             </div>
