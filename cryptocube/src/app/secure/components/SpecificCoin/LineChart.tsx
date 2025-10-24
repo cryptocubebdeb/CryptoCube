@@ -141,7 +141,7 @@ function createLineChart(data: any[], {
 
     svg
         .style("background", "transparent")   // dark navy background
-        .attr("color", "#e4af04");        // yellow for axes
+        .attr("color", "transparent");        // transparent axes and lines
 
     const formatAbbrev = d3.format(".2s");
 
@@ -173,6 +173,22 @@ function createLineChart(data: any[], {
             .attr("fill", "currentColor")
             .attr("text-anchor", "start")
             .text(yLabel ?? ""));
+
+    const yTicks = d3.range(yDomain[0], yDomain[1], (yDomain[1] - yDomain[0]) / 7);
+
+    svg.append("g")
+        .attr("class", "grid-lines")
+        .selectAll("line")
+        .data(yTicks)
+        .join("line")
+        .attr("x1", marginLeft)
+        .attr("x2", width - marginRight)
+        .attr("y1", d => yScale(d))
+        .attr("y2", d => yScale(d))
+        .attr("stroke", "#444")
+        .attr("stroke-opacity", 0.3)
+        .attr("shape-rendering", "crispEdges");
+
 
     svg.selectAll(".y-axis text")
         .attr("fill", "#e4af04")
@@ -223,6 +239,15 @@ function createLineChart(data: any[], {
 
     const tooltip = svg.append("g")
         .style("pointer-events", "none");
+
+    // line that follows the cursor along X
+    const cursorLine = svg.append("line")
+        .attr("class", "cursor-line")
+        .attr("stroke", "#ffffff40")    // soft white with transparency
+        .attr("stroke-width", 1)
+        .attr("y1", marginTop)
+        .attr("y2", height - marginBottom)
+        .style("display", "none");      // hidden until hover
 
 
     //This method handles the pointer movement over the chart and displays the tooltip
@@ -337,6 +362,12 @@ function createLineChart(data: any[], {
             .attr("class", "tooltip-arrow")
             .attr("d", arrowPath)
             .attr("fill", boxColor);
+
+        // === show and move the cursor line ===
+        cursorLine
+            .style("display", null)
+            .attr("x1", pointX)
+            .attr("x2", pointX);
     }
 
 
