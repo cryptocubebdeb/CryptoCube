@@ -6,11 +6,13 @@ import CoinChart from "../../components/SpecificCoin/CoinChart";
 import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGauge";
 import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
 import { getCoinNews } from "../../../lib/getCoinNews";
+import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
+import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
+import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
 export default async function Page({ params }: { params: { id: string } }) {
-
     const { id } = params; // id example "bitcoin"
 
     const [coinData, series] = await Promise.all([
@@ -87,9 +89,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
-            <div className="flex flex-1 justify-center">
+            <div className="flex flex-1 justify-center w-full">
                 {/* Main container */}
-                <div className="flex w-[95%] gap-6 items-start">
+                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start">
 
                     {/* Right column - details */}
                     <div className="flex-[0.27] text-white p-8 text-xl rounded-[2px] shadow-md border-r border-white/20">
@@ -111,6 +113,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <span className="text-lg text-white/60 uppercase">{symbole}</span>
                             </div>
                         </div>
+
+
 
                         {/* Current price */}
                         <div className="p-4 border-b border-white/10">
@@ -232,10 +236,44 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
                         </div>
+
+                         {/*------------- Gauges Section -------------*/}
+                        <div className="mt-10 border border-white/10 rounded-md p-6">
+                            <h2 className="text-2xl text-white/90 mb-6 text-center">Market Insights</h2>
+
+                            {/* Volatility Index */}
+                            <div className="flex flex-col items-center mb-8">
+                                <h3 className="text-lg text-white/80 mb-3">{name} Volatility Index</h3>
+                                <RiskGauge value={Math.round(riskScore)} />
+                                <p className="text-white/60 text-sm mt-3">
+                                    Based on 7-day change: {Math.round(PercentageChangeIn7d)}%
+                                </p>
+                            </div>
+
+                            {/* Fear & Greed + Global Market */}
+                            <div className="flex justify-center gap-10 flex-wrap">
+                                {/* Fear & Greed */}
+                                <div className="flex flex-col items-center w-64">
+                                    <h3 className="text-lg text-white/80 mb-3">Market Sentiment</h3>
+                                    <RiskGauge value={Math.round(fearGreedValue)} />
+                                    <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
+                                </div>
+
+                                {/* Global Market */}
+                                <div className="flex flex-col items-center w-64">
+                                    <h3 className="text-lg text-white/80 mb-3">Global Market</h3>
+                                    <RiskGauge value={Math.round(marketHealth)} />
+                                    <p className="text-sm text-white/60 mt-2">
+                                        {marketHealth >= 55 ? "Growing" : marketHealth <= 45 ? "Cooling" : "Stable"}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     {/* Left column - chart + risk analysis */}
-                    <div className="flex-[0.73] flex flex-col gap-6">
+                    <div className="flex-[0.73] flex flex-col gap-6 pl-6">
 
                         {/* Chart container */}
                         <div className="text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
@@ -261,73 +299,42 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
 
                             <details className="group bg-[#12141A] border border-white/10 rounded-md">
-                                <summary className="cursor-pointer list-none px-4 py-3 text-white/80 hover:text-white/95 select-none">
-                                    <span className="mr-2">About {name}</span>
+                                <summary className="cursor-pointer list-none px-4 py-3 text-white/75 hover:text-white transition text-sm sm:text-base select-none">
+                                    <span className="mr-2 font-medium">About {name}</span>
                                     <span className="text-white/50 group-open:hidden">· Show more</span>
                                     <span className="text-white/50 hidden group-open:inline">· Show less</span>
                                 </summary>
-                                <div className="px-4 pb-4">
+
+                                <div className="px-4 pb-5">
                                     <div
-                                        className="text-white/85 leading-relaxed"
-                                        style={{ textAlign: "justify", textJustify: "inter-word" }}
+                                        className="text-white/80 text-[13px] sm:text-[14px] leading-relaxed sm:leading-7"
+                                        style={{
+                                            textAlign: "justify",
+                                            textJustify: "inter-word",
+                                            lineHeight: "1.6",
+                                        }}
                                         dangerouslySetInnerHTML={{ __html: coinDescription }}
                                     />
                                 </div>
                             </details>
                         </div>
-
-                        {/*------------- Gauges Section -------------*/}
-                        <div className="flex flex-wrap justify-between gap-6 w-full mt-6">
-
-                            {/* === Left: Specific Coin Volatility === */}
-                            <div className="flex-1 min-w-[250px] p-6 rounded-[8px] shadow-md">
-                                <h2 className="text-2xl text-white mb-6 text-center">Volatility Index</h2>
-                                <div className="flex flex-col items-center">
-                                    <h3 className="text-lg text-white/80 mb-3">{name}</h3>
-                                    <RiskGauge value={Math.round(riskScore)} />
-                                    <p className="text-white/60 text-sm mt-3">
-                                        Based on 7-day change: {Math.round(PercentageChangeIn7d)}%
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* === Right: Market Overview (Fear & Greed + Global) === */}
-                            <div className="flex-[1.9] min-w-[550px] p-6 rounded-[8px] shadow-md">
-                                <h2 className="text-2xl text-white mb-6 text-center">Market Overview</h2>
-
-                                <div className="flex justify-center gap-10 flex-wrap">
-                                    {/* Fear & Greed */}
-                                    <div className="flex flex-col items-center w-64">
-                                        <h3 className="text-lg text-white/80 mb-3">Market Sentiment</h3>
-                                        <RiskGauge value={Math.round(fearGreedValue)} />
-                                        <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
-                                    </div>
-
-                                    {/* Global Market */}
-                                    <div className="flex flex-col items-center w-64">
-                                        <h3 className="text-lg text-white/80 mb-3">Global Market</h3>
-                                        <RiskGauge value={Math.round(marketHealth)} />
-                                        <p className="text-sm text-white/60 mt-2">
-                                            {
-                                                marketHealth >= 55
-                                                    ? "Growing"   // If marketHealth ≥ 55 = market performing well
-                                                    : marketHealth <= 45
-                                                        ? "Cooling"   // If marketHealth ≤ 45 = market slowing down
-                                                        : "Stable"    // Otherwise (45–55) = neutral 
-                                            }
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div className="text-white p-6 rounded-[8px] shadow-md">
-                            <h2 className="text-2xl mb-4">Latest updates</h2>
-                            <CoinDailyNews coinId={id} />
-                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/*------------- Markets Section -------------*/}
+            <div className="mt-6 w-[95%] mx-auto mb-12">
+                <CoinMarkets coinId={id} />
+            </div>
+
+            {/*------------- Treasuries Section -------------*/}
+            <div className="mt-6 w-[95%] mx-auto mb-12">
+                <CoinTreasuries coinId={id} />
+            </div>
+
+            <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
+                <h2 className="text-2xl mb-4">Latest updates</h2>
+                <CoinDailyNews coinId={id} />
             </div>
         </div>
     );

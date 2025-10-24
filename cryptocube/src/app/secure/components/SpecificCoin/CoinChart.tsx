@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getCoinChart } from "../../../lib/getCoinChart";
 import LineChart from "./LineChart";
+import WatchlistButton from "./WatchlistBtn";
 
 type RawPoint = { time: number; price: number };
 type Point = { x: number; y: number }; //each point in the graphic must have a price for a specific time
@@ -48,21 +49,28 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
   ]
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Time range buttons */}
-      <div className="flex gap-2 mb-4">
-        {ranges.map(range => (
-          <button
-            key={range.value}
-            onClick={() => setDays(range.value)}
-            className={`px-3 py-1 rounded-md text-sm ${days === range.value
-              ? "bg-yellow-500 text-black"
-              : "bg-gray-800 text-gray-200 hover:bg-gray-700"
-              }`}
-          >
-            {range.label}
-          </button>
-        ))}
+    <div className="flex flex-col w-full text-white">
+      {/* === Header Row === */}
+      <div className="flex justify-between items-center mb-4">
+
+        {/* Watchlist button (left) */}
+        <WatchlistButton coinId={coinId} />
+
+        {/* Time range buttons */}
+        <div className="flex gap-2 mb-4">
+          {ranges.map(range => (
+            <button
+              key={range.value}
+              onClick={() => setDays(range.value)}
+              className={`px-3 py-1 rounded-md text-sm ${days === range.value
+                ? "bg-yellow-500 text-black"
+                : "bg-gray-800 text-gray-200 hover:bg-gray-700"
+                }`}
+            >
+              {range.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Chart */}
