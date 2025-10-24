@@ -7,6 +7,7 @@ import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGaug
 import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
 import { getCoinNews } from "../../../lib/getCoinNews";
 import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
+import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -331,7 +332,11 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="mt-6 w-[95%] mx-auto mb-12">
                 <CoinMarkets coinId={id} />
             </div>
-
+            
+            {/*------------- Treasuries Section -------------*/}
+            <div className="mt-6 w-[95%] mx-auto mb-12">
+                <CoinTreasuries coinId={id} />
+            </div>
 
             <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
                 <h2 className="text-2xl mb-4">Latest updates</h2>
