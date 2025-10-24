@@ -9,25 +9,7 @@ import { getCategories, getCategoryAssetCount } from '../../lib/getCategories';
 import MiniChart from '../components/Dashboard/MiniChart';
 import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
 import Button from '@mui/material/Button';
-
-
-// Interface pour les données de cryptomonnaies
-interface CategoryData {
-    id: string;
-    name: string;
-    top_3_coins: string[];
-    top_3_coins_id?: string[];
-    asset_count?: number;
-    market_cap_change_24h: number;
-    market_cap_change_7d?: number;
-    market_cap_change_30d?: number;
-    volume_24h: number;
-    market_cap: number;
-    sparkline_in_30d?: {
-        price: number[];  // Pour chart data
-    };
-}
-
+import { CategoryData } from "../../lib/definitions";
 
 export default function Page() 
 {
@@ -279,6 +261,7 @@ export default function Page()
 
                         <Button
                             variant="outlined"
+                            onClick={() => window.location.href = `/secure/coins?category=${category.id}`}
                             sx={{
                                 borderColor: '#b6b6deff',
                                 width: '100%',
@@ -326,13 +309,13 @@ export default function Page()
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top cryptos</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32"># de contenus</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">30d %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Volume 24h</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Market Cap</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Dernier 30 jours</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Volume 24h</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Market Cap</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-34">Dernier 30 jours</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -358,74 +341,74 @@ export default function Page()
                                             <tr 
                                                 key={`${category.id}-${currentPage}-${index}`}
                                                 className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
-                                                // onClick={() => window.location.href = `/secure/coins`}
+                                                onClick={() => window.location.href = `/secure/coins?category=${category.id}`}
                                             >
-                                            <td className="py-6 px-4 w-16">
-                                                <div className="flex items-center space-x-2">
-                                                    <button className="text-gray-400 hover:text-yellow-500 transition-colors">
-                                                        
-                                                    </button>
-                                                    <span className="font-medium">{actualRank}</span>
-                                                </div>
-                                            </td>
-                                            <td className="py-6 px-4 w-64">
-                                                <div className="flex items-center space-x-3">
-                                                    <div className="font-medium truncate max-w-[300px]" title={category.name}>
-                                                        {category.name}
+                                                <td className="py-6 px-4 w-16">
+                                                    <div className="flex items-center space-x-2">
+                                                        <button className="text-gray-400 hover:text-yellow-500 transition-colors">
+                                                            
+                                                        </button>
+                                                        <span className="font-medium">{actualRank}</span>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td className="py-6 px-4 text-right w-40">
-                                                <div className="flex justify-end items-center">
-                                                    {category.top_3_coins && category.top_3_coins.length > 0 ? (
-                                                        <div className="flex -space-x-2">
-                                                            {category.top_3_coins.slice(0, 3).map((coinUrl, index) => (
-                                                                <img
-                                                                    key={index}
-                                                                    src={coinUrl}
-                                                                    alt={`Coin ${index + 1}`}
-                                                                    className="w-8 h-8 rounded-full border-2 border-gray-800 bg-gray-900"
-                                                                    style={{ zIndex: 3 - index }}
-                                                                    onError={(e) => {
-                                                                        e.currentTarget.style.display = 'none';
-                                                                    }}                                                          
-                                                                />
-                                                            ))}
+                                                </td>
+                                                <td className="py-6 px-4 w-64">
+                                                    <div className="flex items-center space-x-3">
+                                                        <div className="font-medium truncate max-w-[300px]" title={category.name}>
+                                                            {category.name}
                                                         </div>
-                                                    ) : (
-                                                        <span className="text-gray-500">No coins</span>
-                                                    )}
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
+                                                <td className="py-6 px-4 text-right w-40">
+                                                    <div className="flex justify-end items-center">
+                                                        {category.top_3_coins && category.top_3_coins.length > 0 ? (
+                                                            <div className="flex -space-x-2">
+                                                                {category.top_3_coins.slice(0, 3).map((coinUrl, index) => (
+                                                                    <img
+                                                                        key={index}
+                                                                        src={coinUrl}
+                                                                        alt={`Coin ${index + 1}`}
+                                                                        className="w-8 h-8 rounded-full border-2 border-gray-800 bg-gray-900"
+                                                                        style={{ zIndex: 3 - index }}
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.style.display = 'none';
+                                                                        }}                                                          
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-gray-500">No coins</span>
+                                                        )}
+                                                    </div>
+                                                </td>
 
-                                            <td className="py-6 px-4 text-right w-24">
-                                                {category.asset_count !== undefined ? category.asset_count : 'N/A'}
-                                            </td>
-                                            <td className="py-6 px-4 text-right w-24">
-                                                {formatPercentage(category.market_cap_change_24h)}
-                                            </td>
-                                            <td className="py-6 px-4 text-right w-24">
-                                                {formatPercentage(category.market_cap_change_7d)}
-                                            </td>
-                                            <td className="py-6 px-4 text-right w-24">
-                                                {formatPercentage(category.market_cap_change_30d)}
-                                            </td>
-                                            <td className="py-6 px-4 text-right w-32">
-                                                {getFormatMarketCap(category.volume_24h)}
-                                            </td>
-                                            <td className="py-6 px-4 text-right font-medium w-32">
-                                                {getFormatMarketCap(category.market_cap)}
-                                            </td>
-                                            <td className="py-6 px-4 text-center w-40">
-                                                <div className="flex justify-end">
-                                                    <MiniChart
-                                                        data={category.sparkline_in_30d?.price || []}
-                                                        isPositive={(category.market_cap_change_30d || 0) >= 0}
-                                                    />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )})}
+                                                <td className="py-6 px-4 text-right w-24">
+                                                    {category.asset_count !== undefined ? category.asset_count : 'N/A'}
+                                                </td>
+                                                <td className="py-6 px-4 text-right w-24">
+                                                    {formatPercentage(category.market_cap_change_24h)}
+                                                </td>
+                                                <td className="py-6 px-4 text-right w-24">
+                                                    {formatPercentage(category.market_cap_change_7d)}
+                                                </td>
+                                                <td className="py-6 px-4 text-right w-24">
+                                                    {formatPercentage(category.market_cap_change_30d)}
+                                                </td>
+                                                <td className="py-6 px-4 text-right w-32">
+                                                    {getFormatMarketCap(category.volume_24h)}
+                                                </td>
+                                                <td className="py-6 px-4 text-right font-medium w-32">
+                                                    {getFormatMarketCap(category.market_cap)}
+                                                </td>
+                                                <td className="py-6 px-4 text-center w-40">
+                                                    <div className="flex justify-end">
+                                                        <MiniChart
+                                                            data={category.sparkline_in_30d?.price || []}
+                                                            isPositive={(category.market_cap_change_30d || 0) >= 0}
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )})}
                                     </>
                                 )}
                             </tbody>
