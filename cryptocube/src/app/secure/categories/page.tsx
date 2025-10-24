@@ -9,26 +9,7 @@ import { getCategories, getCategoryAssetCount } from '../../lib/getCategories';
 import MiniChart from '../components/Dashboard/MiniChart';
 import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
 import Button from '@mui/material/Button';
-
-
-// Interface pour les données des catégories
-interface CategoryData {
-    id: string;
-    name: string;
-    content: string;
-    top_3_coins: string[];
-    top_3_coins_id?: string[];
-    asset_count?: number;
-    market_cap_change_24h: number;
-    market_cap_change_7d?: number;
-    market_cap_change_30d?: number;
-    volume_24h: number;
-    market_cap: number;
-    sparkline_in_30d?: {
-        price: number[];  // Pour chart data
-    };
-}
-
+import { CategoryData } from "../../lib/definitions";
 
 export default function Page() 
 {
