@@ -141,8 +141,7 @@ function createLineChart(data: any[], {
 
     svg
         .style("background", "transparent")   // dark navy background
-        .attr("stroke", "#e4af04")        // yellow line accent
-        .attr("color", "#e5e7eb");        // light gray text for axes
+        .attr("color", "#e4af04");        // yellow for axes
 
     const formatAbbrev = d3.format(".2s");
 
@@ -152,7 +151,7 @@ function createLineChart(data: any[], {
         .call(xAxis);
 
     svg.selectAll(".x-axis text")
-        .attr("fill", "#e4e4e4")     // light gray text color
+        .attr("fill", "#e4af04")     // light gray text color
         .style("font-size", "20px")  // larger text
         .style("font-weight", "500");
 
@@ -176,7 +175,7 @@ function createLineChart(data: any[], {
             .text(yLabel ?? ""));
 
     svg.selectAll(".y-axis text")
-        .attr("fill", "#e4e4e4")
+        .attr("fill", "#e4af04")
         .style("font-size", "20px")
         .style("font-weight", "500");
 
@@ -225,33 +224,121 @@ function createLineChart(data: any[], {
     const tooltip = svg.append("g")
         .style("pointer-events", "none");
 
+
+    //This method handles the pointer movement over the chart and displays the tooltip
     function pointermoved(event: PointerEvent) {
         const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
+        if (i < 0 || i >= X.length) return;
+
+        const date = new Date(X[i]);
+        const value = Y[i];
+
+        const formatDate = d3.timeFormat("%b %d, %Y, %H:%M:%S %Z");
+        const formatNumber = d3.format(",.0f");
+
+        const pointX = xScale(X[i]);
+        const pointY = yScale(Y[i]);
+        const isLeft = pointX < width / 2;
+
         tooltip.style("display", null);
-        tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(Y[i])})`);
+        tooltip.attr("transform", `translate(${pointX},${pointY})`);
+        tooltip.selectAll("*").remove();
 
-        const path = tooltip.selectAll("path")
-            .data([,])
-            .join("path")
-            .attr("fill", "white")
-            .attr("stroke", "black");
+        // === text content ===
+        const lines = [
+            { text: formatDate(date), color: "#9ca3af" },
+            { text: "Price: ", color: "#b0b6c3", append: `$${formatNumber(value)}` },
+        ];
 
-        const text = tooltip.selectAll("text")
-            .data([,])
-            .join("text")
-            .call(text => text
-                .selectAll("tspan")
-                .data(`${title(i)}`.split(/\n/))
-                .join("tspan")
-                .attr("x", 0)
-                .attr("y", (_, i) => `${i * 1.1}em`)
-                .attr("font-weight", "bold")
-                .text(d => d));
+        const text = tooltip.append("text")
+            .attr("font-family", "Inter, sans-serif")
+            .attr("font-size", 16)
+            .attr("text-anchor", "start")
+            .attr("stroke", "none") // remove yellow outline
+            .attr("fill", "#fff")
+            .style("text-shadow", "none")
+            .style("-webkit-font-smoothing", "antialiased");
 
-        const { x, y, width: w, height: h } = (text.node() as SVGTextElement)?.getBBox();
-        text.attr("transform", `translate(${-w / 2},${15 - y})`);
-        path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+        // Start the first line right at the top
+        let y = 0;
+
+        // Go through each line we want to display in the tooltip (like date, price, etc.) **Kinda works like a printer**
+        lines.forEach(line => {
+            text.append("tspan")
+                .attr("x", 0) // start text drawing at x=0, all the way to the left of the box
+                .attr("y", y) // draw this line a bit lower for each line, depending on the value of y
+                .attr("fill", line.color) // gray tone for the label
+                .attr("font-weight", 400)
+                .text(line.text);
+
+            // If there’s an extra part (like the price value), add it next to it
+            if (line.append) {
+                text.append("tspan")
+                    .attr("fill", "#fff") // white text to stand out
+                    .attr("font-weight", 600)
+                    .text(line.append);
+            }
+
+            // Move down before writing the next line
+            y += 24;
+        });
+
+        // === box sizing ===
+
+        // Figure out how big the text is, so we can draw a box that fits it
+        const bbox = (text.node() as SVGTextElement).getBBox();
+
+        // Add a bit of empty space around the text inside the box
+        const paddingX = 20, paddingY = 14;
+
+        // Calculate how wide and tall the box should be
+        const boxWidthWithPadding = bbox.width + paddingX * 2;
+        const boxHeightWithPadding = bbox.height + paddingY * 2;
+
+        // If the point is on the left side of the chart, put the box to the right of it.
+        // If it’s on the right side, put the box to the left.
+        const boxX = isLeft ? 20 : -boxWidthWithPadding - 20; //Basically its x position
+
+        // Place the box so it’s centered up and down with the data point
+        const boxY = -boxHeightWithPadding / 2; //Basically its y position
+
+        const boxColor = "rgba(20,25,35,0.95)"; // dark box color
+
+        // === drawing the box here ===
+
+        tooltip.append("rect")
+            .attr("x", boxX)
+            .attr("y", boxY)
+            .attr("width", boxWidthWithPadding)
+            .attr("height", boxHeightWithPadding)
+            .attr("rx", 10)
+            .attr("ry", 10)
+            .attr("fill", boxColor)
+            .lower();
+
+        // === reposition text inside box ===
+        const textX = boxX + paddingX;
+        const textY = boxY + (boxHeightWithPadding - bbox.height) / 2 + 12;
+        text.attr("transform", `translate(${textX}, ${textY})`);
+
+        // === arrow ===
+        // Little triangle that connects the box to the point on the line
+        const arrowSize = 8;
+        const centerPointOfTheBoxInY = boxY + boxHeightWithPadding / 2;
+        tooltip.selectAll(".tooltip-arrow").remove();
+
+        // Make the shape of the arrow depending on which side the box is on
+        const arrowPath = isLeft
+            ? `M${boxX - arrowSize},${centerPointOfTheBoxInY} L${boxX},${centerPointOfTheBoxInY - arrowSize} L${boxX},${centerPointOfTheBoxInY + arrowSize}Z`
+            : `M${boxX + boxWidthWithPadding + arrowSize},${centerPointOfTheBoxInY} L${boxX + boxWidthWithPadding},${centerPointOfTheBoxInY - arrowSize} L${boxX + boxWidthWithPadding},${centerPointOfTheBoxInY + arrowSize}Z`;
+
+        // Draw the arrow
+        tooltip.append("path")
+            .attr("class", "tooltip-arrow")
+            .attr("d", arrowPath)
+            .attr("fill", boxColor);
     }
+
 
     function pointerleft() {
         tooltip.style("display", "none");
