@@ -199,68 +199,103 @@ export default function Page()
                         key={category.id}
                         style={{
                             backgroundColor: '#2d2d3fff',
-                            height: '350px',
-                            width: '350px',
+                            height: '380px',
+                            width: '360px',
                             borderRadius: '10px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            gap: '1rem',
-                            padding: '2rem'
+                            justifyContent: 'space-between',
+                            padding: '1.5rem'
                         }}
                     >
-                        <h1 style={{fontSize: '1.2rem', color: '#f1f1feff', fontWeight: 'bold'}}>{category.name}</h1>
-
-                        {/* Volume 24h */}
-                        <div>
-                            <h4 style={{fontSize: '2rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
-                            <h4 style={{fontSize: '1rem', opacity: 0.7}}>Volume échangé sur 24 h</h4>
-                        </div>
-                        
-                        {/* Top 3 coins */}
-                        <div className="flex justify-end items-center mt-3">
-                            {category.top_3_coins && category.top_3_coins.length > 0 ? (
-                                <div className="flex -space-x-2">
-                                    {category.top_3_coins_id && category.top_3_coins_id.length > 0 ? (
-                                        <>
-                                            {category.top_3_coins_id.slice(0, 3).map((coinId, index) => (
-                                                <img
-                                                    key={coinId}
-                                                    src={category.top_3_coins[index]}
-                                                    alt={`Coin ${index + 1}`}
-                                                    className="w-15 h-15 rounded-full border-2 border-gray-800 bg-gray-900 hover:scale-125 transform transition-transform duration-200"
-                                                    style={{ zIndex: 3 - index }}
-                                                    onError={(e) => {
-                                                        e.currentTarget.style.display = 'none';
-                                                    }}
-                                                    onClick={() => window.location.href = `/secure/specificCoin/${coinId}`}
-                                                />
-                                            ))}
-                                        </>
-                                    ) : (
-                                        <span className="text-gray-500">No coins</span>
-                                    )}
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'flex-start',
+                                gap: '1rem',
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'flex-start',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                <h1 style={{fontSize: '1.3rem', color: '#f1f1feff'}}>{category.name}</h1>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        gap: '1rem',
+                                        color: '#dcdcedff',
+                                        fontSize: '1rem'
+                                    }}
+                                >
+                                    <h2>{getFormatMarketCap(category.market_cap)}</h2>
+                                    <h2 style={{ fontSize: '0.85rem' }}>{formatPercentage(category.market_cap_change_24h)}</h2>
                                 </div>
-                            ) : (
-                                <span className="text-gray-500">No coins</span>
-                            )}
+                            </div>
+                        
+                            {/* Volume 24h */}
+                            <div>
+                                <h4 style={{fontSize: '2rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
+                                <h4 style={{fontSize: '1rem', opacity: 0.7}}>Volume échangé sur 24 h</h4>
+                            </div>
+                            
+                            {/* Top 3 coins */}
+                            <div className="flex justify-end items-center mt-3">
+                                {category.top_3_coins && category.top_3_coins.length > 0 ? (
+                                    <div className="flex -space-x-2">
+                                        {category.top_3_coins_id && category.top_3_coins_id.length > 0 ? (
+                                            <>
+                                                {category.top_3_coins_id.slice(0, 3).map((coinId, index) => (
+                                                    <img
+                                                        key={coinId}
+                                                        src={category.top_3_coins[index]}
+                                                        alt={`Coin ${index + 1}`}
+                                                        className="w-15 h-15 rounded-full border-2 border-gray-800 bg-gray-900 hover:scale-115 transform transition-transform duration-200"
+                                                        style={{ zIndex: 3 - index }}
+                                                        onError={(e) => {
+                                                            e.currentTarget.style.display = 'none';
+                                                        }}
+                                                        onClick={() => window.location.href = `/secure/specificCoin/${coinId}`}
+                                                    />
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <span className="text-gray-500">No coins</span>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <span className="text-gray-500">No coins</span>
+                                )}
+                            </div>
                         </div>
 
                         <Button
                             variant="outlined"
                             sx={{
-                                borderColor: '#8b8bc2ff',
-                                marginTop: 'auto',
-                                color: '#8b8bc2ff',
+                                borderColor: '#b6b6deff',
+                                width: '100%',
+                                paddingTop: '0.5rem',
+                                paddingBottom: '0.5rem',
+                                borderRadius: '0.5rem',
+                                color: '#b6b6deff',
                                 fontWeight: 'bold',
                                 transition: 'all 0.3s ease',
                                 '&:hover': { 
                                     backgroundColor: '#42425cff',
+                                    transform: 'scale(1.03)',
+                                    color: '#e1e1f6ff'
                                 }
                             }}
                         >
-                            Voir plus
+                            Voir {category.name}
                         </Button>
                         
 
@@ -290,7 +325,7 @@ export default function Page()
                                 <tr className="border-b border-gray-400">
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top coins</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top cryptos</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-32"># de contenus</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
