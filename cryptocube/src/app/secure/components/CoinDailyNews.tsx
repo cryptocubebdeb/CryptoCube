@@ -81,7 +81,7 @@ export default function CoinDailyNews({
     <Box sx={{ position: "relative" }}>
       {/* Header with arrows */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h6" sx={{ color: "white" }}>Latest updates</Typography>
+        <Typography variant="h5" sx={{ color: "white" }}>Latest updates</Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton onClick={prev} size="small" sx={{ color: "white" }}>
             <ArrowBackIosIcon fontSize="inherit" />

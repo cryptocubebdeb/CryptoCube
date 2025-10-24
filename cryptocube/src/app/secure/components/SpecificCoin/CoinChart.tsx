@@ -44,7 +44,7 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
     { label: "30D", value: 30 },
     { label: "90D", value: 90 },
     { label: "1Y", value: 365 },
-    { label: "5Y", value: 1825 },
+    //{ label: "5Y", value: 1825 },
     //FIGURE OUT HOW TO ADD A MAX RANGE { label: "MAX", value: "max" },
   ]
 

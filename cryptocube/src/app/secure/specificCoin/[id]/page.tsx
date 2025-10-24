@@ -237,7 +237,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                         {/*------------- Gauges Section -------------*/}
+                        {/*------------- Gauges Section -------------*/}
                         <div className="mt-10 border border-white/10 rounded-md p-6">
                             <h2 className="text-2xl text-white/90 mb-6 text-center">Market Insights</h2>
 
@@ -276,9 +276,25 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className="flex-[0.73] flex flex-col gap-6 pl-6">
 
                         {/* Chart container */}
-                        <div className="text-white p-8 rounded-[4px] shadow-md overflow-hidden relative">
+                        <div className="text-white rounded-[4px] shadow-md relative">
                             <div className="w-full min-h-[700px]">
                                 <CoinChart coinId={params.id} currency="cad" />
+                            </div>
+                        </div>
+
+                        {/* Extra coin fundamentals */}
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
+                            <div>
+                                <span className="block text-white/50">Launch Date</span>
+                                <span>{coinData?.genesis_date || "Unknown"}</span>
+                            </div>
+                            <div>
+                                <span className="block text-white/50">Hashing Algorithm</span>
+                                <span>{coinData?.hashing_algorithm || "Unknown"}</span>
+                            </div>
+                            <div>
+                                <span className="block text-white/50">Category</span>
+                                <span>{coinData?.categories?.[0] || "Unknown"}</span>
                             </div>
                         </div>
 
@@ -286,16 +302,25 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <div className="mt-8">
                             <div className="flex items-baseline justify-between mb-3">
                                 <h2 className="text-2xl text-white/90">Description</h2>
-                                {websiteUrl ? (
-                                    <a
-                                        href={websiteUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-md text-white/70 hover:underline"
-                                    >
-                                        Official site
-                                    </a>
-                                ) : null}
+
+                                {/* ------------- Website ------------- */}
+                                <div className="flex flex-wrap gap-3 mt-6 text-sm">
+                                    {coinData?.links?.subreddit_url && (
+                                        <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            Reddit
+                                        </a>
+                                    )}
+                                    {coinData?.links?.repos_url?.github?.[0] && (
+                                        <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            GitHub
+                                        </a>
+                                    )}
+                                    {coinData?.links?.homepage?.[0] && (
+                                        <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            Website
+                                        </a>
+                                    )}
+                                </div>
                             </div>
 
                             <details className="group bg-[#12141A] border border-white/10 rounded-md">
@@ -315,8 +340,55 @@ export default async function Page({ params }: { params: { id: string } }) {
                                         }}
                                         dangerouslySetInnerHTML={{ __html: coinDescription }}
                                     />
+                                    <p className="text-white/50 text-sm italic mt-6">
+                                        Updated {new Date(coinData.last_updated).toLocaleString()} · Data source: CoinGecko
+                                    </p>
                                 </div>
                             </details>
+                        </div>
+
+
+                        {/* ------------- Global Prices ------------- */}
+                        <div className="mt-2 rounded-md p-3">
+                            <h2 className="text-2xl text-white/90 mb-5">Global Prices</h2>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-6 text-sm text-white/80">
+                                {[
+                                    { code: "usd", label: "USD (US Dollar)" },
+                                    { code: "cad", label: "CAD (Canadian Dollar)" },
+                                    { code: "eur", label: "EUR (Euro)" },
+                                    { code: "gbp", label: "GBP (British Pound)" },
+                                    { code: "jpy", label: "JPY (Japanese Yen)" },
+                                    { code: "aud", label: "AUD (Australian Dollar)" },
+                                    { code: "chf", label: "CHF (Swiss Franc)" },
+                                    { code: "inr", label: "INR (Indian Rupee)" },
+                                ].map(({ code, label }) => {
+                                    const value = coinData?.market_data?.current_price?.[code];
+                                    return (
+                                        <div key={code} className="flex justify-between items-center border-b border-white/10 pb-2">
+                                            <span className="text-white/60">{label}</span>
+                                            <span className="font-medium">
+                                                {value
+                                                    ? value.toLocaleString("en-CA", {
+                                                        style: "currency",
+                                                        currency: code.toUpperCase(),
+                                                        maximumFractionDigits: 0,
+                                                    })
+                                                    : "—"}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <p className="text-white/50 text-xs mt-5 text-center">
+                                Prices updated in real time from CoinGecko
+                            </p>
+                        </div>
+
+                        {/* ------------- News section ------------- */}
+                        <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
+                            <CoinDailyNews coinId={id} />
                         </div>
                     </div>
                 </div>
@@ -331,17 +403,9 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="mt-6 w-[95%] mx-auto mb-12">
                 <CoinTreasuries coinId={id} />
             </div>
-
-            <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
-                <h2 className="text-2xl mb-4">Latest updates</h2>
-                <CoinDailyNews coinId={id} />
-            </div>
         </div>
     );
 }
-
-
-
 
 /*
 Notes 
