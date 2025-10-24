@@ -14,7 +14,7 @@ import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/li
 export default function Page() {
     const { data: session } = useSession();
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page + 20 pages
+    const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page * 20 pages
     const [loading, setLoading] = useState(true);
     const [coins, setCoins] = useState<CoinData[]>([]);
     const [activeTab, setActiveTab] = useState('tout');

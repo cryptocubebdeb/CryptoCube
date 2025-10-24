@@ -8,7 +8,7 @@ const MiniChart = ({ data, isPositive, timeframe = '7d' }: MiniChartProps) => {
     if (!data || data.length === 0) {
         return (
             <div className="w-20 h-8 bg-gray-900 rounded flex items-center justify-center text-xs">
-                No data
+                Aucun data
             </div>
         );
     }
