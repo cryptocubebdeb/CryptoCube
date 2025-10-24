@@ -28,7 +28,7 @@
     "jsx-runtime": "^1.2.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.544.0",
-    "next": "15.5.2",
+    "next": "^15.4.1",
     "next-auth": "^5.0.0-beta.29",
     "postgres": "^3.4.7",
     "preact": "^10.27.2",

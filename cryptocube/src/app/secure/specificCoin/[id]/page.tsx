@@ -6,11 +6,11 @@ import CoinChart from "../../components/SpecificCoin/CoinChart";
 import RiskGauge from "../../../../app/secure/components/GaugeComponent/RiskGauge";
 import CoinDailyNews from "../../../../app/secure/components/CoinDailyNews";
 import { getCoinNews } from "../../../lib/getCoinNews";
+import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
 export default async function Page({ params }: { params: { id: string } }) {
-
     const { id } = params; // id example "bitcoin"
 
     const [coinData, series] = await Promise.all([
@@ -322,12 +322,20 @@ export default async function Page({ params }: { params: { id: string } }) {
                         </div>
 
 
-                        <div className="text-white p-6 rounded-[8px] shadow-md">
-                            <h2 className="text-2xl mb-4">Latest updates</h2>
-                            <CoinDailyNews coinId={id} />
-                        </div>
+
                     </div>
                 </div>
+            </div>
+
+            {/*------------- Markets Section -------------*/}
+            <div className="mt-6 w-[95%] mx-auto mb-12">
+                <CoinMarkets coinId={id} />
+            </div>
+
+
+            <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
+                <h2 className="text-2xl mb-4">Latest updates</h2>
+                <CoinDailyNews coinId={id} />
             </div>
         </div>
     );
