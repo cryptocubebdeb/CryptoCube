@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import SearchBar from '../components/SearchBar';
 import CoinsTable from '../components/CoinsTable';
+import AdvancedFiltersModal from '../components/AdvancedFiltersModal';
+import { applyAdvancedFilters, defaultFilters, type FiltersState } from '@/app/lib/filters';
 import { CoinData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
@@ -19,10 +21,12 @@ export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
     const [userWatchlist, setUserWatchlist] = useState<Set<string>>(new Set());
     const [watchlistLoading, setWatchlistLoading] = useState(false);
+    const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+    const [advancedFilters, setAdvancedFilters] = useState<FiltersState>(defaultFilters);
 
-    const fetchCoins = async () => {
+    const fetchCoins = async (category?: string) => {
          try {
-            const data = await getCoinsList();
+            const data = await getCoinsList(category);
             setCoins(data);
         } catch (error) {
             console.error("Error fetching all coins:", error);
@@ -32,8 +36,8 @@ export default function Page() {
     };
 
     useEffect(() => {
-        fetchCoins();
-    }, []);
+        fetchCoins(advancedFilters.category);
+    }, [advancedFilters.category]);
 
     // Tabs filtering
     const getFilteredCoinsByTab = (coinsList: CoinData[], tab: string) => {
@@ -53,9 +57,10 @@ export default function Page() {
         }
     };
 
-    // Filtrage combiné onglet + recherche (doit être défini avant la pagination)
+    // Filtrage combiné onglet + recherche + filtres avancés (doit être défini avant la pagination)
     const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
-    const searchFilteredCoins = tabFilteredCoins.filter(coin =>
+    const advancedFilteredCoins = applyAdvancedFilters(tabFilteredCoins, advancedFilters, userWatchlist);
+    const searchFilteredCoins = advancedFilteredCoins.filter(coin =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -73,7 +78,7 @@ export default function Page() {
     useEffect(() => {
         const totalResults = searchFilteredCoins.length;
         setTotalPages(Math.ceil(totalResults / 40));
-    }, [searchTerm, activeTab, coins.length]);
+    }, [searchTerm, activeTab, coins.length, advancedFilters]);
 
     // Reset à page 1 quand recherche se fait
     useEffect(() => {
@@ -188,18 +193,32 @@ export default function Page() {
                                 );
                             })}
                         </div>
-                        <Button 
-                            variant="outlined"
-                            onClick={() => fetchCoins()}
-                            startIcon={
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                            }
-                            sx={{ mt: -1, mb: 1 }}
-                        >
-                            Refresh
-                        </Button>
+                        <div className="flex items-center gap-3">
+                            <Button
+                                variant="outlined"
+                                onClick={() => setFiltersModalOpen(true)}
+                                startIcon={
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
+                                    </svg>
+                                }
+                                sx={{ mt: -1, mb: 1 }}
+                            >
+                                Filtres 
+                            </Button>
+                            <Button 
+                                variant="outlined"
+                                onClick={() => fetchCoins()}
+                                startIcon={
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                }
+                                sx={{ mt: -1, mb: 1 }}
+                            >
+                                Refresh
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Tableau des cryptomonnaies */}
@@ -334,6 +353,14 @@ export default function Page() {
                     )}
                 </div>
             </div>
+
+            {/* Modal des filtres avancés */}
+            <AdvancedFiltersModal 
+                open={filtersModalOpen}
+                onClose={() => setFiltersModalOpen(false)}
+                initialValues={advancedFilters}
+                onApply={(vals) => setAdvancedFilters(vals)}
+            />
         </>
     )
 }
