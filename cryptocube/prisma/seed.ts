@@ -1,44 +1,43 @@
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 import bcrypt from "bcryptjs";
-console.log(Object.keys(prisma));
 
+const prisma = new PrismaClient();
 
 async function main() {
   const hashedPassword = await bcrypt.hash("Password123!", 10);
 
   // --- USERS ---
-  const alice = await prisma.utilisateur.upsert({
+  const alice = await prisma.user.upsert({
     where: { email: "alice@outlook.com" },
     update: {},
     create: {
       email: "alice@outlook.com",
-      motDePasse: hashedPassword,
-      nom: "Leblanc",
+      passwordHash: hashedPassword,
+      name: "Leblanc",
       prenom: "Alice",
       username: "aliceleblanc05",
     },
   });
 
-  const john = await prisma.utilisateur.upsert({
+  const john = await prisma.user.upsert({
     where: { email: "johndoe@outlook.com" },
     update: {},
     create: {
       email: "johndoe@outlook.com",
-      motDePasse: hashedPassword,
-      nom: "Doe",
+      passwordHash: hashedPassword,
+      name: "Doe",
       prenom: "John",
       username: "johndoe03",
     },
   });
 
-  const jane = await prisma.utilisateur.upsert({
+  const jane = await prisma.user.upsert({
     where: { email: "janedoe@outlook.com" },
     update: {},
     create: {
       email: "janedoe@outlook.com",
-      motDePasse: hashedPassword,
-      nom: "Doe",
+      passwordHash: hashedPassword,
+      name: "Doe",
       prenom: "Jane",
       username: "janedoe06",
     },
@@ -47,7 +46,7 @@ async function main() {
   console.log("[SEED] Successfully created users", { alice, john, jane });
 
   // --- WATCHLIST ITEMS ---
-  await (prisma as any).watchlistItem.createMany({
+  await prisma.watchlistItem.createMany({
     data: [
       // Alice’s watchlist
       { userId: alice.id, coinId: "bitcoin" },
