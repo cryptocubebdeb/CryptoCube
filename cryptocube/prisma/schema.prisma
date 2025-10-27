@@ -13,39 +13,100 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Utilisateur {
-  id         Int    @id @default(autoincrement()) @map("id_utilisateur")
-  email      String @unique @db.VarChar(100)
-  motDePasse String @map("mot_de_passe") @db.VarChar(255)
-  nom        String @db.VarChar(50)
-  prenom     String @db.VarChar(50)
-  username   String @unique @db.VarChar(50)
+// ======================
+//      USER MODEL
+// ======================
 
-  resetToken PasswordResetToken?
-  watchlistItems WatchlistItem[]
-  
-  @@map("utilisateur")
+model User {
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
+  emailVerified  DateTime? // used by NextAuth
+  name           String?
+  prenom         String?
+  username       String?   @unique
+  passwordHash   String?   // hashed password for credentials login
+
+  // Relations
+  accounts       Account[]         // OAuth logins (Google, Facebook, Reddit…)
+  sessions       Session[]         // active login sessions
+  resetToken     PasswordResetToken?
+  watchlistItems WatchlistItem[]   // a user can have multiple watchlist items
 }
+
+
+// ======================
+//        ACCOUNT
+// ======================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// ======================
+//        SESSION
+// ======================
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ======================
+//   VERIFICATION TOKEN
+// ======================
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+
+// ======================
+//      RESET TOKEN
+// ======================
 
 model PasswordResetToken {
-  userId          Int       @id
-  resetToken      String    @db.VarChar(255) // store hashed token
-  tokenValidFrom  DateTime  @default(now())
-  tokenValidUntil DateTime  @default(dbgenerated("now() + interval '1 hour'"))
+  userId          Int      @id
+  resetToken      String
+  tokenValidFrom  DateTime @default(now())
+  tokenValidUntil DateTime @default(dbgenerated("now() + interval '1 hour'"))
 
-  user Utilisateur @relation(fields: [userId], references: [id])
-
-  @@map("password_reset_tokens")
+  user User @relation(fields: [userId], references: [id])
 }
+
+// ======================
+//       WATCHLIST
+// ======================
 
 model WatchlistItem {
   id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  coinId    String   @map("coin_id") @db.VarChar(100)
-  addedAt   DateTime @default(now()) @map("added_at")
+  userId    Int
+  coinId    String
+  addedAt   DateTime @default(now())
 
-  user Utilisateur @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, coinId]) // Un utilisateur ne peut pas avoir le même coin deux fois
-  @@map("watchlist_items")
 }

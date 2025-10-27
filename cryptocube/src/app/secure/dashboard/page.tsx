@@ -1,4 +1,4 @@
-import { auth } from '@/auth'
+import { auth } from '@/auth_old'
 import styles from './page.module.css'
 import DashboardContent from './DashboardContent';
 
