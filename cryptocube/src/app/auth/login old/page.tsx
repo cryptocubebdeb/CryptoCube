@@ -16,6 +16,7 @@ import Box from "@mui/material/Box"
 import Divider from "@mui/material/Divider"
 import IconButton from "@mui/material/IconButton"
 import InputAdornment from "@mui/material/InputAdornment"
+import Tooltip from "@mui/material/Tooltip";
 
 // Icônes MUI
 import Visibility from "@mui/icons-material/Visibility"
@@ -53,6 +54,9 @@ export default function Page() {
     if (!email) {
       setEmailError("Une adresse email est requise");
       hasError = true;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Adresse email invalide");
+      hasError = true;
     }
     if (!password) {
       setPasswordError("Un mot de passe est obligatoire");
@@ -68,8 +72,11 @@ export default function Page() {
       callbackUrl: "/secure/dashboard",
     });
 
-    if (result?.error) {
-      setMessage("Login failed");
+    console.log("signIn result:", result);
+
+    if (result?.error === "CredentialsSignin") setMessage("Email ou mot de passe incorrect");
+    else if (result?.error) {
+      setMessage("Erreur de connexion");
     } else {
       router.push(result?.url ?? "/secure/dashboard");
     }
@@ -116,7 +123,7 @@ export default function Page() {
     <div className={`h-screen flex flex-col ${geologica.className}`}>
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
+        <h1 className="text-3xl font-mono mb-9 mt-12">Connexion</h1>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -160,14 +167,16 @@ export default function Page() {
                 sx: { borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", color: "white" },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                      sx={{ color: "rgba(255,255,255,0.6)" }}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
+                    <Tooltip title={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                        sx={{ color: "rgba(255,255,255,0.6)" }}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </Tooltip>
                   </InputAdornment>
                 ),
               }}
@@ -237,7 +246,7 @@ export default function Page() {
 
             <p className="text-center text-sm mt-2 text-gray-300">
               Pas de compte?{" "}
-              <Link href="/auth/signup" className="underline">
+              <Link href="/signup" className="underline">
                 S'inscrire
               </Link>
             </p>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth_old';
+import { auth } from '@/app/api/auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -8,7 +8,7 @@ async function getAuthenticatedUserId(): Promise<number | null> {
   const session = await auth();
   if (!session?.user?.email) return null;
 
-  const user = await prisma.utilisateur.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { id: true },
   });
