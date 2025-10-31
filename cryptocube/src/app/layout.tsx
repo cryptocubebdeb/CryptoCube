@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AuthSessionProvider from "./components/AuthSessionProvider";
 import MUIThemeProvider from "./components/ThemeProvider";
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
             <main className="py-5">
               {children}
             </main>
+            <Footer />
           </MUIThemeProvider>
         </AuthSessionProvider>
       </body>
