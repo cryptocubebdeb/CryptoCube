@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <AuthSessionProvider>
           <MUIThemeProvider>
-            <main className="py-5">
+            <main className="py-5 pb-24 md:pb-32">
               {children}
             </main>
             <Footer />
