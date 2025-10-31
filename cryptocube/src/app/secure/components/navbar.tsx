@@ -23,10 +23,10 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
-      <div className="mx-auto max-w-7xl h-14 px-4 flex items-center justify-between">
-        <Link href="/secure/dashboard" className="font-semibold">CryptoCube</Link>
+      <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
+        <Link href="/secure/dashboard" className="font-bold text-2xl">CryptoCube</Link>
 
-        <ul className="flex flex-row items-center gap-6 ">
+        <ul className="flex flex-row items-center gap-8">
           {Links.map((link) => {
             const active = !!link.text && pathname?.startsWith(link.href);
             return (
@@ -34,7 +34,7 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   className={[
-                    "navbar-text uppercase text-sm transition-colors",
+                    "navbar-text uppercase text-base transition-colors",
                     active ? "text-yellow-400" : "text-white/80 hover:text-white",
                   ].join(" ")}
                 >
