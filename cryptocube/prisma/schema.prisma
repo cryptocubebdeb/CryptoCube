@@ -128,13 +128,13 @@ model SimulatorAccount {
   user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // How much fake cash they started with (ex: 75000.00). Never changes.
-  initialCashBalance      Decimal      @db.Numeric(18, 2)
+  initialCashBalance      Decimal      @db.Decimal(18, 2)
 
   // How much fake cash is left right now (not invested).
-  currentCashBalance       Decimal         @db.Numeric(18, 2)
+  currentCashBalance       Decimal         @db.Decimal(18, 2)
 
   // Profit they've actually locked in by selling higher than they bought.
-  realizedProfitUsd    Decimal         @db.Numeric(18, 2) @default(0)
+  realizedProfitUsd    Decimal         @db.Decimal(18, 2) @default(0)
 
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
@@ -163,10 +163,10 @@ model Portfolio {
   coinSymbol                String
 
   // How much of that coin they currently own
-  amountOwned               Decimal        @db.Numeric(38, 18)
+  amountOwned               Decimal        @db.Decimal(38, 18)
 
   // Average price in USD they paid for what they STILL HOLD
-  averageEntryPriceUsd      Decimal        @db.Numeric(18, 8)
+  averageEntryPriceUsd      Decimal        @db.Decimal(18, 8)
 
   createdAt                 DateTime       @default(now())
   updatedAt                 DateTime       @updatedAt
@@ -185,23 +185,23 @@ model TradeHistory {
   id                   Int           @id @default(autoincrement())
 
   // Which simulated account did this trade
-  simulatorAccountId    Int
-  simulatorAccount      SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+  simulatorAccountId       Int
+  simulatorAccount         SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-   // BUY or SELL
+  // BUY or SELL
   tradeType            TradeType
 
   // Which coin was traded
   coinSymbol           String
 
   // How much coin was bought/sold
-  amountTraded         Decimal       @db.Numeric(38, 18)
+  amountTraded         Decimal       @db.Decimal(38, 18)
 
   // USD price per coin at that exact time
-  tradePrice           Decimal       @db.Numeric(18, 8)
+  tradePrice           Decimal       @db.Decimal(18, 8)
 
   // Total value of the trade = amountTraded * tradePriceUsd
-  tradeTotal           Decimal       @db.Numeric(18, 2)
+  tradeTotal           Decimal       @db.Decimal(18, 2)
 
   executedAt           DateTime      @default(now())
 }
