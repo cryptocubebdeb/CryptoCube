@@ -156,8 +156,8 @@ model Portfolio {
   id                        Int            @id @default(autoincrement())
 
   // Which simulated account this belongs to
-  paperAccountId            Int
-  paperAccount              PaperAccount   @relation(fields: [paperAccountId], references: [id], onDelete: Cascade)
+  simulatorAccountId         Int
+  simulatorAccount           SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
   // Which coin (ex: "btc", "eth", "sol")
   coinSymbol                String
@@ -185,10 +185,10 @@ model TradeHistory {
   id                   Int           @id @default(autoincrement())
 
   // Which simulated account did this trade
-  paperAccountId       Int
-  paperAccount         PaperAccount  @relation(fields: [paperAccountId], references: [id], onDelete: Cascade)
+  simulatorAccountId    Int
+  simulatorAccount      SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  // BUY or SELL
+   // BUY or SELL
   tradeType            TradeType
 
   // Which coin was traded
