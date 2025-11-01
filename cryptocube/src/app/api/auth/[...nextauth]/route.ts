@@ -41,11 +41,12 @@ export const authOptions: NextAuthConfig = {
             clientId: process.env.REDDIT_CLIENT_ID!,
             clientSecret: process.env.REDDIT_CLIENT_SECRET!,
             profile(profile) {
-                // Reddit usually doesn’t give email — synthesize one
+                const name = profile.name ?? "Reddit User";
                 return {
-                    id: profile.id,
-                    name: profile.name ?? "Reddit User",
-                    email: `${profile.name}@reddit.local`,
+                    id: String(profile.id),
+                    name,
+                    email: profile.name ? `${profile.name}@reddit.local` : undefined, // Reddit rarely gives email
+                    image: (profile as any)?.icon_img ?? undefined,
                 };
             },
         }),
@@ -76,18 +77,17 @@ export const authOptions: NextAuthConfig = {
 
                 return {
                     id: user.id.toString(),
-                    email: user.email,
-                    name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim(),
+                    email: user.email ?? undefined,
+                    name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim() || undefined,
                 };
             },
         }),
     ],
 
     callbacks: {
-        async session({ session, user }) {
-            // Add the user id to the session object
+        async session({ session, token, user }) {
             if (session.user) {
-                session.user.id = user.id.toString();
+                session.user.id = (token?.sub ?? user?.id ?? "").toString();
             }
             return session;
         },
