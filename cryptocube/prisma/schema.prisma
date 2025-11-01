@@ -172,7 +172,7 @@ model Portfolio {
   updatedAt                 DateTime       @updatedAt
 
   // You can't have 2 rows for the same coin in the same account
-  @@unique([paperAccountId, coinSymbol])
+  @@unique([simulatorAccountId, coinSymbol])
 }
 
 
