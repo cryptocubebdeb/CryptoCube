@@ -19,6 +19,8 @@ const prisma = new PrismaClient();
 export const authOptions: NextAuthConfig = {
     adapter: PrismaAdapter(prisma),
 
+    trustHost: true,
+
     session: {
         strategy: "database",
     },
