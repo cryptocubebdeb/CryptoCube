@@ -31,6 +31,8 @@ model User {
   sessions       Session[]         // active login sessions
   resetToken     PasswordResetToken?
   watchlistItems WatchlistItem[]   // a user can have multiple watchlist items
+  
+  simulatorAccount SimulatorAccount?
 }
 
 
@@ -109,4 +111,104 @@ model WatchlistItem {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, coinId]) // Un utilisateur ne peut pas avoir le même coin deux fois
+}
+
+
+
+// ======================
+//   SIMULATOR ACCOUNT
+// ======================
+// One row per user. Tracks their simulator money.
+
+model SimulatorAccount {
+  id                   Int             @id @default(autoincrement())
+
+  // Link to User
+  userId               Int             @unique
+  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // How much fake cash they started with (ex: 75000.00). Never changes.
+  initialCashBalance      Decimal      @db.Numeric(18, 2)
+
+  // How much fake cash is left right now (not invested).
+  currentCashBalance       Decimal         @db.Numeric(18, 2)
+
+  // Profit they've actually locked in by selling higher than they bought.
+  realizedProfitUsd    Decimal         @db.Numeric(18, 2) @default(0)
+
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  // What coins they currently hold
+  portfolio            Portfolio[]
+
+  // All buy/sell actions
+  tradeHistory         TradeHistory[]
+}
+
+
+// ======================
+//       PORTFOLIO
+// ======================
+// All the coins the user is holding in his portfolio
+
+model Portfolio {
+  id                        Int            @id @default(autoincrement())
+
+  // Which simulated account this belongs to
+  paperAccountId            Int
+  paperAccount              PaperAccount   @relation(fields: [paperAccountId], references: [id], onDelete: Cascade)
+
+  // Which coin (ex: "btc", "eth", "sol")
+  coinSymbol                String
+
+  // How much of that coin they currently own
+  amountOwned               Decimal        @db.Numeric(38, 18)
+
+  // Average price in USD they paid for what they STILL HOLD
+  averageEntryPriceUsd      Decimal        @db.Numeric(18, 8)
+
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+
+  // You can't have 2 rows for the same coin in the same account
+  @@unique([paperAccountId, coinSymbol])
+}
+
+
+// ======================
+//      TRADE HISTORY
+// ======================
+// Every buy/sell gets recorded here forever.
+
+model TradeHistory {
+  id                   Int           @id @default(autoincrement())
+
+  // Which simulated account did this trade
+  paperAccountId       Int
+  paperAccount         PaperAccount  @relation(fields: [paperAccountId], references: [id], onDelete: Cascade)
+
+  // BUY or SELL
+  tradeType            TradeType
+
+  // Which coin was traded
+  coinSymbol           String
+
+  // How much coin was bought/sold
+  amountTraded         Decimal       @db.Numeric(38, 18)
+
+  // USD price per coin at that exact time
+  tradePrice           Decimal       @db.Numeric(18, 8)
+
+  // Total value of the trade = amountTraded * tradePriceUsd
+  tradeTotal           Decimal       @db.Numeric(18, 2)
+
+  executedAt           DateTime      @default(now())
+}
+
+
+// BUY or SELL flag
+enum TradeType {
+  BUY
+  SELL
 }
