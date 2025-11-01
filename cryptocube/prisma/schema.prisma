@@ -25,7 +25,7 @@ model User {
   prenom         String?
   username       String?   @unique
   passwordHash   String?   // hashed password for credentials login
-
+  image          String?              
   // Relations
   accounts       Account[]         // OAuth logins (Google, Facebook, Reddit…)
   sessions       Session[]         // active login sessions
