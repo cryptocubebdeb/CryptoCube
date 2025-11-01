@@ -9,7 +9,7 @@ import type { NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
-import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -32,16 +32,16 @@ export const authOptions: NextAuthConfig = {
             issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID!}/v2.0`,
         }),
 
-        FacebookProvider({
-            clientId: process.env.FACEBOOK_CLIENT_ID!,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
 
         RedditProvider({
             clientId: process.env.REDDIT_CLIENT_ID!,
             clientSecret: process.env.REDDIT_CLIENT_SECRET!,
             profile(profile) {
-                // Reddit doesn’t return an email by default — generate a placeholder
+                // Reddit usually doesn’t give email — synthesize one
                 return {
                     id: profile.id,
                     name: profile.name ?? "Reddit User",
@@ -94,7 +94,7 @@ export const authOptions: NextAuthConfig = {
     },
 
     pages: {
-        signIn: "/login", // optional: your custom login page path
+        signIn: "/auth/login", // optional: your custom sign in page path
     },
 
     secret: process.env.NEXTAUTH_SECRET,
