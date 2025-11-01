@@ -19,7 +19,7 @@ datasource db {
 
 model User {
   id             Int       @id @default(autoincrement())
-  email          String    @unique
+  email          String?    @unique
   emailVerified  DateTime? // used by NextAuth
   name           String?
   prenom         String?
@@ -57,6 +57,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])   
 }
 
 // ======================
@@ -70,6 +71,7 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])   
 }
 
 // ======================
