@@ -20,7 +20,7 @@ import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 
 // Icônes sociales
-import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa"
+import { FaGoogle, FaRedditAlien, FaMicrosoft } from "react-icons/fa"
 
 const geologica = Geologica({
     subsets: ["latin"],
@@ -128,34 +128,14 @@ export default function Page() {
         }
     }
 
-    // --- OAuth handlers (updated for your actual providers) ---
+    const handleMicrosoftSignUp = async () =>
+        signIn("microsoft-entra-id", { callbackUrl: "/secure/dashboard", redirect: true });
 
-    const handleMicrosoftSignUp = async () => {
-        try {
-            await signIn("microsoft-entra-id", { callbackUrl: "/secure/dashboard" })
-        } catch (err) {
-            console.error("Erreur Microsoft Entra ID OAuth:", err)
-            alert("Erreur lors de la connexion avec Microsoft")
-        }
-    }
+    const handleGoogleSignUp = async () =>
+        signIn("google", { callbackUrl: "/secure/dashboard", redirect: true });
 
-    const handleFacebookSignUp = async () => {
-        try {
-            await signIn("facebook", { callbackUrl: "/secure/dashboard" })
-        } catch (err) {
-            console.error("Erreur Facebook OAuth:", err)
-            alert("Erreur lors de la connexion avec Facebook")
-        }
-    }
-
-    const handleRedditSignUp = async () => {
-        try {
-            await signIn("reddit", { callbackUrl: "/secure/dashboard" })
-        } catch (err) {
-            console.error("Erreur Reddit OAuth:", err)
-            alert("Erreur lors de la connexion avec Reddit")
-        }
-    }
+    const handleRedditSignUp = async () =>
+        signIn("reddit", { callbackUrl: "/secure/dashboard", redirect: true });
 
     return (
         <div className={`h-screen flex flex-col ${geologica.className}`}>
@@ -320,7 +300,7 @@ export default function Page() {
                                 className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700 transition-colors"
                                 aria-label="S'inscrire avec Microsoft"
                             >
-                                <span className="font-bold text-white text-lg">M</span>
+                                <FaMicrosoft className="w-7 h-7 text-white" />
                             </button>
 
                             {/* Reddit */}
@@ -333,14 +313,14 @@ export default function Page() {
                                 <FaRedditAlien className="w-7 h-7 text-white" />
                             </button>
 
-                            {/* Facebook */}
+                            {/* Google */}
                             <button
                                 type="button"
-                                onClick={handleFacebookSignUp}
+                                onClick={handleGoogleSignUp}
                                 className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
-                                aria-label="S'inscrire avec Facebook"
+                                aria-label="S'inscrire avec Google"
                             >
-                                <FaFacebookF className="w-7 h-7 text-white" />
+                                <FaGoogle className="w-7 h-7 text-white" />
                             </button>
                         </div>
 
