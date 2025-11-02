@@ -123,28 +123,21 @@ model WatchlistItem {
 // One row per user. Tracks their simulator money.
 
 model SimulatorAccount {
-  id                   Int             @id @default(autoincrement())
+  id                   Int              @id @default(autoincrement())
 
-  // Link to User
-  userId               Int             @unique
-  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               Int              @unique
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // How much fake cash they started with (ex: 75000.00). Never changes.
-  initialCashBalance      Decimal      @db.Decimal(18, 2)
+  initialCashBalance   Decimal          @db.Decimal(18, 2) // starting cash
+  currentCashBalance   Decimal          @db.Decimal(18, 2) // current available cash
+  realizedProfitUsd    Decimal          @db.Decimal(18, 2) @default(0)
 
-  // How much fake cash is left right now (not invested).
-  currentCashBalance       Decimal         @db.Decimal(18, 2)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
 
-  // Profit they've actually locked in by selling higher than they bought.
-  realizedProfitUsd    Decimal         @db.Decimal(18, 2) @default(0)
-
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-
-  // What coins they currently hold
+  // Relations
   portfolio            Portfolio[]
-
-  // All buy/sell actions
+  orders               Order[]
   tradeHistory         TradeHistory[]
 }
 
@@ -177,6 +170,28 @@ model Portfolio {
   @@unique([simulatorAccountId, coinSymbol])
 }
 
+// ======================
+//         ORDER
+// ======================
+model Order {
+  id                   Int            @id @default(autoincrement())
+  simulatorAccountId   Int
+  simulatorAccount     SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+
+  coinSymbol           String
+  orderType            TradeType       // BUY / SELL
+  orderKind            OrderKind       // MARKET / LIMIT
+  amount               Decimal         @db.Decimal(38, 18)
+  price                Decimal?        @db.Decimal(18, 8)  // null for market orders
+  status               OrderStatus     @default(PENDING)
+  
+  createdAt            DateTime        @default(now())
+  executedAt           DateTime?       // set when filled
+
+  // Optional link to trade record created when executed
+  tradeHistoryId       Int?
+  tradeHistory         TradeHistory?   @relation(fields: [tradeHistoryId], references: [id], onDelete: SetNull)
+}
 
 // ======================
 //      TRADE HISTORY
@@ -190,22 +205,17 @@ model TradeHistory {
   simulatorAccountId       Int
   simulatorAccount         SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  // BUY or SELL
+  orderId              Int?
+  order                Order?            @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
   tradeType            TradeType
-
-  // Which coin was traded
   coinSymbol           String
+  amountTraded         Decimal           @db.Decimal(38, 18)
+  tradePrice           Decimal           @db.Decimal(18, 8)
+  tradeTotal           Decimal           @db.Decimal(18, 2)
+  executedAt           DateTime          @default(now())
 
-  // How much coin was bought/sold
-  amountTraded         Decimal       @db.Decimal(38, 18)
-
-  // USD price per coin at that exact time
-  tradePrice           Decimal       @db.Decimal(18, 8)
-
-  // Total value of the trade = amountTraded * tradePriceUsd
-  tradeTotal           Decimal       @db.Decimal(18, 2)
-
-  executedAt           DateTime      @default(now())
+  @@index([coinSymbol])
 }
 
 
@@ -214,3 +224,16 @@ enum TradeType {
   BUY
   SELL
 }
+
+enum OrderKind {
+  MARKET //Execute order directly depending on the current market price
+  LIMIT  //Execute only if the market riches that specific price
+}
+
+enum OrderStatus {
+  PENDING
+  EXECUTED
+  CANCELLED
+  EXPIRED
+}
+
