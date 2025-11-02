@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Footer from "../../components/Footer";
+
 
 function Feature({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -10,7 +10,7 @@ function Feature({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-// Avatar component removed — section "L'équipe" was deleted per request.
+
 
 export default function Page() {
   return (
@@ -69,7 +69,7 @@ export default function Page() {
             </div>
           </section>
 
-          {/* Section "L'équipe" supprimée */}
+         
 
           <section className="mt-12 mb-20 p-6 bg-gradient-to-r from-white/3 to-white/5 rounded-lg border border-white/6">
             <h3 className="text-xl font-semibold">Contact</h3>
