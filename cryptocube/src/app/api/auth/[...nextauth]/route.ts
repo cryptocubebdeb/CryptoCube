@@ -9,7 +9,7 @@ import type { NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
-import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -18,6 +18,8 @@ const prisma = new PrismaClient();
 
 export const authOptions: NextAuthConfig = {
     adapter: PrismaAdapter(prisma),
+
+    trustHost: true,
 
     session: {
         strategy: "database",
@@ -30,20 +32,21 @@ export const authOptions: NextAuthConfig = {
             issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID!}/v2.0`,
         }),
 
-        FacebookProvider({
-            clientId: process.env.FACEBOOK_CLIENT_ID!,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
 
         RedditProvider({
             clientId: process.env.REDDIT_CLIENT_ID!,
             clientSecret: process.env.REDDIT_CLIENT_SECRET!,
             profile(profile) {
-                // Reddit doesn’t return an email by default — generate a placeholder
+                const name = profile.name ?? "Reddit User";
                 return {
-                    id: profile.id,
-                    name: profile.name ?? "Reddit User",
-                    email: `${profile.name}@reddit.local`,
+                    id: String(profile.id),
+                    name,
+                    email: profile.name ? `${profile.name}@reddit.local` : undefined, // Reddit rarely gives email
+                    image: (profile as any)?.icon_img ?? undefined,
                 };
             },
         }),
@@ -74,25 +77,24 @@ export const authOptions: NextAuthConfig = {
 
                 return {
                     id: user.id.toString(),
-                    email: user.email,
-                    name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim(),
+                    email: user.email ?? undefined,
+                    name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim() || undefined,
                 };
             },
         }),
     ],
 
     callbacks: {
-        async session({ session, user }) {
-            // Add the user id to the session object
+        async session({ session, token, user }) {
             if (session.user) {
-                session.user.id = user.id.toString();
+                session.user.id = (token?.sub ?? user?.id ?? "").toString();
             }
             return session;
         },
     },
 
     pages: {
-        signIn: "/login", // optional: your custom login page path
+        signIn: "/auth/login", // optional: your custom sign in page path
     },
 
     secret: process.env.NEXTAUTH_SECRET,
