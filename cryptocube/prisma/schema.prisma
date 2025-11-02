@@ -174,49 +174,47 @@ model Portfolio {
 //         ORDER
 // ======================
 model Order {
-  id                   Int            @id @default(autoincrement())
-  simulatorAccountId   Int
-  simulatorAccount     SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+  id                 Int             @id @default(autoincrement())
+  simulatorAccountId Int
+  simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  coinSymbol           String
-  orderType            TradeType       // BUY / SELL
-  orderKind            OrderKind       // MARKET / LIMIT
-  amount               Decimal         @db.Decimal(38, 18)
-  price                Decimal?        @db.Decimal(18, 8)  // null for market orders
-  status               OrderStatus     @default(PENDING)
-  
-  createdAt            DateTime        @default(now())
-  executedAt           DateTime?       // set when filled
+  coinSymbol         String
+  orderType          TradeType
+  orderKind          OrderKind
+  amount             Decimal          @db.Decimal(38, 18)
+  price              Decimal?         @db.Decimal(18, 8)
+  status             OrderStatus      @default(PENDING)
 
-  // Optional link to trade record created when executed
-  tradeHistoryId       Int?
-  tradeHistory         TradeHistory?   @relation(fields: [tradeHistoryId], references: [id], onDelete: SetNull)
+  createdAt          DateTime         @default(now())
+  executedAt         DateTime?
+
+  // optional link to executed trade
+  tradeHistory       TradeHistory?    @relation("OrderTradeHistory")
+
+  @@index([coinSymbol])
 }
 
 // ======================
 //      TRADE HISTORY
 // ======================
-// Every buy/sell gets recorded here forever.
-
 model TradeHistory {
-  id                   Int           @id @default(autoincrement())
+  id                 Int             @id @default(autoincrement())
+  simulatorAccountId Int
+  simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  // Which simulated account did this trade
-  simulatorAccountId       Int
-  simulatorAccount         SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+  orderId            Int?             @unique
+  order              Order?           @relation("OrderTradeHistory", fields: [orderId], references: [id])
 
-  orderId              Int?
-  order                Order?            @relation(fields: [orderId], references: [id], onDelete: SetNull)
-
-  tradeType            TradeType
-  coinSymbol           String
-  amountTraded         Decimal           @db.Decimal(38, 18)
-  tradePrice           Decimal           @db.Decimal(18, 8)
-  tradeTotal           Decimal           @db.Decimal(18, 2)
-  executedAt           DateTime          @default(now())
+  tradeType          TradeType
+  coinSymbol         String
+  amountTraded       Decimal          @db.Decimal(38, 18)
+  tradePrice         Decimal          @db.Decimal(18, 8)
+  tradeTotal         Decimal          @db.Decimal(18, 2)
+  executedAt         DateTime         @default(now())
 
   @@index([coinSymbol])
 }
+
 
 
 // BUY or SELL flag
