@@ -100,7 +100,7 @@ export default function Page() {
             console.log("Formulaire valide, soumission...");
 
             try {
-                const response = await fetch('/api/auth/signup', {
+                const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -111,11 +111,15 @@ export default function Page() {
                 const data = await response.json();
 
                 if (response.ok) {
-                    console.log("Inscription réussie:", data);
-                    alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
+                    console.log("successful signup:", data);
 
                     // Rediriger vers la page de login
-                    router.push('/auth/login');
+                    const res = await signIn("credentials", {
+                        redirect: true,                     // let next-auth redirect 
+                        email: form.email.trim().toLowerCase(),
+                        password: form.password,
+                        callbackUrl: "/secure/dashboard",   // redirection
+                    });
 
                 } else {
                     console.error("Erreur d'inscription:", data.error);
