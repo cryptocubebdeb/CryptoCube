@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../../components/sidebar"
+import Sidebar from "../../../components/Portfolio/sidebar"
 import styles from '../../page.module.css'
 import { useSession } from "next-auth/react"; 
 
