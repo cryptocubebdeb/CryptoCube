@@ -2,7 +2,7 @@ import PortfolioChart from "../../components/Portfolio/PortfolioChart";
 
 export default function SimulatorHome() {
   return (
-    <main className="min-h-screen bg-[#0f1116] text-white p-8">
+    <main className="min-h-screen bg-[#0f1116] text-white p-8 rounded-3xl">
       <h1 id="home" className="text-3xl font-bold mb-6 scroll-mt-[130px]">Simulator Dashboard</h1>
       <PortfolioChart />
 
