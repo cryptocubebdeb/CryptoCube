@@ -15,21 +15,21 @@ export default function Toolbar() {
 
                 {/* main icons */}
                 <div className="flex flex-col items-center gap-5">
-                    <Link href="#" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/85">
+                    <a href="#home" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/85 hover:bg-[#23252c] hover:text-yellow-400 transition">
                         <Home size={18} />
-                    </Link>
-                    <Link href="#" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70">
+                    </a>
+                    <a href="#wallet" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70 hover:bg-[#23252c] hover:text-yellow-400 transition">
                         <Wallet size={18} />
-                    </Link>
-                    <Link href="#" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70">
+                    </a>
+                    <a href="#search" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70 hover:bg-[#23252c] hover:text-yellow-400 transition">
                         <Search size={18} />
-                    </Link>
-                    <Link href="#" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70">
+                    </a>
+                    <a href="#percent" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70 hover:bg-[#23252c] hover:text-yellow-400 transition">
                         <Percent size={18} />
-                    </Link>
-                    <Link href="#" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70">
+                    </a>
+                    <a href="#activity" className="w-10 h-10 rounded-xl bg-[#1c1e26] flex items-center justify-center text-white/70 hover:bg-[#23252c] hover:text-yellow-400 transition">
                         <Activity size={18} />
-                    </Link>
+                    </a>
                 </div>
             </div>
             
