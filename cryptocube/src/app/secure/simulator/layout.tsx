@@ -7,14 +7,15 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
       <Toolbar />
 
       {/* Main content */}
-      <main className="min-h-screen ml-64 mr-[320px] pt-[70px] p-8">
+      <main className="min-h-screen ml-20 mr-[360px] pt-[20px] p-8">
         {children}
       </main>
 
       {/* Right panel */}
-      <aside className="fixed right-0 top-[70px] h-[calc(100vh-70px)] w-[320px] bg-[#15171E] p-6 border-l border-[#23252c]">
+      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] bg-[#15171E] p-6 mr-5 border-l border-[#23252c]">
         <h2 className="text-xl font-bold mb-6 text-center">Trade</h2>
       </aside>
     </>
+      
   )
 }
