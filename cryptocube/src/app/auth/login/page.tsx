@@ -23,7 +23,7 @@ import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 
 // Icônes sociales
-import { FaGoogle, FaRedditAlien, FaFacebookF } from "react-icons/fa"
+import { FaGoogle, FaRedditAlien, FaMicrosoft } from "react-icons/fa"
 
 const geologica = Geologica({
   subsets: ["latin"],
@@ -67,7 +67,7 @@ export default function Page() {
 
     const result = await signIn("credentials", {
       redirect: false,
-      email,
+      email: email.trim().toLowerCase(),
       password,
       callbackUrl: "/secure/dashboard",
     });
@@ -82,42 +82,15 @@ export default function Page() {
     }
   }
 
-  // Fonctions OAuth
-  const handleGoogleSignUp = async () => {
-    try {
-      await signIn("google", {
-        callbackUrl: "/secure/dashboard",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Erreur Google OAuth:", error);
-      alert("Erreur lors de la connexion avec Google");
-    }
-  };
+  const handleMicrosoftSignIn = async () =>
+    signIn("microsoft-entra-id", { callbackUrl: "/secure/dashboard", redirect: true });
 
-  const handleFacebookSignUp = async () => {
-    try {
-      await signIn("facebook", {
-        callbackUrl: "/secure/dashboard",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Erreur Facebook OAuth:", error);
-      alert("Erreur lors de la connexion avec Facebook");
-    }
-  };
+  const handleGoogleSignIn = async () =>
+    signIn("google", { callbackUrl: "/secure/dashboard", redirect: true });
 
-  const handleRedditSignUp = async () => {
-    try {
-      await signIn("reddit", {
-        callbackUrl: "/secure/dashboard",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Erreur Reddit OAuth:", error);
-      alert("Erreur lors de la connexion avec Reddit");
-    }
-  };
+  const handleRedditSignIn = async () =>
+    signIn("reddit", { callbackUrl: "/secure/dashboard", redirect: true });
+
 
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
@@ -213,40 +186,41 @@ export default function Page() {
 
             {/* Icônes sociales */}
             <div className="flex justify-center gap-6">
+              {/* Microsoft */}
+              <button
+                type="button"
+                onClick={handleMicrosoftSignIn}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700"
+                aria-label="Se connecter avec Microsoft"
+              >
+                <FaMicrosoft className="w-7 h-7 text-white" />
+              </button>
+
               {/* Google */}
               <button
                 type="button"
-                onClick={handleGoogleSignUp}
+                onClick={handleGoogleSignIn}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100"
                 aria-label="Se connecter avec Google"
               >
-                <FaGoogle className="w-7 h-7 text-orange-500" />
+                <FaGoogle className="w-7 h-7" />
               </button>
 
               {/* Reddit */}
               <button
                 type="button"
-                onClick={handleRedditSignUp}
+                onClick={handleRedditSignIn}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
                 aria-label="Se connecter avec Reddit"
               >
                 <FaRedditAlien className="w-7 h-7 text-white" />
               </button>
-
-              {/* Facebook */}
-              <button
-                type="button"
-                onClick={handleFacebookSignUp}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
-                aria-label="Se connecter avec Facebook"
-              >
-                <FaFacebookF className="w-7 h-7 text-white" />
-              </button>
             </div>
+
 
             <p className="text-center text-sm mt-2 text-gray-300">
               Pas de compte?{" "}
-              <Link href="/signup" className="underline">
+              <Link href="../../auth/signup" className="underline">
                 S'inscrire
               </Link>
             </p>

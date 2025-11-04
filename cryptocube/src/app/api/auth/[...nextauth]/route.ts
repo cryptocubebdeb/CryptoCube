@@ -1,104 +1,104 @@
 /*
-    This file handles all the the authentication logic using NextAuth.js.
-    Its a catch all : all URL starting with /api/auth/ will be handled here, instead of having
-    multiple files for each endpoint (like /api/auth/signin, /api/auth/callback/google, etc).
+  Auth route for NextAuth v5 beta + Prisma + JWT sessions.
+  We intentionally relax types here because v5 beta typings are broken.
 */
-
-import NextAuth from "next-auth";
-import type { NextAuthConfig } from "next-auth";
+import * as NextAuthPkg from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
-import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const authOptions: NextAuthConfig = {
-    adapter: PrismaAdapter(prisma),
+// ---- FIX THE “not callable” TS ERROR HERE ----
+// next-auth@5 beta typings are messed up, so we coerce the default export.
+const NextAuth: any =
+  (NextAuthPkg as any).default ?? NextAuthPkg;
 
-    session: {
-        strategy: "database",
+export const authOptions = {
+  adapter: PrismaAdapter(prisma),
+  trustHost: true,
+
+  // JWT sessions so middleware doesn’t hit Prisma in the edge runtime
+  session: { strategy: "jwt" },
+
+  providers: [
+    MicrosoftEntraID({
+      clientId: process.env.AZURE_AD_CLIENT_ID!,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+      issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID!}/v2.0`,
+    }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+
+    RedditProvider({
+      clientId: process.env.REDDIT_CLIENT_ID!,
+      clientSecret: process.env.REDDIT_CLIENT_SECRET!,
+      profile(profile) {
+        const name = profile.name ?? "Reddit User";
+        return {
+          id: String(profile.id),
+          name,
+          email: profile.name ? `${profile.name}@reddit.local` : undefined,
+          image: (profile as any)?.icon_img ?? undefined,
+        };
+      },
+    }),
+
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = String(credentials?.email ?? "").trim().toLowerCase();
+        const password = String(credentials?.password ?? "");
+
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || !user.passwordHash) return null;
+
+        const isValid = await bcrypt.compare(password, user.passwordHash);
+        if (!isValid) return null;
+
+        return {
+          id: user.id.toString(),
+          email: user.email ?? undefined,
+          name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim() || undefined,
+        };
+      },
+    }),
+  ],
+
+  callbacks: {
+    // types here are intentionally loose – we just need it to work
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token, user }: any) {
+      if (session?.user) {
+        session.user.id = (token?.sub ?? user?.id ?? "").toString();
+      }
+      return session;
     },
+  },
 
-    providers: [
-        MicrosoftEntraID({
-            clientId: process.env.AZURE_AD_CLIENT_ID!,
-            clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-            issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID!}/v2.0`,
-        }),
-
-        FacebookProvider({
-            clientId: process.env.FACEBOOK_CLIENT_ID!,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-        }),
-
-        RedditProvider({
-            clientId: process.env.REDDIT_CLIENT_ID!,
-            clientSecret: process.env.REDDIT_CLIENT_SECRET!,
-            profile(profile) {
-                // Reddit doesn’t return an email by default — generate a placeholder
-                return {
-                    id: profile.id,
-                    name: profile.name ?? "Reddit User",
-                    email: `${profile.name}@reddit.local`,
-                };
-            },
-        }),
-
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "text" },
-                password: { label: "Password", type: "password" },
-            },
-            async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) return null;
-
-                const email = String(credentials.email);
-                const password = String(credentials.password);
-                const user = await prisma.user.findUnique({
-                    where: { email },
-                });
-
-                if (!user || !user.passwordHash) return null;
-
-                const isValid = await bcrypt.compare(
-                    password,
-                    user.passwordHash
-                );
-
-                if (!isValid) return null;
-
-                return {
-                    id: user.id.toString(),
-                    email: user.email,
-                    name: `${user.prenom ?? ""} ${user.name ?? ""}`.trim(),
-                };
-            },
-        }),
-    ],
-
-    callbacks: {
-        async session({ session, user }) {
-            // Add the user id to the session object
-            if (session.user) {
-                session.user.id = user.id.toString();
-            }
-            return session;
-        },
-    },
-
-    pages: {
-        signIn: "/login", // optional: your custom login page path
-    },
-
-    secret: process.env.NEXTAUTH_SECRET,
-    debug: process.env.NODE_ENV === "development",
+  pages: { signIn: "/auth/login" },
+  secret: process.env.AUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 };
 
-const { auth, handlers: { GET, POST }, signIn, signOut } = NextAuth(authOptions);
+// Call NextAuth once, then export what we need
+const nextAuth = NextAuth(authOptions);
 
-export { auth, GET, POST, signIn, signOut };
+// These are used by the API route
+export const { GET, POST } = nextAuth.handlers;
+
+// This is what you use in middleware and (optionally) elsewhere
+export const { auth, signIn, signOut } = nextAuth;

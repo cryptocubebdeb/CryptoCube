@@ -8,16 +8,17 @@ import { Search, User } from "lucide-react";
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const USER_ID = (session as any)?.user?.id as string | undefined;
+  const userId = session?.user?.id;
 
   const Links = [
     { href: "/secure/dashboard", text: "Accueil" },
     { href: "/secure/coins", text: "Coins" },
     { href: "/secure/categories", text: "Catégories" },
-    { href: "/secure/simulator", text: "Simulateur" },
+    { href: "/secure/simulator/Home", text: "Simulateur" },
     { href: "/secure/community", text: "Communauté" },
     { href: "/secure/about", text: "À propos" },
     { href: "/secure/coins?q=", icon: <Search size={20} /> },
+    { href: userId ? `/secure/account/details/${userId}` : "/auth/login", icon: <User size={20} /> },
   ];
 
   const userLink = { href: USER_ID ? `/secure/account/details/${USER_ID}` : "/auth/login", icon: <User size={25} /> };

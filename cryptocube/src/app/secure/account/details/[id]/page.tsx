@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Sidebar from "../../../components/sidebar"
+import Sidebar from "../../../components/Sidebar"
 import styles from './page.module.css'
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
 import ProfilePic from "./ProfilePic";
