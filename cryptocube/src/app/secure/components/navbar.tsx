@@ -54,7 +54,7 @@ export default function Navbar() {
             <div
               role="menu"
               aria-label="User menu"
-              className="absolute left-1/2 top-full mt-2 w-48 bg-slate-800 border border-white/10 rounded-md py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform -translate-x-1/2 translate-y-1 group-hover:translate-y-0 transition-all shadow-lg z-50"
+              className="absolute left-1/2 top-full mt-4 w-48 bg-slate-800 border border-white/10 rounded-md py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform -translate-x-1/2 translate-y-7 group-hover:translate-y-0 transition-all shadow-lg z-50"
             >
               {USER_ID ? (
                 <>
