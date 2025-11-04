@@ -1,4 +1,4 @@
-import { auth } from '@/auth_old'
+import { auth } from '@/app/api/auth/[...nextauth]/route';
 import styles from './page.module.css'
 import DashboardContent from './DashboardContent';
 

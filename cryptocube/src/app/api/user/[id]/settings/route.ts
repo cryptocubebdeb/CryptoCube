@@ -1,86 +1,93 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+type UpdateUserBody = {
+  email: string;
+  name: string;
+  prenom: string;
+  username: string;
+};
+
 export async function GET(
-    _request: NextRequest,
-    context: { params: Promise<{ id: string }> }
+  _request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-    const { id } = await context.params;
-    const userId = Number(id);
+  const userId = Number(params.id);
 
-    if (!Number.isFinite(userId)) {
-        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+  if (!Number.isFinite(userId)) {
+    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        prenom: true,
+        username: true,
+        image: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    try {
-        // Real database query
-        const user = await prisma.utilisateur.findUnique({
-            where: { id: userId },
-            select: { 
-                id: true,
-                email: true,
-                nom: true,
-                prenom: true,
-                username: true 
-            }
-        });
-
-        if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-        return NextResponse.json(user);
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-    } finally {
-        await prisma.$disconnect();
-    }
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
 
-
 export async function PUT(
-    request: NextRequest,
-    context: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-    const { id } = await context.params;
-    const userId = Number(id);
+  const userId = Number(params.id);
 
-    if (!Number.isFinite(userId)) {
-        return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
-    }
+  if (!Number.isFinite(userId)) {
+    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+  }
 
-    const data = await request.json();
-    const { email, nom, prenom, username } = data;
+  const body = (await request.json()) as Partial<UpdateUserBody>;
+  const { email, name: fullName, prenom, username } = body;
 
-    if (!email || !nom || !prenom || !username) {
-        return NextResponse.json({ error: "Missing user data" }, { status: 400 });
-    }
+  if (!email || !fullName || !prenom || !username) {
+    return NextResponse.json({ error: "Missing user data" }, { status: 400 });
+  }
 
-    try {
-        // Real database query
-        const updatedUser = await prisma.utilisateur.update({
-            where: { id: userId },
-            data: {
-                email,
-                nom,
-                prenom,
-                username
-            },
-            select: {
-                id: true,
-                email: true,
-                nom: true,
-                prenom: true,
-                username: true
-            }
-        });
-        return NextResponse.json(updatedUser);
-    } catch (error) {
-        console.error("Error updating user:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-    } finally {
-        await prisma.$disconnect();
-    }
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        email,
+        name: fullName,
+        prenom,
+        username,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        prenom: true,
+        username: true,
+      },
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
