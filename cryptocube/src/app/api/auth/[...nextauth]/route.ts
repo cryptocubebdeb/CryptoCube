@@ -22,6 +22,21 @@ export const authOptions = {
   adapter: PrismaAdapter(prisma),
   trustHost: true,
 
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production"
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        domain: process.env.NODE_ENV === "production" ? ".cryptocube.win" : undefined,
+      },
+    },
+  },
+
   // JWT sessions so middleware doesn’t hit Prisma in the edge runtime
   session: { strategy: "jwt" },
 
@@ -79,8 +94,6 @@ export const authOptions = {
   ],
 
   callbacks: {
-    // types here are intentionally loose – we just need it to work
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token, user }: any) {
       if (session?.user) {
         session.user.id = (token?.sub ?? user?.id ?? "").toString();
@@ -100,5 +113,5 @@ const nextAuth = NextAuth(authOptions);
 // These are used by the API route
 export const { GET, POST } = nextAuth.handlers;
 
-// This is what you use in middleware and (optionally) elsewhere
+// This is what you use in middleware
 export const { auth, signIn, signOut } = nextAuth;

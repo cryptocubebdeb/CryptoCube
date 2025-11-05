@@ -65,21 +65,12 @@ export default function Page() {
 
     if (hasError) return; //Pas besoin de continuer en cas d'erreur
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: email.trim().toLowerCase(),
+    await signIn("credentials", {
+      redirect: true, 
+      email,
       password,
       callbackUrl: "/secure/dashboard",
     });
-
-    console.log("signIn result:", result);
-
-    if (result?.error === "CredentialsSignin") setMessage("Email ou mot de passe incorrect");
-    else if (result?.error) {
-      setMessage("Erreur de connexion");
-    } else {
-      router.push(result?.url ?? "/secure/dashboard");
-    }
   }
 
   const handleMicrosoftSignIn = async () =>
