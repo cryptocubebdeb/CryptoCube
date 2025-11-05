@@ -48,6 +48,8 @@ export default function Navbar() {
     return () => clearCloseTimeout();
   }, []);
 
+  
+
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
@@ -98,13 +100,13 @@ export default function Navbar() {
               }
             >
               {!session ? (
-                <Link href="/auth/login" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Connectez-vous</Link>
+                <Link href="/auth/login" role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Connectez-vous</Link>
               ) : (
                 <>
-                  <Link href={`/secure/account/details/${userId}`} role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Détails</Link>
-                  <Link href="/secure/account/watchlist" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Watchlist</Link>
-                  <Link href="/secure/account/notifications" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Notifications</Link>
-                  <button onClick={() => signOut({ callbackUrl: '/' })} role="menuitem" className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700">Déconnexion</button>
+                  <Link href={`/secure/account/details/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Détails</Link>
+                  <Link href={`/secure/account/watchlist/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Watchlist</Link>
+                  <Link href={`/secure/account/notifications/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Notifications</Link>
+                  <button onClick={() => { setUserMenuOpen(false); signOut({ callbackUrl: '/auth/login' }); }} role="menuitem" className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700">Déconnexion</button>
                 </>
               )}
             </div>
