@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Search, User } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -21,15 +22,39 @@ export default function Navbar() {
     { href: userId ? `/secure/account/details/${userId}` : "/auth/login", icon: <User size={20} /> },
   ];
 
-  const userLink = { href: USER_ID ? `/secure/account/details/${USER_ID}` : "/auth/login", icon: <User size={25} /> };
+  const userLink = Links[Links.length - 1];
+
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const closeTimeout = useRef<number | null>(null);
+
+  const clearCloseTimeout = () => {
+    if (closeTimeout.current) {
+      window.clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+  };
+
+  const openUserMenu = () => {
+    clearCloseTimeout();
+    setUserMenuOpen(true);
+  };
+
+  const closeUserMenuDelayed = () => {
+    clearCloseTimeout();
+    closeTimeout.current = window.setTimeout(() => setUserMenuOpen(false), 150);
+  };
+
+  useEffect(() => {
+    return () => clearCloseTimeout();
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
         <Link href="/secure/dashboard" className="font-bold text-2xl">CryptoCube</Link>
 
-        <ul className="flex flex-row items-center gap-6">
-          {Links.map((link) => {
+        <ul className="flex flex-row items-center gap-6 ">
+          {Links.slice(0, -1).map((link) => {
             const active = !!link.text && pathname?.startsWith(link.href);
             return (
               <li key={link.href}>
@@ -46,29 +71,45 @@ export default function Navbar() {
             );
           })}
 
-          
-          <li className="relative group">
-            <Link href={userLink.href} className="text-white/80 hover:text-white p-2 rounded-md flex items-center">
+          {/* User icon with conditional hover dropdown */}
+          <li
+            className="relative"
+            key={userLink.href}
+            onMouseEnter={openUserMenu}
+            onMouseLeave={closeUserMenuDelayed}
+            onFocus={openUserMenu}
+            onBlur={closeUserMenuDelayed}
+          >
+            <Link
+              href={userLink.href}
+              className="navbar-text text-white/80 hover:text-white flex items-center"
+              aria-haspopup="menu"
+              aria-expanded={userMenuOpen}
+            >
               {userLink.icon}
             </Link>
 
             <div
               role="menu"
               aria-label="User menu"
-              className="absolute left-1/2 top-full mt-4 w-48 bg-slate-800 border border-white/10 rounded-md py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform -translate-x-1/2 translate-y-7 group-hover:translate-y-0 transition-all shadow-lg z-50"
+              className={
+                `absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 ` +
+                (userMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none')
+              }
             >
-              {USER_ID ? (
-                <>
-                  <a href="#" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Détails</a>
-                  <a href="#" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Watchlist</a>
-                  <a href="#" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Notifications</a>
-                  <a href="#" role="menuitem" className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700">Déconnexion</a>
-                </>
+              {!session ? (
+                <Link href="/auth/login" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Connectez-vous</Link>
               ) : (
-                <a href="/auth/login" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Connectez-vous</a>
+                <>
+                  <Link href={`/secure/account/details/${userId}`} role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Détails</Link>
+                  <Link href="/secure/account/watchlist" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Watchlist</Link>
+                  <Link href="/secure/account/notifications" role="menuitem" className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Notifications</Link>
+                  <button onClick={() => signOut({ callbackUrl: '/' })} role="menuitem" className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700">Déconnexion</button>
+                </>
               )}
             </div>
           </li>
+
         </ul>
       </div>
     </header>
