@@ -408,7 +408,7 @@ export default function Page() {
                         </div>
                     ) : (
                         <>
-                            <div className="min-h-[2920px]">
+                            <div className="min-h-auto">
                                 {filteredCoins.length === 0 ? (
                                     <div className="text-center py-20 text-gray-500">Aucun résultat trouvé</div>
                                 ) : (
