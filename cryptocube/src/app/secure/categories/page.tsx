@@ -289,7 +289,7 @@ export default function Page()
 
 
         {/* ======= Liste de catégories =======*/}
-        <div className="min-h-screen">
+        <div className="min-h-auto">
             <div className="max-w-[95rem] mx-auto">
                 <h1 className="text-xl md:text-2xl font-bold mb-10">
                      {categories.length} Catégories
@@ -302,20 +302,17 @@ export default function Page()
                         <p className="mt-4 text-gray-500">Chargement des données...</p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto min-h-[2920px]">
-                            <table className="w-full table-fixed">
+                    <div className="overflow-x-auto">
+                        <table className="w-full table-fixed">
                             <thead>
                                 <tr className="border-b border-gray-400">
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top cryptos</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th> {/* NA */}
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">30d %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Volume 24h</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Market Cap</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-34">Dernier 30 jours</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,25 +384,11 @@ export default function Page()
                                                 <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(category.market_cap_change_24h)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(category.market_cap_change_7d)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(category.market_cap_change_30d)}
-                                                </td>
                                                 <td className="py-6 px-4 text-right w-32">
                                                     {getFormatMarketCap(category.volume_24h)}
                                                 </td>
                                                 <td className="py-6 px-4 text-right font-medium w-32">
                                                     {getFormatMarketCap(category.market_cap)}
-                                                </td>
-                                                <td className="py-6 px-4 text-center w-40">
-                                                    <div className="flex justify-end">
-                                                        <MiniChart
-                                                            data={category.sparkline_in_30d?.price || []}
-                                                            isPositive={(category.market_cap_change_30d || 0) >= 0}
-                                                        />
-                                                    </div>
                                                 </td>
                                             </tr>
                                         )})}
@@ -416,90 +399,90 @@ export default function Page()
 
                         {/* Pagination */}
                         <div className="flex justify-center items-center space-x-4 my-8">
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className={`p-2 rounded transition-transform ${currentPage === 1 
-                            ? 'text-gray-400 cursor-not-allowed' 
-                            : 'text-white hover:scale-125'
-                        }`}
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                className={`p-2 rounded transition-transform ${currentPage === 1 
+                                    ? 'text-gray-400 cursor-not-allowed' 
+                                    : 'text-white hover:scale-125'
+                                }`}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
 
-                    {/* Page Numbers */}
-                    {(() => {
-                        const pages = [];
-                        const startPage = Math.max(1, currentPage - 2);
-                        const endPage = Math.min(totalPages, currentPage + 2);
+                            {/* Page Numbers */}
+                            {(() => {
+                                const pages = [];
+                                const startPage = Math.max(1, currentPage - 2);
+                                const endPage = Math.min(totalPages, currentPage + 2);
 
-                        // Première page
-                        if (startPage > 1) {
-                            pages.push(
-                                <button
-                                    key={1}
-                                    onClick={() => setCurrentPage(1)}
-                                    className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
-                                >
-                                    1
-                                </button>
-                            );
-                            if (startPage > 2) {
-                                pages.push(<span key="dots1" className="px-2 text-gray-400">...</span>);
-                            }
-                        }
+                                // Première page
+                                if (startPage > 1) {
+                                    pages.push(
+                                        <button
+                                            key={1}
+                                            onClick={() => setCurrentPage(1)}
+                                            className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
+                                        >
+                                            1
+                                        </button>
+                                    );
+                                    if (startPage > 2) {
+                                        pages.push(<span key="dots1" className="px-2 text-gray-400">...</span>);
+                                    }
+                                }
 
-                        // Milieu
-                        for (let i = startPage; i <= endPage; i++) {
-                            pages.push(
-                                <button
-                                    key={i}
-                                    onClick={() => setCurrentPage(i)}
-                                    className={`px-3 py-1 rounded border ${i === currentPage 
-                                        ? 'bg-blue-500 text-white border-blue-500' 
-                                        : 'text-blue-500 border-transparent hover:border-blue-500'
-                                    }`}
-                                >
-                                    {i}
-                                </button>
-                            );
-                        }
+                                // Milieu
+                                for (let i = startPage; i <= endPage; i++) {
+                                    pages.push(
+                                        <button
+                                            key={i}
+                                            onClick={() => setCurrentPage(i)}
+                                            className={`px-3 py-1 rounded border ${i === currentPage 
+                                                ? 'bg-blue-500 text-white border-blue-500' 
+                                                : 'text-blue-500 border-transparent hover:border-blue-500'
+                                            }`}
+                                        >
+                                            {i}
+                                        </button>
+                                    );
+                                }
 
-                        // Dernière page
-                        if (endPage < totalPages) {
-                            if (endPage < totalPages - 1) {
-                                pages.push(<span key="dots2" className="px-2 text-gray-400">...</span>);
-                            }
+                                // Dernière page
+                                if (endPage < totalPages) {
+                                    if (endPage < totalPages - 1) {
+                                        pages.push(<span key="dots2" className="px-2 text-gray-400">...</span>);
+                                    }
 
-                            pages.push(
-                                <button
-                                    key={totalPages}
-                                    onClick={() => setCurrentPage(totalPages)}
-                                    className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
-                                >
-                                    {totalPages}
-                                </button>
-                            );
-                        }
+                                    pages.push(
+                                        <button
+                                            key={totalPages}
+                                            onClick={() => setCurrentPage(totalPages)}
+                                            className="px-3 py-1 rounded border border-transparent text-blue-500 hover:border-blue-500"
+                                        >
+                                            {totalPages}
+                                        </button>
+                                    );
+                                }
 
-                        return pages;
-                    })()}
+                                return pages;
+                            })()}
 
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className={`p-2 rounded transition-transform ${currentPage === totalPages 
-                            ? 'text-gray-400 cursor-not-allowed' 
-                            : 'text-white hover:scale-125'
-                        }`}
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className={`p-2 rounded transition-transform ${currentPage === totalPages 
+                                    ? 'text-gray-400 cursor-not-allowed' 
+                                    : 'text-white hover:scale-125'
+                                }`}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

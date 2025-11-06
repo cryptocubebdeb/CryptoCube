@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
@@ -15,6 +15,7 @@ import { getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { set } from "lodash";
 
 export default function Page() {
     const { data: session } = useSession();
@@ -29,6 +30,10 @@ export default function Page() {
     const [filtersModalOpen, setFiltersModalOpen] = useState(false);
     const [advancedFilters, setAdvancedFilters] = useState<FiltersState>(defaultFilters);
     const [categoryDetails, setCategoryDetails] = useState<CategoryData | null>(null);
+    const [refreshCooldown, setRefreshCooldown] = useState(false);
+    const [cooldownProgress, setCooldownProgress] = useState(0);
+    const cooldownDuration = 10000; // milliseconds in 10 seconds
+    const animationRef = useRef<number | null>(null); // For button animation
     const searchParams = useSearchParams();
     const category = searchParams.get('category');
 
@@ -43,13 +48,16 @@ export default function Page() {
         }
     };
 
+    // Fetch coins on mount and when category or advancedFilters.category changes
+    const effectiveCategory = category || advancedFilters.category;
+
     useEffect(() => {
-        fetchCoins(category || advancedFilters.category);
-    }, [category, advancedFilters.category]);
+        fetchCoins(effectiveCategory);
+    }, [effectiveCategory]);
 
     // Pour fetch info du catégorie
     useEffect(() => {
-        if (!category) {
+        if (!effectiveCategory) {
             setCategoryDetails(null);
             return;
         }
@@ -106,6 +114,37 @@ export default function Page() {
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Cooldown pour le boutton de Refresh
+    const handleRefresh = () => {
+        if (refreshCooldown || loading) return;
+        fetchCoins();
+        setRefreshCooldown(true);
+        const start = performance.now();
+
+        const animate = () => {
+            const now = performance.now();
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / cooldownDuration, 1);
+            setCooldownProgress(progress);
+            if (progress < 1) {
+                animationRef.current = requestAnimationFrame(animate);
+            } else {
+                setRefreshCooldown(false);
+                setCooldownProgress(0);
+            }
+        };
+        animationRef.current = requestAnimationFrame(animate);
+    };
+
+    // Cleanup animation frame
+    useEffect(() => {
+        return () => {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
+        };
+    }, []);
 
     // Pagination - 40 coins par page
     const getCurrentPageCoins = () => {
@@ -338,13 +377,23 @@ export default function Page() {
                             </Button>
                             <Button 
                                 variant="outlined"
-                                onClick={() => fetchCoins()}
+                                onClick={handleRefresh}
+                                disabled={loading || refreshCooldown}
                                 startIcon={
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                 }
-                                sx={{ mt: -1, mb: 1 }}
+                                sx={{ 
+                                    mt: -1,
+                                    mb: 1,
+                                    color: refreshCooldown ? 'gray' : undefined,
+                                    borderColor: refreshCooldown ? 'gray' : undefined,
+                                    background: refreshCooldown
+                                        ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
+                                        : undefined,
+                                    transition: 'background 0.3s',
+                                 }}
                             >
                                 Refresh
                             </Button>
@@ -359,7 +408,7 @@ export default function Page() {
                         </div>
                     ) : (
                         <>
-                            <div className="min-h-[2920px]">
+                            <div className="min-h-auto">
                                 {filteredCoins.length === 0 ? (
                                     <div className="text-center py-20 text-gray-500">Aucun résultat trouvé</div>
                                 ) : (
