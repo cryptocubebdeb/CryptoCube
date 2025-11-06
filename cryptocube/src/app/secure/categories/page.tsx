@@ -309,13 +309,10 @@ export default function Page()
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
                                     <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top cryptos</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th> {/* NA */}
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7d %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">30d %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Volume 24h</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Market Cap</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-34">Dernier 30 jours</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,25 +384,11 @@ export default function Page()
                                                 <td className="py-6 px-4 text-right w-24">
                                                     {formatPercentage(category.market_cap_change_24h)}
                                                 </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(category.market_cap_change_7d)}
-                                                </td>
-                                                <td className="py-6 px-4 text-right w-24">
-                                                    {formatPercentage(category.market_cap_change_30d)}
-                                                </td>
                                                 <td className="py-6 px-4 text-right w-32">
                                                     {getFormatMarketCap(category.volume_24h)}
                                                 </td>
                                                 <td className="py-6 px-4 text-right font-medium w-32">
                                                     {getFormatMarketCap(category.market_cap)}
-                                                </td>
-                                                <td className="py-6 px-4 text-center w-40">
-                                                    <div className="flex justify-end">
-                                                        <MiniChart
-                                                            data={category.sparkline_in_30d?.price || []}
-                                                            isPositive={(category.market_cap_change_30d || 0) >= 0}
-                                                        />
-                                                    </div>
                                                 </td>
                                             </tr>
                                         )})}
