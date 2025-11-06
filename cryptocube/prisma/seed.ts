@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
+ 
 const prisma = new PrismaClient();
-
+ 
 async function main() {
   const hashedPassword = await bcrypt.hash("Password123!", 10);
-
+ 
   // --- USERS ---
   const [alice, john, jane] = await Promise.all([
     prisma.user.upsert({
@@ -42,9 +42,9 @@ async function main() {
       },
     }),
   ]);
-
+ 
   console.log("[SEED] Created users");
-
+ 
   // --- WATCHLIST ITEMS ---
   await prisma.watchlistItem.createMany({
     data: [
@@ -52,12 +52,12 @@ async function main() {
       { userId: alice.id, coinId: "bitcoin" },
       { userId: alice.id, coinId: "ethereum" },
       { userId: alice.id, coinId: "solana" },
-
+ 
       // John
       { userId: john.id, coinId: "bitcoin" },
       { userId: john.id, coinId: "dogecoin" },
       { userId: john.id, coinId: "cardano" },
-
+ 
       // Jane
       { userId: jane.id, coinId: "avalanche-2" },
       { userId: jane.id, coinId: "polkadot" },
@@ -66,7 +66,7 @@ async function main() {
     skipDuplicates: true,
   });
   console.log("[SEED] Watchlists created");
-
+ 
   // --- SIMULATOR ACCOUNTS ---
   const [aliceSim, johnSim, janeSim] = await Promise.all([
     prisma.simulatorAccount.upsert({
@@ -101,7 +101,7 @@ async function main() {
     }),
   ]);
   console.log("[SEED] Simulator accounts created");
-
+ 
   // --- PORTFOLIOS ---
   await prisma.portfolio.createMany({
     data: [
@@ -118,7 +118,7 @@ async function main() {
         amountOwned: 5.2,
         averageEntryPriceUsd: 2200.0,
       },
-
+ 
       // John’s holdings
       {
         simulatorAccountId: johnSim.id,
@@ -132,7 +132,7 @@ async function main() {
         amountOwned: 800,
         averageEntryPriceUsd: 0.45,
       },
-
+ 
       // Jane’s holdings
       {
         simulatorAccountId: janeSim.id,
@@ -150,7 +150,7 @@ async function main() {
     skipDuplicates: true,
   });
   console.log("[SEED] Portfolios created");
-
+ 
   // --- ORDERS ---
   const [aliceOrder, johnOrder, janeOrder] = await Promise.all([
     prisma.order.create({
@@ -188,7 +188,7 @@ async function main() {
     }),
   ]);
   console.log("[SEED] Orders created");
-
+ 
   // --- TRADE HISTORY ---
   await prisma.tradeHistory.createMany({
     data: [
@@ -210,7 +210,7 @@ async function main() {
         tradePrice: 2450.0,
         tradeTotal: 2450.0,
       },
-
+ 
       // John’s history
       {
         simulatorAccountId: johnSim.id,
@@ -221,7 +221,7 @@ async function main() {
         tradePrice: 0.075,
         tradeTotal: 37.5,
       },
-
+ 
       // Jane’s history
       {
         simulatorAccountId: janeSim.id,
@@ -243,7 +243,7 @@ async function main() {
   });
   console.log("[SEED] Trade history created");
 }
-
+ 
 main()
   .then(async () => {
     console.log("[SEED] Database seeding complete!");
