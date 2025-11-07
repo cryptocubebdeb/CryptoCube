@@ -1,21 +1,35 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['coin-images.coingecko.com'],
     remotePatterns: [
-      { protocol: "https", hostname: "assets.coingecko.com" },
-      { protocol: "https", hostname: "www.coingecko.com" },
-      { protocol: "https", hostname: "s2.coinmarketcap.com" },
-      { protocol: "https", hostname: "static.crypto.com" },
-      { protocol: "https", hostname: "**.coingecko.com" }, // wildcard fallback
+      {
+        protocol: "https",
+        hostname: "coin-images.coingecko.com",  // <– this is the one you need
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com", // GitHub avatars
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",  // Google avatars
+      },
+      {
+        protocol: "https",
+        hostname: "graph.facebook.com",         // if you ever use FB
+      },
+      // add any other hostnames you actually use
     ],
-  },
-  experimental: {
-    typedRoutes: false,
-  },
-  typescript: {
-    ignoreBuildErrors: true, // optional safety
   },
 };
 

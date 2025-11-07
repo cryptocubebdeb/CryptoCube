@@ -1,57 +1,92 @@
-// app/api/signup/route.ts
+// src/app/api/custom-signup/route.ts
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../lib/prisma";
+import { hash } from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const nom = String(body.nom ?? "").trim();
-    const prenom = String(body.prenom ?? "").trim();
-    const email = String(body.email ?? "").trim().toLowerCase();
-    const password = String(body.password ?? "");
+    const body = await req.json().catch(() => null);
 
-    // basic validation
-    if (!email || !password || !nom || !prenom) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!body || typeof body !== "object") {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 }
+      );
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+
+    const { email, password, name } = body as {
+      email?: string;
+      password?: string;
+      name?: string;
+    };
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password are required." },
+        { status: 400 }
+      );
     }
+
     if (password.length < 8) {
-      return NextResponse.json({ error: "Password too short" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters." },
+        { status: 400 }
+      );
     }
 
-    // unique email check
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json({ error: "Email already in use" }, { status: 409 });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    // Create user (match your schema: email String? if you allow OAuth without email)
-    const user = await prisma.user.create({
-      data: {
-        email,                 // ensure your Prisma model has email (nullable if Reddit)
-        name: nom,             // you used user.name earlier
-        prenom,                // you used user.prenom earlier
-        passwordHash,          // credentials users only
-        // If your schema has username, add: username: String(body.username ?? "").trim()
-      },
-      select: { id: true, email: true },
+    const existing = await prisma.user.findUnique({
+      where: { email },
     });
 
-    return NextResponse.json({ id: user.id, email: user.email }, { status: 201 });
-  } catch (err) {
-    console.error("Signup error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
-  }
-}
+    const passwordHash = await hash(password, 10);
 
-// (optional) reject other methods
-export async function GET() {
-  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+    // user already has password
+    if (existing && existing.passwordHash) {
+      return NextResponse.json(
+        {
+          error:
+            "This email already has a password. Go to the sign-in page and log in instead.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // user exists but OAuth-only → attach password
+    if (existing && !existing.passwordHash) {
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: {
+          passwordHash,
+          name: name || existing.name,
+        },
+      });
+
+      return NextResponse.json({
+        ok: true,
+        mode: "attached-password",
+        message: "Password added to existing account.",
+      });
+    }
+
+    // brand new user
+    await prisma.user.create({
+      data: {
+        email,
+        name: name || null,
+        passwordHash,
+      },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      mode: "created",
+      message: "Account created.",
+    });
+  } catch (err) {
+    console.error("CUSTOM SIGNUP ROUTE ERROR", err);
+    return NextResponse.json(
+      { error: "Internal server error." },
+      { status: 500 }
+    );
+  }
 }

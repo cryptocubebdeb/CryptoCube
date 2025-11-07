@@ -1,0 +1,132 @@
+"use client"
+import React, { useEffect, useState } from 'react';
+import { CircularProgress, Box, Avatar, Typography } from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { getCoinsList } from '../../../lib/getCoinsList';
+import MiniChart from './MiniChart';
+
+interface Coin {
+    id: string;
+    name: string;
+    symbol: string;
+    image: string;
+    current_price: number;
+    price_change_percentage_24h: number;
+    price_change_percentage_7d_in_currency?: number; // Pour isPositive (MiniChart)
+    sparkline_in_7d?: { price: number[] }; // Pour MiniChart
+}
+
+export default function TopWinningCoins(): React.JSX.Element {
+    const [coins, setCoins] = useState<Coin[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchCoins() {
+            try {
+                const data = await getCoinsList();
+
+                // get top winning coins
+                const sortedData = data.sort((first: Coin, second: Coin) => second.price_change_percentage_24h - first.price_change_percentage_24h);
+
+                setCoins(sortedData);
+            } catch (error) {
+                console.error("Error fetching top coins:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchCoins();
+    }, []);
+
+    if (loading) {
+        return (
+            <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
+                Loading top winning coins...
+            </Typography>
+        );
+    }
+
+    if (!coins.length) {
+        return (
+            <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'error.main' }}>
+                Failed to load top winning coins.
+            </Typography>
+        );
+    }
+
+    return (
+        <Box sx={{ pt: 1 }}>
+            {coins.slice(0, 5).map((coin, index) => (
+                <Box
+                    key={coin.id}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginLeft: 1,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                        py: 2,
+                        borderBottom: index < 4 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                        cursor: 'pointer',
+                        '&:hover': {
+                            backgroundColor: '#1a1a20ff',
+                        },
+                        transition: 'background-color 0.2s ease',
+                    }}
+                    onClick={() => window.location.href = `/secure/specificCoin/${coin.id}`}
+                >
+                    {/* Logo, nom et symbole */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Avatar 
+                            src={coin.image} 
+                            alt={coin.name} 
+                            sx={{ width: 32, height: 32 }} 
+                        />
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography variant="body1" sx={{ fontWeight: 500, color: 'white' }}>
+                                {coin.name}
+                            </Typography>
+
+                            <Typography variant="body1" sx={{ color: 'gray' }}>
+                                {coin.symbol.toUpperCase()}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                {/* Prix actuel et changement */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: 'white' }}>
+                        ${coin.current_price.toFixed(2)}
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 2, marginRight: 2 }}>
+                        {coin.price_change_percentage_24h >= 0 ? (
+                            <TrendingUpIcon sx={{ color: '#4caf50', fontSize: '1rem' }} />
+                        ) : (
+                            <TrendingDownIcon sx={{ color: '#f44336', fontSize: '1rem' }} />
+                        )}
+
+                        <Typography
+                            variant="body1"
+                            sx={{ color: coin.price_change_percentage_24h >= 0 ? '#4caf50' : '#f44336' }}
+                        >
+                            {coin.price_change_percentage_24h >= 0 ? '+' : ''}
+                            {coin.price_change_percentage_24h.toFixed(2)}%
+                        </Typography>
+                    </Box>
+
+                    <MiniChart
+                        data={coin.sparkline_in_7d?.price || []}
+                        isPositive={(coin.price_change_percentage_24h || 0) >= 0}
+                        timeframe="24h"
+                    />
+                </Box>
+            </Box>
+        ))}
+        </Box>
+    );
+}

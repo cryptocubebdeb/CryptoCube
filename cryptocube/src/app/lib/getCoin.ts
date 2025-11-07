@@ -1,6 +1,11 @@
 const URL_API = "https://api.coingecko.com/api/v3";
 
 export async function getCoin(id: string) {
+    if (!id) {
+        console.warn("[getCoin] No id provided");
+        return null;
+    }
+    
     const API_KEY = process.env.COINGECKO_API_KEY;
     if (!API_KEY) {
         throw new Error("Missing COINGECKO_API_KEY in environment.");

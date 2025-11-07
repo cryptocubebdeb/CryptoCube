@@ -1,17 +1,17 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Search, User } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userId = (session?.user as any)?.id as string | undefined; // kept if you want to log / debug later
 
-  const Links = [
+  const links = [
     { href: "/secure/dashboard", text: "Accueil" },
     { href: "/secure/coins", text: "Coins" },
     { href: "/secure/categories", text: "Catégories" },
@@ -19,10 +19,13 @@ export default function Navbar() {
     { href: "/secure/community", text: "Communauté" },
     { href: "/secure/about", text: "À propos" },
     { href: "/secure/coins?q=", icon: <Search size={20} /> },
-    { href: userId ? `/secure/account/details/${userId}` : "/auth/login", icon: <User size={20} /> },
   ];
 
-  const userLink = Links[Links.length - 1];
+  // user icon link (used for the clickable icon itself)
+  const userLink = {
+    href: session ? "/secure/account/details" : "/auth/login",
+    icon: <User size={20} />,
+  };
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const closeTimeout = useRef<number | null>(null);
@@ -41,30 +44,37 @@ export default function Navbar() {
 
   const closeUserMenuDelayed = () => {
     clearCloseTimeout();
-    closeTimeout.current = window.setTimeout(() => setUserMenuOpen(false), 150);
+    closeTimeout.current = window.setTimeout(
+      () => setUserMenuOpen(false),
+      150
+    );
   };
 
   useEffect(() => {
     return () => clearCloseTimeout();
   }, []);
 
-  
-
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
-        <Link href="/secure/dashboard" className="font-bold text-2xl">CryptoCube</Link>
+        <Link href="/secure/dashboard" className="font-bold text-2xl">
+          CryptoCube
+        </Link>
 
         <ul className="flex flex-row items-center gap-6 ">
-          {Links.slice(0, -1).map((link) => {
-            const active = !!link.text && pathname?.startsWith(link.href);
+          {/* main nav links (including search) */}
+          {links.map((link) => {
+            const active =
+              !!link.text && pathname?.startsWith(link.href);
             return (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   className={[
                     "navbar-text uppercase text-base transition-colors",
-                    active ? "text-yellow-400" : "text-white/80 hover:text-white",
+                    active
+                      ? "text-yellow-400"
+                      : "text-white/80 hover:text-white",
                   ].join(" ")}
                 >
                   {link.text || link.icon}
@@ -73,10 +83,9 @@ export default function Navbar() {
             );
           })}
 
-          {/* User icon with conditional hover dropdown */}
+          {/* User icon with hover dropdown */}
           <li
             className="relative"
-            key={userLink.href}
             onMouseEnter={openUserMenu}
             onMouseLeave={closeUserMenuDelayed}
             onFocus={openUserMenu}
@@ -95,23 +104,61 @@ export default function Navbar() {
               role="menu"
               aria-label="User menu"
               className={
-                `absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 ` +
-                (userMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none')
+                "absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
+                (userMenuOpen
+                  ? "opacity-100 scale-100 pointer-events-auto"
+                  : "opacity-0 scale-95 pointer-events-none")
               }
             >
               {!session ? (
-                <Link href="/auth/login" role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Connectez-vous</Link>
+                <Link
+                  href="/auth/login"
+                  role="menuitem"
+                  onClick={() => setUserMenuOpen(false)}
+                  className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                >
+                  Connectez-vous
+                </Link>
               ) : (
                 <>
-                  <Link href={`/secure/account/details/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Détails</Link>
-                  <Link href={`/secure/account/watchlist/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Watchlist</Link>
-                  <Link href={`/secure/account/notifications/${userId}`} role="menuitem" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700">Notifications</Link>
-                  <button onClick={() => { setUserMenuOpen(false); signOut({ callbackUrl: '/auth/login' }); }} role="menuitem" className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700">Déconnexion</button>
+                  <Link
+                    href="/secure/account/details"
+                    role="menuitem"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                  >
+                    Détails
+                  </Link>
+                  <Link
+                    href="/secure/account/watchlist"
+                    role="menuitem"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                  >
+                    Watchlist
+                  </Link>
+                  <Link
+                    href="/secure/account/notifications"
+                    role="menuitem"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                  >
+                    Notifications
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      signOut({ callbackUrl: "/auth/login" });
+                    }}
+                    role="menuitem"
+                    className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700"
+                  >
+                    Déconnexion
+                  </button>
                 </>
               )}
             </div>
           </li>
-
         </ul>
       </div>
     </header>

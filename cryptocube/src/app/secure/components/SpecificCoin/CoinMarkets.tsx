@@ -99,15 +99,15 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-sm table-fixed">
           <colgroup>
-            <col className="w-[5%]" />   {/* # */}
-            <col className="w-[18%]" />  {/* Exchange */}
-            <col className="w-[10%]" />  {/* Pair */}
-            <col className="w-[12%]" />  {/* Price */}
-            <col className="w-[10%]" />  {/* Spread */}
-            <col className="w-[15%]" />  {/* Volume */}
-            <col className="w-[10%]" />  {/* Volume % */}
-            <col className="w-[10%]" />  {/* Last Update */}
-            <col className="w-[10%]" />  {/* Score */}
+            <col className="w-[5%]" />
+            <col className="w-[18%]" />
+            <col className="w-[10%]" />
+            <col className="w-[12%]" />
+            <col className="w-[10%]" />
+            <col className="w-[15%]" />
+            <col className="w-[10%]" />
+            <col className="w-[10%]" />
+            <col className="w-[10%]" />
           </colgroup>
 
           <thead className="border-b border-white/20 text-white/70 uppercase">
@@ -132,9 +132,9 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
               const volumePercent = ((volume / totalVolume) * 100).toFixed(2);
               const formattedTime = ticker.last_traded_at
                 ? new Date(ticker.last_traded_at).toLocaleTimeString("fr-CA", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
                 : "-";
 
               return (
@@ -144,11 +144,10 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
                     if (ticker.trade_url)
                       window.open(ticker.trade_url, "_blank", "noopener,noreferrer");
                   }}
-                  className={`border-b border-white/10 transition ${
-                    ticker.trade_url
+                  className={`border-b border-white/10 transition ${ticker.trade_url
                       ? "hover:bg-white/10 cursor-pointer"
                       : "opacity-70 cursor-default"
-                  }`}
+                    }`}
                 >
                   <td className="py-2 px-3 text-center whitespace-nowrap">
                     {rowNumber}
@@ -190,8 +189,8 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
                         ticker.trust_score === "green"
                           ? "text-green-400 font-semibold"
                           : ticker.trust_score === "yellow"
-                          ? "text-yellow-400 font-semibold"
-                          : "text-red-400 font-semibold"
+                            ? "text-yellow-400 font-semibold"
+                            : "text-red-400 font-semibold"
                       }
                     >
                       {ticker.trust_score?.toUpperCase() || "N/A"}
@@ -210,9 +209,8 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
         <button
           onClick={() => changePage(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${
-            currentPage === 1 ? "opacity-40 cursor-not-allowed" : ""
-          }`}
+          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${currentPage === 1 ? "opacity-40 cursor-not-allowed" : ""
+            }`}
         >
           ‹
         </button>
@@ -221,11 +219,10 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
           <button
             key={pageNumber}
             onClick={() => changePage(pageNumber)}
-            className={`px-3 py-1 rounded-md border border-white/20 transition ${
-              currentPage === pageNumber
+            className={`px-3 py-1 rounded-md border border-white/20 transition ${currentPage === pageNumber
                 ? "bg-white/20 text-white font-semibold"
                 : "hover:bg-white/10"
-            }`}
+              }`}
           >
             {pageNumber}
           </button>
@@ -235,9 +232,8 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
         <button
           onClick={() => changePage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${
-            currentPage === totalPages ? "opacity-40 cursor-not-allowed" : ""
-          }`}
+          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${currentPage === totalPages ? "opacity-40 cursor-not-allowed" : ""
+            }`}
         >
           ›
         </button>

@@ -12,14 +12,26 @@ import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
-export default async function Page({ params }: { params: { id: string } }) {
-    const { id } = params; // id example "bitcoin"
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params; 
+    console.log("[SpecificCoinPage] id =", id);
 
+    // --- Fetch data ---
     const [coinData, series] = await Promise.all([
         getCoin(id),
         getCoinChart(id, 30, "cad"),
     ]);
 
+    let news: Awaited<ReturnType<typeof getCoinNews>> = [];
+    try {
+        news = await getCoinNews(id);
+    } catch {
+        news = [];
+    }
 
     // --- Basic coin info ---
     const name = coinData?.name ?? id; // Name of the current crypto
@@ -28,13 +40,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     const rank = coinData?.market_cap_rank; // Global market rank of the crypto
     const coinDescription = coinData?.description?.en ?? "";
     const websiteUrl = coinData?.links?.homepage?.[0] || null;
-
-    let news: Awaited<ReturnType<typeof getCoinNews>> = [];
-    try {
-        news = await getCoinNews(id);
-    } catch {
-        news = [];
-    }
 
     // --- Market data ---
     const currentPrice = coinData?.market_data?.current_price?.cad; // Current price in CAD
@@ -278,7 +283,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         {/* Chart container */}
                         <div className="text-white rounded-[4px] shadow-md relative">
                             <div className="w-full min-h-[700px]">
-                                <CoinChart coinId={params.id} currency="cad" />
+                                <CoinChart coinId={id} currency="cad" />
                             </div>
                         </div>
 

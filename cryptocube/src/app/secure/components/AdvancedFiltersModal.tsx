@@ -97,8 +97,8 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
     setPriceMax('');
     setMarketCapMin('');
     setMarketCapMax('');
-  setVolumeMin('');
-  setVolumeMax('');
+    setVolumeMin('');
+    setVolumeMax('');
     setChange24hMin('');
     setChange24hMax('');
     setExcludeStablecoins(false);
@@ -107,7 +107,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
   };
 
   // Hydrate depuis initialValues quand on ouvre le modal
-  
+
   useEffect(() => {
     if (!open || !initialValues) return;
     if (initialValues.topGagnants !== undefined) setTopGainers(initialValues.topGagnants);
@@ -120,8 +120,8 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
     if (initialValues.priceMax !== undefined) setPriceMax(String(initialValues.priceMax ?? ''));
     if (initialValues.marketCapMin !== undefined) setMarketCapMin(String(initialValues.marketCapMin ?? ''));
     if (initialValues.marketCapMax !== undefined) setMarketCapMax(String(initialValues.marketCapMax ?? ''));
-  if (initialValues.volumeMin !== undefined) setVolumeMin(String(initialValues.volumeMin ?? ''));
-  if (initialValues.volumeMax !== undefined) setVolumeMax(String(initialValues.volumeMax ?? ''));
+    if (initialValues.volumeMin !== undefined) setVolumeMin(String(initialValues.volumeMin ?? ''));
+    if (initialValues.volumeMax !== undefined) setVolumeMax(String(initialValues.volumeMax ?? ''));
     if (initialValues.change24hMin !== undefined) setChange24hMin(String(initialValues.change24hMin ?? ''));
     if (initialValues.change24hMax !== undefined) setChange24hMax(String(initialValues.change24hMax ?? ''));
     if (initialValues.exclureStablecoins !== undefined) setExcludeStablecoins(initialValues.exclureStablecoins);
@@ -144,11 +144,10 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
         }
       }}
     >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+      <DialogTitle sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        pb: 2,
         borderBottom: '1px solid #2d3240'
       }}>
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
@@ -343,7 +342,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
         </Box>
 
         {/* Filtres numériques */}
-  <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
+        <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
           {/* Prix */}
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Prix</Typography>
@@ -469,7 +468,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
           </Box>
         </Box>
 
-        
+
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #2d3240' }}>

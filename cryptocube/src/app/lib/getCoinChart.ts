@@ -5,6 +5,11 @@ export async function getCoinChart(
   days: number = 30,
   currency: string = "cad"
 ) {
+   if (!id) {
+    console.warn("[getCoinChart] No coinId provided");
+    return [];
+  }
+
   const API_KEY = process.env.COINGECKO_API_KEY;
   if (!API_KEY) {
     throw new Error("Missing COINGECKO_API_KEY in environment.");

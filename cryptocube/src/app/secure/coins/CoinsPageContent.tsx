@@ -38,7 +38,7 @@ export default function Page() {
     const category = searchParams.get('category');
 
     const fetchCoins = async (category?: string) => {
-         try {
+        try {
             const data = await getCoinsList(category);
             setCoins(data);
         } catch (error) {
@@ -76,7 +76,7 @@ export default function Page() {
         const result = getFormatPercentage(value);
 
         if (result.isPositive === null) return <span className="text-gray-400">{result.value}</span>;
-        
+
         return (
             <span className={`flex items-center justify-end gap-1 ${result.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                 {result.isPositive ? (
@@ -208,13 +208,11 @@ export default function Page() {
         }
     };
 
-    
-
     return (
         <>
             {categoryDetails ? (
                 <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
-                    <div 
+                    <div
                         style={{
                             width: '70%',
                             display: 'flex',
@@ -293,7 +291,7 @@ export default function Page() {
                         </div>
 
                         {/* Barre de recherche */}
-                        <SearchBar 
+                        <SearchBar
                             searchTerm={searchTerm}
                             onSearchChange={setSearchTerm}
                             placeholder="Explore crypto..."
@@ -313,7 +311,7 @@ export default function Page() {
                                 Simple. Rapide. Transparent.
                             </p>
                             {/* Barre de recherche */}
-                            <SearchBar 
+                            <SearchBar
                                 searchTerm={searchTerm}
                                 onSearchChange={setSearchTerm}
                                 placeholder="Explore crypto..."
@@ -333,7 +331,7 @@ export default function Page() {
                         {activeTab === 'pluséchangées' && 'Cryptomonnaies les plus échangées'}
                         {activeTab === 'gagnants' && 'Top gagnants (24h)'}
                     </h2>
-                    
+
                     {/* Onglets de navigation */}
                     <div className="flex justify-between items-center mb-5 border-b border-gray-400">
                         <div className="flex space-x-8">
@@ -350,11 +348,10 @@ export default function Page() {
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tabKey)}
-                                        className={`pb-4 px-1 text-md transition-colors ${
-                                            activeTab === tabKey
+                                        className={`pb-4 px-1 text-md transition-colors ${activeTab === tabKey
                                                 ? 'border-b-2 border-blue-500 text-blue-600'
                                                 : 'text-gray-500 hover:text-gray-300'
-                                        }`}
+                                            }`}
                                     >
                                         {tab}
                                         <span className="ml-1 text-xs opacity-60">({tabCount})</span>
@@ -373,9 +370,9 @@ export default function Page() {
                                 }
                                 sx={{ mt: -1, mb: 1 }}
                             >
-                                Filtres 
+                                Filtres
                             </Button>
-                            <Button 
+                            <Button
                                 variant="outlined"
                                 onClick={handleRefresh}
                                 disabled={loading || refreshCooldown}
@@ -384,7 +381,7 @@ export default function Page() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                 }
-                                sx={{ 
+                                sx={{
                                     mt: -1,
                                     mb: 1,
                                     color: refreshCooldown ? 'gray' : undefined,
@@ -393,7 +390,7 @@ export default function Page() {
                                         ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
                                         : undefined,
                                     transition: 'background 0.3s',
-                                 }}
+                                }}
                             >
                                 Refresh
                             </Button>
@@ -425,9 +422,9 @@ export default function Page() {
                                                     aria-label={userWatchlist.has(coinId) ? 'Remove from watchlist' : 'Add to watchlist'}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
-                                                        <path 
-                                                            strokeLinecap="round" 
-                                                            strokeLinejoin="round" 
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                             stroke="currentColor"
                                                             fill={userWatchlist.has(coinId) ? 'currentColor' : 'none'}
                                                             d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
@@ -447,10 +444,10 @@ export default function Page() {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                     disabled={currentPage === 1}
-                                    className={`p-2 rounded transition-transform ${currentPage === 1 
-                                        ? 'text-gray-400 cursor-not-allowed' 
+                                    className={`p-2 rounded transition-transform ${currentPage === 1
+                                        ? 'text-gray-400 cursor-not-allowed'
                                         : 'text-white hover:scale-125'
-                                    }`}
+                                        }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -485,10 +482,10 @@ export default function Page() {
                                             <button
                                                 key={i}
                                                 onClick={() => setCurrentPage(i)}
-                                                className={`px-3 py-1 rounded border ${i === currentPage 
-                                                    ? 'bg-blue-500 text-white border-blue-500' 
+                                                className={`px-3 py-1 rounded border ${i === currentPage
+                                                    ? 'bg-blue-500 text-white border-blue-500'
                                                     : 'text-blue-500 border-transparent hover:border-blue-500'
-                                                }`}
+                                                    }`}
                                             >
                                                 {i}
                                             </button>
@@ -518,10 +515,10 @@ export default function Page() {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                     disabled={currentPage === totalPages}
-                                    className={`p-2 rounded transition-transform ${currentPage === totalPages 
-                                        ? 'text-gray-400 cursor-not-allowed' 
+                                    className={`p-2 rounded transition-transform ${currentPage === totalPages
+                                        ? 'text-gray-400 cursor-not-allowed'
                                         : 'text-white hover:scale-125'
-                                    }`}
+                                        }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -534,7 +531,7 @@ export default function Page() {
             </div>
 
             {/* Modal des filtres avancés */}
-            <AdvancedFiltersModal 
+            <AdvancedFiltersModal
                 open={filtersModalOpen}
                 onClose={() => setFiltersModalOpen(false)}
                 initialValues={advancedFilters}

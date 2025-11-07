@@ -1,24 +1,22 @@
+// src/app/api/user/[id]/settings/route.ts
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 type UpdateUserBody = {
-  email: string;
-  name: string;
-  prenom: string;
-  username: string;
+  email?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  username?: string | null;
 };
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const userId = Number(params.id);
-
-  if (!Number.isFinite(userId)) {
-    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
-  }
+  const { id } = await context.params; // params is a Promise in Next 16
+  const userId = id; // string
 
   try {
     const user = await prisma.user.findUnique({
@@ -26,8 +24,8 @@ export async function GET(
       select: {
         id: true,
         email: true,
-        name: true,
-        prenom: true,
+        firstName: true,
+        lastName: true,
         username: true,
         image: true,
       },
@@ -49,19 +47,19 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const userId = Number(params.id);
+  const { id } = await context.params;
+  const userId = id;
 
-  if (!Number.isFinite(userId)) {
-    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
-  }
+  const body = (await request.json()) as UpdateUserBody;
+  const { email, firstName, lastName, username } = body;
 
-  const body = (await request.json()) as Partial<UpdateUserBody>;
-  const { email, name: fullName, prenom, username } = body;
-
-  if (!email || !fullName || !prenom || !username) {
-    return NextResponse.json({ error: "Missing user data" }, { status: 400 });
+  if (!email || !firstName || !lastName || !username) {
+    return NextResponse.json(
+      { error: "Missing user data" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -69,16 +67,17 @@ export async function PUT(
       where: { id: userId },
       data: {
         email,
-        name: fullName,
-        prenom,
+        firstName,
+        lastName,
         username,
       },
       select: {
         id: true,
         email: true,
-        name: true,
-        prenom: true,
+        firstName: true,
+        lastName: true,
         username: true,
+        image: true,
       },
     });
 

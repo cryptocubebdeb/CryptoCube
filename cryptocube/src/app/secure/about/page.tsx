@@ -10,8 +10,6 @@ function Feature({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-
-
 export default function Page() {
   return (
     <>

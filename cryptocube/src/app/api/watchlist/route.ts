@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/app/api/auth/[...nextauth]/route';
+import { getAuthSession } from "@/app/lib/getServerSession";     
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function getAuthenticatedUserId(): Promise<number | null> {
-  const session = await auth();
-  if (!session?.user?.email) return null;
+async function getAuthenticatedUserId(): Promise<string | null> {
+  const session = await getAuthSession();
+
+  if (!session?.user?.email) {
+    return null;
+  }
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { id: true },
   });
 
-  return user?.id ?? null;
+  return user?.id ?? null; // <- String, matches your Prisma schema
 }
-
 
 export async function GET() {
   const userId = await getAuthenticatedUserId();

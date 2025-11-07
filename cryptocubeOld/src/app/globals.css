@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0f131b;
+  --foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000111;
+    --foreground: #ffffff;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Geologica', sans-serif;
+}
+
+.btn-primary {
+  @apply w-64 bg-yellow-400 px-6 py-2 text-white rounded-3xl hover:bg-yellow-700 font-mono font-semibold;
+}
+
+.navbar-text {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+} 
+
+.sidebar {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+}
+
+html {
+  scroll-behavior: smooth;
+}

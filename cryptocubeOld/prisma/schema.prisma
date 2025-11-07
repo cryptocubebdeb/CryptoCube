@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+ 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+ 
+generator client {
+  provider = "prisma-client-js"
+}
+ 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+ 
+// ======================
+//      USER MODEL
+// ======================
+ 
+model User {
+  id             Int       @id @default(autoincrement())
+  email          String?    @unique
+  emailVerified  DateTime? // used by NextAuth
+  name           String?
+  prenom         String?
+  username       String?   @unique
+  passwordHash   String?   // hashed password for credentials login
+  image          String?              
+  // Relations
+  accounts       Account[]         // OAuth logins (Google, Facebook, Reddit…)
+  sessions       Session[]         // active login sessions
+  resetToken     PasswordResetToken?
+  watchlistItems WatchlistItem[]   // a user can have multiple watchlist items
+  simulatorAccount SimulatorAccount?
+}
+ 
+ 
+// ======================
+//        ACCOUNT
+// ======================
+ 
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+  @@index([userId])   
+}
+ 
+// ======================
+//        SESSION
+// ======================
+ 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])   
+}
+ 
+// ======================
+//   VERIFICATION TOKEN
+// ======================
+ 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+}
+ 
+ 
+// ======================
+//      RESET TOKEN
+// ======================
+ 
+model PasswordResetToken {
+  userId          Int      @id
+  resetToken      String
+  tokenValidFrom  DateTime @default(now())
+  tokenValidUntil DateTime @default(dbgenerated("now() + interval '1 hour'"))
+ 
+  user User @relation(fields: [userId], references: [id])
+}
+ 
+// ======================
+//       WATCHLIST
+// ======================
+ 
+model WatchlistItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  coinId    String
+  addedAt   DateTime @default(now())
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([userId, coinId]) // Un utilisateur ne peut pas avoir le même coin deux fois
+}
+ 
+ 
+// ======================
+//   SIMULATOR ACCOUNT
+// ======================
+// One row per user. Tracks their simulator money.
+ 
+model SimulatorAccount {
+  id                   Int              @id @default(autoincrement())
+ 
+  userId               Int              @unique
+  user                 User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  initialCashBalance   Decimal          @db.Decimal(18, 2) // starting cash
+  currentCashBalance   Decimal          @db.Decimal(18, 2) // current available cash
+  realizedProfitUsd    Decimal          @db.Decimal(18, 2) @default(0)
+ 
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+ 
+  // Relations
+  portfolio            Portfolio[]
+  orders               Order[]
+  tradeHistory         TradeHistory[]
+}
+ 
+ 
+// ======================
+//       PORTFOLIO
+// ======================
+// All the coins the user is holding in his portfolio
+ 
+model Portfolio {
+  id                        Int            @id @default(autoincrement())
+ 
+  // Which simulated account this belongs to
+  simulatorAccountId         Int
+  simulatorAccount           SimulatorAccount  @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+ 
+  // Which coin (ex: "btc", "eth", "sol")
+  coinSymbol                String
+ 
+  // How much of that coin they currently own
+  amountOwned               Decimal        @db.Decimal(38, 18)
+ 
+  // Average price in USD they paid for what they STILL HOLD
+  averageEntryPriceUsd      Decimal        @db.Decimal(18, 8)
+ 
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+ 
+  // You can't have 2 rows for the same coin in the same account
+  @@unique([simulatorAccountId, coinSymbol])
+}
+ 
+// ======================
+//         ORDER
+// ======================
+model Order {
+  id                 Int             @id @default(autoincrement())
+  simulatorAccountId Int
+  simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+ 
+  coinSymbol         String
+  orderType          TradeType
+  orderKind          OrderKind
+  amount             Decimal          @db.Decimal(38, 18)
+  price              Decimal?         @db.Decimal(18, 8)
+  status             OrderStatus      @default(PENDING)
+ 
+  createdAt          DateTime         @default(now())
+  executedAt         DateTime?
+ 
+  // optional link to executed trade
+  tradeHistory       TradeHistory?    @relation("OrderTradeHistory")
+ 
+  @@index([coinSymbol])
+}
+ 
+// ======================
+//      TRADE HISTORY
+// ======================
+model TradeHistory {
+  id                 Int             @id @default(autoincrement())
+  simulatorAccountId Int
+  simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+ 
+  orderId            Int?             @unique
+  order              Order?           @relation("OrderTradeHistory", fields: [orderId], references: [id])
+ 
+  tradeType          TradeType
+  coinSymbol         String
+  amountTraded       Decimal          @db.Decimal(38, 18)
+  tradePrice         Decimal          @db.Decimal(18, 8)
+  tradeTotal         Decimal          @db.Decimal(18, 2)
+  executedAt         DateTime         @default(now())
+ 
+  @@index([coinSymbol])
+}
+ 
+ 
+// BUY or SELL flag
+enum TradeType {
+  BUY
+  SELL
+}
+ 
+enum OrderKind {
+  MARKET //Execute order directly depending on the current market price
+  LIMIT  //Execute only if the market riches that specific price
+}
+ 
+enum OrderStatus {
+  PENDING
+  EXECUTED
+  CANCELLED
+  EXPIRED
+}
