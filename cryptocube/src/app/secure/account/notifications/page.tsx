@@ -1,12 +1,11 @@
 "use client";
 
 import Sidebar from "../../components/Sidebar";
-import styles from "../../account/page.module.css"
 import { useSession } from "next-auth/react";
 
 export default function NotificationsPage() {
   const { data: session, status } = useSession();
-  const userId = (session?.user as any)?.id as string | undefined;
+  const userId = (session?.user as { id?: string })?.id;
 
   if (status === "loading") {
     return (
@@ -30,8 +29,8 @@ export default function NotificationsPage() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-        <h2 className={styles.title}>Mes Notifications</h2>
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+        <h2 className="title">Mes Notifications</h2>
       </main>
     </div>
   );

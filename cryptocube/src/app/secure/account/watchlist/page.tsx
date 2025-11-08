@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import Sidebar from "../../components/Sidebar";
-import styles from "../../account/page.module.css"
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
 import { CoinData } from "@/app/lib/definitions"
@@ -12,30 +11,12 @@ import CoinsTable from "../../components/CoinsTable"
 
 export default function Page() {
   const { data: session, status } = useSession()
-  const userId = (session?.user as any)?.id as string | undefined
+  const userId = (session?.user as { id?: string })?.id
 
   const [watchlistCoins, setWatchlistCoins] = useState<CoinData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [removingCoinId, setRemovingCoinId] = useState<string | null>(null)
-
-  // While session is loading
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center h-screen text-white">
-        <p>Chargement...</p>
-      </div>
-    )
-  }
-
-  // If not logged in
-  if (!userId || !session?.user?.email) {
-    return (
-      <div className="flex items-center justify-center h-screen text-white">
-        <p>Veuillez vous connecter pour accéder à votre watchlist</p>
-      </div>
-    )
-  }
 
   // Fetch watchlist coins
   useEffect(() => {
@@ -65,8 +46,27 @@ export default function Page() {
     }
 
     fetchWatchlistCoinsData()
-  }, [session.user.email])
+  }, [session?.user?.email])
 
+
+  // While session is loading
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center h-screen text-white">
+        <p>Chargement...</p>
+      </div>
+    )
+  }
+
+  // If not logged in
+  if (!userId || !session?.user?.email) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white">
+        <p>Veuillez vous connecter pour accéder à votre watchlist</p>
+      </div>
+    )
+  }
+  
   // Remove coin from watchlist
   const removeCoin = async (e: React.MouseEvent, coinId: string) => {
     e.stopPropagation()
@@ -92,8 +92,8 @@ export default function Page() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-        <h2 className={`${styles.title} mb-12`}>Ma Watchlist</h2>
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+        <h2 className="title mb-12">Ma Watchlist</h2>
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
@@ -124,7 +124,7 @@ export default function Page() {
               showSparkline={true}
               renderStar={(coinId: string) => (
                 <button
-                  onClick={(e) => removeCoin(e as any, coinId)}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => removeCoin(e, coinId)}
                   className={`transition-colors p-1 rounded text-yellow-500 hover:text-yellow-400 ${
                     removingCoinId === coinId ? "opacity-50" : ""
                   }`}

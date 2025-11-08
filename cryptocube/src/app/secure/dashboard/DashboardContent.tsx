@@ -1,9 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
@@ -11,7 +7,6 @@ import MarketOverviewGauges from '../components/Dashboard/MarketOverviewGauges';
 import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
-import SearchBar from '../components/SearchBar';
 import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
 
 export default function DashboardContent() {
