@@ -104,7 +104,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
     <div className={`h-screen flex flex-col ${geologica.className}`}>
 
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl font-mono mb-9 mt-12">Connexion</h1>
+        <h1 className="text-3xl mb-9 mt-12">Connexion</h1>
 
         {oauthError && (
           <p className="mb-4 max-w-lg text-center text-sm text-red-500 px-4">

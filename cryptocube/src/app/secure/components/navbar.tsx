@@ -9,7 +9,7 @@ import { Search, User } from "lucide-react";
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const userId = (session?.user as any)?.id as string | undefined; // kept if you want to log / debug later
+  const userId = (session?.user as { id?: string })?.id;
 
   const links = [
     { href: "/secure/dashboard", text: "Accueil" },
