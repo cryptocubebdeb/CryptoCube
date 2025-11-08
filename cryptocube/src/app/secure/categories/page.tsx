@@ -1,15 +1,14 @@
 "use client"
 
-import Link from "next/link"
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useState, useEffect } from "react";
-import { getCategories, getCategoryAssetCount } from '../../lib/getCategories';
-import MiniChart from '../components/Dashboard/MiniChart';
+import { getCategories } from '../../lib/getCategories';
 import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData";
 import Button from '@mui/material/Button';
 import { CategoryData } from "../../lib/definitions";
+import Image from 'next/image';
 
 export default function Page() 
 {
@@ -24,7 +23,7 @@ export default function Page()
             const data = await getCategories();
 
             // Filtrer les catégories avec aucun data
-            const filtered = data.filter((category: any) => {
+            const filtered = data.filter((category: CategoryData) => {
                 return !(category.market_cap === null || category.volume_24h === null || (!category.top_3_coins || category.top_3_coins.length === 0));
             });
             setCategories(filtered);
@@ -236,7 +235,7 @@ export default function Page()
                                         {category.top_3_coins_id && category.top_3_coins_id.length > 0 ? (
                                             <>
                                                 {category.top_3_coins_id.slice(0, 3).map((coinId, index) => (
-                                                    <img
+                                                    <Image
                                                         key={coinId}
                                                         src={category.top_3_coins[index]}
                                                         alt={`Coin ${index + 1}`}
@@ -325,7 +324,7 @@ export default function Page()
                                                     Aucune donnée disponible
                                                 </p>
                                                 <p className="text-sm">
-                                                    Les catégories s'afficheront ici
+                                                    Les catégories vont être affichées ici
                                                 </p>
                                             </div>
                                         </td>
