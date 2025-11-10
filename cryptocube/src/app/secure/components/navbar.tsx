@@ -148,7 +148,7 @@ export default function Navbar() {
                   <button
                     onClick={() => {
                       setUserMenuOpen(false);
-                      signOut({ callbackUrl: "/auth/login" });
+                      signOut({ callbackUrl: "/auth/signin" });
                     }}
                     role="menuitem"
                     className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700"
