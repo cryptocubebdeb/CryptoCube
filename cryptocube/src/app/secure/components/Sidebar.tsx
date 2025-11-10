@@ -19,17 +19,6 @@ const Sidebar = ({ userId }: SidebarProps) => {
     { href: "/secure/account/settings", icon: <Settings size={20} />, text: "Paramètres" },
   ];
 
-  const handleSignOut = async () => {
-    try {
-      await signOut({
-        callbackUrl: "/", // Redirection vers la landing
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Erreur déconnexion:", error);
-    }
-  };
-
   return (
     <aside className="sidebar w-64 min-h-screen text-white p-6 flex flex-col justify-between">
       <div>
@@ -51,7 +40,9 @@ const Sidebar = ({ userId }: SidebarProps) => {
 
       <div className="mb-30">
         <button
-          onClick={handleSignOut}
+          onClick={() => {
+            signOut({ callbackUrl: "/auth/signin" });
+          }}
           className="flex items-center gap-3 hover:text-red-500 transition-colors bg-transparent border-none cursor-pointer text-white text-left"
         >
           <LogOut size={20} />
