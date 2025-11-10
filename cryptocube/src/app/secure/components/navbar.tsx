@@ -112,7 +112,7 @@ export default function Navbar() {
             >
               {!session ? (
                 <Link
-                  href="/auth/login"
+                  href="/auth/signin"
                   role="menuitem"
                   onClick={() => setUserMenuOpen(false)}
                   className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
