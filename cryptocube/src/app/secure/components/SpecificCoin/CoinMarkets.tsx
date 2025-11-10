@@ -80,7 +80,7 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
     const pages: number[] = [];
     const maxVisible = 5;
     let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, start + maxVisible - 1);
+    const end = Math.min(totalPages, start + maxVisible - 1);
     if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
     for (let i = start; i <= end; i++) pages.push(i);
     return pages;
@@ -161,21 +161,21 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
                     {ticker.base}/{ticker.target}
                   </td>
 
-                  <td className="py-2 px-3 text-right font-mono whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap">
                     ${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </td>
 
-                  <td className="py-2 px-3 text-right font-mono whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap">
                     {ticker.bid_ask_spread_percentage
                       ? `${ticker.bid_ask_spread_percentage.toFixed(2)}%`
                       : "—"}
                   </td>
 
-                  <td className="py-2 px-3 text-right font-mono whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap">
                     ${volume.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </td>
 
-                  <td className="py-2 px-3 text-right font-mono whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap">
                     {volumePercent}%
                   </td>
 

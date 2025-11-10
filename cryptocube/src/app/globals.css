@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&display=swap');
 
 :root {
   --background: #ffffff;
@@ -22,5 +23,181 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Geologica', sans-serif;
+}
+
+
+.btn-primary {
+  @apply w-64 bg-yellow-400 px-6 py-2 text-white rounded-3xl hover:bg-yellow-700 font-mono font-semibold;
+}
+
+.navbar-text {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+} 
+
+.sidebar {
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Styles for dashboard page */
+.headline {
+    display: flex;
+    font-size: 1.8rem;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 8.5rem;
+}
+
+.titreHeadline {
+    font-weight: 400;
+    margin-top: 4rem;
+    margin-left: 3rem;
+    text-align: center;
+    font-size: larger;
+}
+
+.titreSubHeadline {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-left: 3rem;
+    text-align: center;
+    font-size: 25px;
+}
+
+
+/* Styles for account page */
+.title {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-top: 2.5rem;
+    margin-left: 3rem;
+}
+
+.main {
+    background-color: #15171E;
+    margin-left: 2rem;
+    width: max-content;
+    height: 95%;
+    overflow-x: hidden;
+}
+
+.personalInfoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.line {
+    opacity: 0.2;
+    margin-top: 0.2rem;
+    margin-bottom: 1.5rem;
+    width: 95%;
+}
+
+.personInfo {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    margin-left: 1rem;
+}
+
+.infoTitles {
+    font-size: 16px;
+}
+
+.infoText {
+    margin-left: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    width: 40%;
+}
+
+.nameFields {
+    display: flex;
+    justify-content: space-between;
+    /* gap: 12rem; */
+}
+
+.inputField {
+    background-color: #D3DAEF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    width: 13rem;
+    margin-top: 0.5rem;
+    color: black;
+}
+
+.inputEmailField{
+    background-color: #D3DAEF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    color: black;
+}
+
+.inputProfileField{
+    background-color: #D3DAEF;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    width: 18rem;
+    margin-top: 0.5rem;
+}
+
+.nameDisplay {
+    background-color: #232734;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    width: 13rem;
+    margin-top: 0.5rem;
+}
+
+.emailDisplay {
+    background-color: #232734;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.profileInfoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profileDisplay{
+    background-color: #232734;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    width: 18rem;
+    margin-top: 0.5rem;
 }

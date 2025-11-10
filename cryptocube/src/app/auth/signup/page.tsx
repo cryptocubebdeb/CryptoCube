@@ -151,7 +151,7 @@ export default function Page() {
 
 
       const text = await response.text();
-      let data: any = null;
+      let data: unknown = null;
       try {
         data = JSON.parse(text);
       } catch {
@@ -159,9 +159,16 @@ export default function Page() {
       }
 
       if (!response.ok) {
-        const msg =
-          (data && typeof data.error === "string" && data.error) ||
-          `Erreur d'inscription (status ${response.status})`;
+        let msg = `Erreur d'inscription (status ${response.status})`;
+        if (
+          data &&
+          typeof data === "object" &&
+          data !== null &&
+          "error" in data &&
+          typeof (data as { error?: unknown }).error === "string"
+        ) {
+          msg = (data as { error: string }).error;
+        }
         setServerError(msg);
         setSubmitting(false);
         return;
@@ -211,7 +218,7 @@ export default function Page() {
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl font-mono mb-9 mt-12">Inscription</h1>
+        <h1 className="text-3xl mb-9 mt-12">Inscription</h1>
 
         {serverError && (
           <p className="mb-4 max-w-lg text-center text-sm text-red-500 px-4">
@@ -400,7 +407,7 @@ export default function Page() {
             </Box>
 
             <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>
-              ou s'inscrire avec
+              ou inscrire avec
             </Divider>
 
             <div className="flex justify-center gap-6">

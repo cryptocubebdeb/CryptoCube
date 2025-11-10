@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import Sidebar from "../../components/Sidebar";
-import styles from "./page.module.css";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -29,7 +28,7 @@ type User = {
 
 export default function Page() {
   const { data: session, status } = useSession();
-  const userId = (session?.user as any)?.id as string | undefined;
+  const userId = (session?.user as { id?: string })?.id;
 
   // toggles
   const [isEditingPersonal, setIsEditingPersonal] = useState(false);
@@ -117,8 +116,8 @@ export default function Page() {
 
       resetPasswordFields();
       setIsPopupOpen(false);
-    } catch (e: any) {
-      setPasswordError(e?.message ?? "Une erreur s'est produite");
+    } catch (e: unknown) {
+      setPasswordError((e as Error)?.message ?? "Une erreur s'est produite");
     } finally {
       setIsSavingPassword(false);
     }
@@ -147,9 +146,9 @@ export default function Page() {
         setLastName(userData.lastName ?? "");
         setEmail(userData.email ?? "");
         setUsername(userData.username ?? "");
-      } catch (e: any) {
+      } catch (e: unknown) {
         setError(
-          e?.message ?? "An error occurred while loading user data"
+          (e as Error)?.message ?? "An error occurred while loading user data"
         );
       } finally {
         setLoading(false);
@@ -179,8 +178,8 @@ export default function Page() {
       const updatedUser: User = await res.json();
       setUser(updatedUser);
       setIsEditingPersonal(false);
-    } catch (e: any) {
-      setError(e?.message ?? "An error occurred. Could not save personal info");
+    } catch (e: unknown) {
+      setError((e as Error)?.message ?? "An error occurred. Could not save personal info");
     }
   };
 
@@ -204,8 +203,8 @@ export default function Page() {
       const updatedUser: User = await res.json();
       setUser(updatedUser);
       setIsEditingProfile(false);
-    } catch (e: any) {
-      setError(e?.message ?? "An error occurred. Could not save profile info");
+    } catch (e: unknown) {
+      setError((e as Error)?.message ?? "An error occurred. Could not save profile info");
     }
   };
 
@@ -231,12 +230,12 @@ export default function Page() {
       {/* You’ll need Sidebar to accept string userId now */}
       <Sidebar />
 
-      <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-        <h2 className={styles.title}>Mes Détails</h2>
+      <main className={`${"main"} flex-1 mt-1 rounded-2xl overflow-auto`}>
+        <h2 className={`${"title"}`}>Mes Détails</h2>
 
         <div className="p-6 ml-5 mt-2 w-full max-w-full">
           {/* ----- Personal Info ----- */}
-          <div className={styles.personalInfoHeader}>
+          <div className={`${"personalInfoHeader"}`}>
             <h2 className="text-xl">Information Personnel</h2>
 
             <Button
@@ -250,40 +249,40 @@ export default function Page() {
             </Button>
           </div>
 
-          <hr className={styles.line} />
+          <hr className="line"/>
 
-          <div className={styles.personInfo}>
+          <div className="personInfo">
             <ProfilePic />
 
-            <div className={styles.infoText}>
-              <div className={styles.nameFields}>
+            <div className="infoText">
+              <div className="nameFields">
                 <div>
-                  <p className={styles.infoTitles}>PRÉNOM</p>
+                  <p className="infoTitles">PRÉNOM</p>
                   {isEditingPersonal ? (
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className={styles.inputField}
+                      className="inputField"
                     />
                   ) : (
-                    <div className={styles.nameDisplay}>
+                    <div className="nameDisplay">
                       {user.firstName || "—"}
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <p className={styles.infoTitles}>NOM</p>
+                  <p className="infoTitles">NOM</p>
                   {isEditingPersonal ? (
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className={styles.inputField}
+                      className="inputField"
                     />
                   ) : (
-                    <div className={styles.nameDisplay}>
+                    <div className="nameDisplay">
                       {user.lastName || "—"}
                     </div>
                   )}
@@ -291,23 +290,23 @@ export default function Page() {
               </div>
 
               <div>
-                <p className={styles.infoTitles}>COURRIEL</p>
+                <p className="infoTitles">COURRIEL</p>
                 {isEditingPersonal ? (
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={styles.inputEmailField}
+                    className="inputEmailField"
                   />
                 ) : (
-                  <div className={styles.emailDisplay}>{user.email}</div>
+                  <div className="emailDisplay">{user.email}</div>
                 )}
               </div>
             </div>
           </div>
 
           {/* ----- Profile Info ----- */}
-          <div className={styles.profileInfoHeader}>
+          <div className="profileInfoHeader">
             <h2 className="text-xl">Information de Profil</h2>
 
             <Button
@@ -321,28 +320,28 @@ export default function Page() {
             </Button>
           </div>
 
-          <hr className={styles.line} />
+          <hr className="line" />
 
-          <div className={styles.profileInfo}>
+          <div className="profileInfo">
             <div>
-              <p className={styles.infoTitles}>NOM D&apos;UTILISATEUR</p>
+              <p className="infoTitles">NOM D&apos;UTILISATEUR</p>
               {isEditingProfile ? (
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className={styles.inputProfileField}
+                  className="inputProfileField"
                 />
               ) : (
-                <div className={styles.profileDisplay}>
+                <div className="profileDisplay">
                   {user.username || "—"}
                 </div>
               )}
             </div>
 
             <div>
-              <p className={styles.infoTitles}>MOT DE PASSE</p>
-              <div className={styles.profileDisplay}>•••••••</div>
+              <p className="infoTitles">MOT DE PASSE</p>
+              <div className="profileDisplay">•••••••</div>
             </div>
 
             <Button

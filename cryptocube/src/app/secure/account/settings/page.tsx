@@ -1,13 +1,11 @@
 "use client"
 
-import Link from "next/link"
 import Sidebar from "../../components/Sidebar"
-import styles from "../../account/page.module.css"
 import { useSession } from "next-auth/react"
 
 export default function Page() {
   const { data: session, status } = useSession()
-  const userId = (session?.user as any)?.id as string | undefined
+  const userId = (session?.user as { id?: string })?.id
 
   // While session is loading
   if (status === "loading") {
@@ -33,8 +31,8 @@ export default function Page() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className={`${styles.main} flex-1 mt-1 rounded-2xl overflow-auto`}>
-        <h2 className={styles.title}>Mes Paramètres</h2>
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+        <h2 className="title">Mes Paramètres</h2>
 
         {/* Language + Light/Dark mode*/}
       </main>
