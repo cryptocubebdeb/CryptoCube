@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { User } from "lucide-react";
+import { Search, User } from "lucide-react";
 
 interface SearchResult {
   id: string;
@@ -27,7 +27,7 @@ export default function Navbar() {
     { href: "/secure/about", text: "À propos" },
   ];
 
-  // user icon link (used for the clickable icon itself)
+  // lien icône utilisateur (utilisé pour l'icône cliquable)
   const userLink = {
     href: session ? "/secure/account/details" : "/auth/login",
     icon: <User size={20} />,
@@ -36,13 +36,14 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const closeTimeout = useRef<number | null>(null);
 
-  // Search state
+  // État de la recherche
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const searchContainerRef = useRef<HTMLDivElement | null>(null);
 
   const clearCloseTimeout = () => {
     if (closeTimeout.current) {
@@ -68,14 +69,33 @@ export default function Navbar() {
     return () => clearCloseTimeout();
   }, []);
 
-  // Cleanup debounce on unmount
+  // Nettoyage du debounce lors du démontage
   useEffect(() => {
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
   }, []);
 
-  // Fetch matching coins from CoinGecko search endpoint
+  // Fermer la recherche en cliquant à l'extérieur ou en appuyant sur Échap
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [searchOpen]);
+
+  // Récupère les cryptos correspondantes via l'endpoint de recherche de CoinGecko
   const fetchSearchResults = async (q: string) => {
     if (!q || q.trim().length === 0) {
       setResults([]);
@@ -110,7 +130,7 @@ export default function Navbar() {
     }
   };
 
-  // Debounced handler for query change
+  // Gestionnaire débouncé pour les changements de la requête
   const handleQueryChange = (v: string) => {
     setQuery(v);
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
@@ -121,7 +141,7 @@ export default function Navbar() {
   };
 
   const goToCoin = (id: string) => {
-    // navigate to specific coin page
+    // naviguer vers la page du coin spécifique
     window.location.href = `/secure/specificCoin/${id}`;
   };
 
@@ -133,7 +153,7 @@ export default function Navbar() {
         </Link>
 
         <ul className="flex flex-row items-center gap-6 ">
-          {/* main nav links (including search) */}
+          {/* liens principaux de navigation */}
           {links.map((link) => {
             const active = !!link.text && pathname?.startsWith(link.href);
             return (
@@ -151,65 +171,91 @@ export default function Navbar() {
             );
           })}
 
-          {/* Search input (small) */}
+          {/* Bouton icône recherche - seule l'icône visible par défaut */}
+          <li>
+            <button
+              type="button"
+              aria-label="Open search"
+                  onClick={() => {
+                const willOpen = !searchOpen;
+                setSearchOpen(willOpen);
+                if (willOpen) {
+                  // focus l'input après rendu
+                  window.setTimeout(() => inputRef.current?.focus(), 0);
+                }
+              }}
+              className="navbar-text text-white/80 hover:text-white p-1"
+            >
+              <Search size={20} />
+            </button>
+          </li>
+
+          {/* Search input (small) - animated open/close */}
           <li className="relative">
             <div
-              className="relative"
-              onMouseEnter={() => setSearchOpen(true)}
-              onMouseLeave={() => setSearchOpen(false)}
+              ref={searchContainerRef}
+              className={
+                "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
+                (searchOpen
+                  ? "px-3 py-1 w-64 opacity-100"
+                  : "px-0 py-0 w-0 opacity-0 pointer-events-none")
+              }
             >
-              <div className="flex items-center bg-slate-800 rounded-full px-3 py-1 w-64">
-                <input
-                  type="text"
-                  aria-label="Search coins"
-                  ref={inputRef}
-                  value={query}
-                  onChange={(e) => handleQueryChange(e.target.value)}
-                  onFocus={() => setSearchOpen(true)}
-                  placeholder="Rechercher une crypto..."
-                  className="appearance-none bg-transparent text-white placeholder-white/60 outline-none w-full"
-                />
-              </div>
-
-              {/* Dropdown results */}
-              <div
+              <input
+                type="text"
+                aria-label="Search coins"
+                ref={inputRef}
+                value={query}
+                onChange={(e) => handleQueryChange(e.target.value)}
+                onFocus={() => setSearchOpen(true)}
+                placeholder="Rechercher une crypto..."
                 className={
-                  "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
-                  (searchOpen && results.length > 0
-                    ? "opacity-100 scale-100 pointer-events-auto"
-                    : "opacity-0 scale-95 pointer-events-none")
+                  "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
+                  (searchOpen ? "w-full pl-2" : "w-0 pl-0")
                 }
-              >
-                {searchLoading ? (
-                  <div className="px-3 py-2 text-sm text-white/70">Recherche...</div>
-                ) : (
-                  results.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => goToCoin(r.id)}
-                      className="w-full text-left flex items-center gap-3 px-3 py-2 hover:bg-slate-700 text-white"
-                    >
-                      {r.thumb ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={r.thumb} alt={r.name} className="w-6 h-6 rounded" />
-                      ) : (
-                        <div className="w-6 h-6 rounded bg-white/10" />
-                      )}
-                      <div className="flex flex-col text-sm">
-                        <span className="font-medium">{r.name}</span>
-                        <span className="text-white/60 uppercase">{r.symbol}</span>
-                      </div>
-                    </button>
-                  ))
-                )}
-                {!searchLoading && results.length === 0 && query.length > 0 && (
-                  <div className="px-3 py-2 text-sm text-white/60">Aucun résultat</div>
-                )}
-              </div>
+              />
+            </div>
+
+            {/* Résultats dropdown*/}
+            <div
+              className={
+                "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
+                (searchOpen
+                  ? "opacity-100 scale-100 pointer-events-auto translate-y-0"
+                  : "opacity-0 scale-95 pointer-events-none -translate-y-2")
+              }
+            >
+              {searchLoading ? (
+                <div className="px-3 py-2 text-sm text-white/70">Recherche...</div>
+              ) : results.length > 0 ? (
+                results.map((r) => (
+                  <button
+                    key={r.id}
+                    onClick={() => goToCoin(r.id)}
+                    className="w-full text-left flex items-center gap-3 px-3 py-2 hover:bg-slate-700 text-white"
+                  >
+                    {r.thumb ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={r.thumb} alt={r.name} className="w-6 h-6 rounded" />
+                    ) : (
+                      <div className="w-6 h-6 rounded bg-white/10" />
+                    )}
+                    <div className="flex flex-col text-sm">
+                      <span className="font-medium">{r.name}</span>
+                      <span className="text-white/60 uppercase">{r.symbol}</span>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                // Aucun résultat trouvé
+                query.length > 0 ? (
+                  <div className="px-3 py-2 text-sm text-white/60">Aucune correspondance</div>
+                ) : null
+              )}
             </div>
           </li>
 
-          {/* User icon with hover dropdown */}
+          {/* Icône utilisateur avec menu déroulant au survol */}
           <li
             className="relative"
             onMouseEnter={openUserMenu}
