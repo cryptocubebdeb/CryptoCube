@@ -236,13 +236,16 @@ export default function Page()
                                             <>
                                                 {category.top_3_coins_id.slice(0, 3).map((coinId, index) => (
                                                     <Image
+                                                        width={32}
+                                                        height={32}
                                                         key={coinId}
                                                         src={category.top_3_coins[index]}
                                                         alt={`Coin ${index + 1}`}
-                                                        width={60}
-                                                        height={60}
                                                         className="w-15 h-15 rounded-full border-2 border-gray-800 bg-gray-900 hover:scale-115 transform transition-transform duration-200"
                                                         style={{ zIndex: 3 - index }}
+                                                        onError={(e) => {
+                                                            e.currentTarget.style.display = 'none';
+                                                        }}
                                                         onClick={() => window.location.href = `/secure/specificCoin/${coinId}`}
                                                     />
                                                 ))}
@@ -359,13 +362,16 @@ export default function Page()
                                                             <div className="flex -space-x-2">
                                                                 {category.top_3_coins.slice(0, 3).map((coinUrl, index) => (
                                                                     <Image
+                                                                        width={32}
+                                                                        height={32}
                                                                         key={index}
                                                                         src={coinUrl}
                                                                         alt={`Coin ${index + 1}`}
-                                                                        width={32}
-                                                                        height={32}
                                                                         className="w-8 h-8 rounded-full border-2 border-gray-800 bg-gray-900"
                                                                         style={{ zIndex: 3 - index }}
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.style.display = 'none';
+                                                                        }}                                                          
                                                                     />
                                                                 ))}
                                                             </div>
@@ -411,7 +417,7 @@ export default function Page()
 
                             {/* Page Numbers */}
                             {(() => {
-                                const pages = [];
+                                const pages: React.ReactNode[] = [];
                                 const startPage = Math.max(1, currentPage - 2);
                                 const endPage = Math.min(totalPages, currentPage + 2);
 

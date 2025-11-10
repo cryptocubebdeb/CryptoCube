@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import Button from "@mui/material/Button"; // https://mui.com/material-ui/react-button/
@@ -456,7 +456,7 @@ export default function Page() {
 
                                 {/* Page Numbers */}
                                 {(() => {
-                                    const pages = [];
+                                    const pages: React.ReactNode[] = [];
                                     const startPage = Math.max(1, currentPage - 2);
                                     const endPage = Math.min(totalPages, currentPage + 2);
 
