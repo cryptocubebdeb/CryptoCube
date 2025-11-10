@@ -33,7 +33,9 @@ export default function SearchBar({ searchTerm, onSearchChange, placeholder = "E
             width: '100%',
             maxWidth: '1050px',
             '& .MuiOutlinedInput-root': {
+              transition: 'border-color 0.3s',
               borderRadius: '50px',
+              color: '#fff',
               '& fieldset': {
                 borderColor: '#434344ff', // Change border color (default state)
                 borderWidth: '2px', // Make border thicker
@@ -51,7 +53,7 @@ export default function SearchBar({ searchTerm, onSearchChange, placeholder = "E
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon color='action' />
+                <SearchIcon sx={{ color: '#989898ff', marginLeft: '8px' }} />
               </InputAdornment>
             ),
           }}
