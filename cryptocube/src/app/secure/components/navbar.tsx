@@ -23,7 +23,6 @@ export default function Navbar() {
     { href: "/secure/coins", text: "Coins" },
     { href: "/secure/categories", text: "Catégories" },
     { href: "/secure/simulator/Home", text: "Simulateur" },
-    { href: "/secure/community", text: "Communauté" },
     { href: "/secure/about", text: "À propos" },
   ];
 
