@@ -105,13 +105,8 @@ export default function Navbar() {
 
     setSearchLoading(true);
     try {
-      const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-      const headers: Record<string, string> = {};
-      if (API_KEY) headers["x-cg-demo-api-key"] = API_KEY;
-
       const res = await fetch(
-        `https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(q)}`,
-        { headers }
+        `https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(q)}`
       );
       if (!res.ok) throw new Error("Search failed");
       const data = await res.json();
@@ -140,10 +135,6 @@ export default function Navbar() {
     setSearchOpen(true);
   };
 
-  const goToCoin = (id: string) => {
-    // naviguer vers la page du coin spécifique
-    window.location.href = `/secure/specificCoin/${id}`;
-  };
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
@@ -181,7 +172,6 @@ export default function Navbar() {
                   const willOpen = !searchOpen;
                   setSearchOpen(willOpen);
                   if (willOpen) {
-                    // focus l'input après rendu
                     window.setTimeout(() => inputRef.current?.focus(), 0);
                   }
                 }}
@@ -207,6 +197,9 @@ export default function Navbar() {
                 type="text"
                 aria-label="Search coins"
                 ref={inputRef}
+                aria-expanded={searchOpen}
+                aria-controls="search-results"
+                autoComplete="off"
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
@@ -226,6 +219,9 @@ export default function Navbar() {
                   ? "opacity-100 scale-100 pointer-events-auto translate-y-0"
                   : "opacity-0 scale-95 pointer-events-none -translate-y-2")
               }
+              id="search-results"
+              role="listbox"
+              aria-label="Search results"
             >
               {searchLoading ? (
                 <div className="px-3 py-2 text-sm text-white/70">Recherche...</div>
@@ -235,9 +231,10 @@ export default function Navbar() {
                     key={r.id}
                     href={`/secure/specificCoin/${r.id}`}
                     className="w-full text-left flex items-center gap-3 px-3 py-2 hover:bg-slate-700 text-white"
+                    role="option"
+                    aria-selected={false}
                   >
                     {r.thumb ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={r.thumb} alt={r.name} className="w-6 h-6 rounded" />
                     ) : (
                       <div className="w-6 h-6 rounded bg-white/10" />
@@ -249,7 +246,7 @@ export default function Navbar() {
                   </Link>
                 ))
               ) : (
-                // Aucun résultat trouvé
+                //Si Aucun résultat trouvé
                 query.length > 0 ? (
                   <div className="px-3 py-2 text-sm text-white/60">Aucune correspondance</div>
                 ) : null
