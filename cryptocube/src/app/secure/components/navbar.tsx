@@ -42,7 +42,8 @@ export default function Navbar() {
   const [searchLoading, setSearchLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const searchContainerRef = useRef<HTMLDivElement | null>(null);
+  // utilisé pour détecter les clics en-dehors du conteneur (input + dropdown)
+  const searchContainerRef = useRef<HTMLLIElement | null>(null);
 
   const clearCloseTimeout = () => {
     if (closeTimeout.current) {
@@ -170,29 +171,31 @@ export default function Navbar() {
             );
           })}
 
-          {/* Bouton icône recherche - seule l'icône visible par défaut */}
-          <li>
-            <button
-              type="button"
-              aria-label="Open search"
-                  onClick={() => {
-                const willOpen = !searchOpen;
-                setSearchOpen(willOpen);
-                if (willOpen) {
-                  // focus l'input après rendu
-                  window.setTimeout(() => inputRef.current?.focus(), 0);
-                }
-              }}
-              className="navbar-text text-white/80 hover:text-white p-1"
-            >
-              <Search size={20} />
-            </button>
-          </li>
+          {/* Bouton icône recherche - affiché uniquement quand la recherche est fermée */}
+          {!searchOpen && (
+            <li>
+              <button
+                type="button"
+                aria-label="Open search"
+                onClick={() => {
+                  const willOpen = !searchOpen;
+                  setSearchOpen(willOpen);
+                  if (willOpen) {
+                    // focus l'input après rendu
+                    window.setTimeout(() => inputRef.current?.focus(), 0);
+                  }
+                }}
+                className="navbar-text text-white/80 hover:text-white p-1"
+              >
+                <Search size={20} />
+              </button>
+            </li>
+          )}
 
           {/* Search input (small) - animated open/close */}
-          <li className="relative">
+          {/* conteneur qui englobe l'input et le dropdown - ref pour détecter clic en-dehors */}
+          <li className="relative" ref={searchContainerRef}>
             <div
-              ref={searchContainerRef}
               className={
                 "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
                 (searchOpen
@@ -228,9 +231,9 @@ export default function Navbar() {
                 <div className="px-3 py-2 text-sm text-white/70">Recherche...</div>
               ) : results.length > 0 ? (
                 results.map((r) => (
-                  <button
+                  <Link
                     key={r.id}
-                    onClick={() => goToCoin(r.id)}
+                    href={`/secure/specificCoin/${r.id}`}
                     className="w-full text-left flex items-center gap-3 px-3 py-2 hover:bg-slate-700 text-white"
                   >
                     {r.thumb ? (
@@ -243,7 +246,7 @@ export default function Navbar() {
                       <span className="font-medium">{r.name}</span>
                       <span className="text-white/60 uppercase">{r.symbol}</span>
                     </div>
-                  </button>
+                  </Link>
                 ))
               ) : (
                 // Aucun résultat trouvé
