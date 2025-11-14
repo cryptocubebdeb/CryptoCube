@@ -15,8 +15,6 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import ProfilePic from "./ProfilePic";
-
 // Match your new Prisma shape (string id, firstName/lastName)
 type User = {
   id: string;
@@ -252,8 +250,6 @@ export default function Page() {
           <hr className="line"/>
 
           <div className="personInfo">
-            <ProfilePic />
-
             <div className="infoText">
               <div className="nameFields">
                 <div>
