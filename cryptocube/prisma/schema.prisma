@@ -103,9 +103,9 @@ model SimulatorAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  portfolio    Portfolio[]
-  orders       Order[]
-  tradeHistory TradeHistory[]
+  portfolio Portfolio[]
+  orders    Order[]
+  trades    TradeHistory[]
 }
 
 model Portfolio {
@@ -138,7 +138,7 @@ model Order {
   createdAt  DateTime  @default(now())
   executedAt DateTime?
 
-  tradeHistory TradeHistory? @relation("OrderTradeHistory")
+  trades TradeHistory[] // instead of single trade reference
 
   @@index([coinSymbol])
 }
@@ -148,8 +148,8 @@ model TradeHistory {
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  orderId Int?   @unique
-  order   Order? @relation("OrderTradeHistory", fields: [orderId], references: [id])
+  orderId Int?
+  order   Order?     @relation(fields: [orderId], references: [id])
 
   tradeType    TradeType
   coinSymbol   String
