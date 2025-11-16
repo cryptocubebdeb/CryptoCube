@@ -106,7 +106,6 @@ html {
     display: flex;
     align-items: flex-start;
     margin-bottom: 3rem;
-    margin-left: 1rem;
 }
 
 .infoTitles {
@@ -114,7 +113,6 @@ html {
 }
 
 .infoText {
-    margin-left: 3rem;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
