@@ -271,14 +271,14 @@ export const getColors = (nbArcsToDisplay: number, gauge: Gauge) => {
   //Otherwise make an interpolation
   let arcsEqualsColorsLength = nbArcsToDisplay === colorsValue?.length;
   if (arcsEqualsColorsLength) return colorsValue;
-  var colorScale = scaleLinear()
+  const colorScale = scaleLinear<number, string>()
     .domain([1, nbArcsToDisplay])
     //@ts-ignore
     .range([colorsValue[0], colorsValue[colorsValue.length - 1]]) //Use the first and the last color as range
     //@ts-ignore
     .interpolate(interpolateHsl);
-  var colorArray = [];
-  for (var i = 1; i <= nbArcsToDisplay; i++) {
+    const colorArray: string[] = [];
+    for (let i = 1; i <= nbArcsToDisplay; i++) {
     colorArray.push(colorScale(i));
   }
   return colorArray;

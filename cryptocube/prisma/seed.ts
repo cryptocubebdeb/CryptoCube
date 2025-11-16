@@ -1,11 +1,17 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
- 
+// prisma/seed.js
+const {
+  PrismaClient,
+  TradeType,
+  OrderKind,
+  OrderStatus,
+} = require("@prisma/client");
+const bcrypt = require("bcryptjs");
+
 const prisma = new PrismaClient();
- 
+
 async function main() {
   const hashedPassword = await bcrypt.hash("Password123!", 10);
- 
+
   // --- USERS ---
   const [alice, john, jane] = await Promise.all([
     prisma.user.upsert({
@@ -14,8 +20,8 @@ async function main() {
       create: {
         email: "alice@outlook.com",
         passwordHash: hashedPassword,
-        name: "Leblanc",
-        prenom: "Alice",
+        lastName: "Leblanc",
+        firstName: "Alice",
         username: "aliceleblanc05",
       },
     }),
@@ -25,8 +31,8 @@ async function main() {
       create: {
         email: "johndoe@outlook.com",
         passwordHash: hashedPassword,
-        name: "Doe",
-        prenom: "John",
+        lastName: "Doe",
+        firstName: "John",
         username: "johndoe03",
       },
     }),
@@ -36,15 +42,15 @@ async function main() {
       create: {
         email: "janedoe@outlook.com",
         passwordHash: hashedPassword,
-        name: "Doe",
-        prenom: "Jane",
+        lastName: "Doe",
+        firstName: "Jane",
         username: "janedoe06",
       },
     }),
   ]);
- 
-  console.log("[SEED] Created users");
- 
+
+  console.log("[SEED] Users created");
+
   // --- WATCHLIST ITEMS ---
   await prisma.watchlistItem.createMany({
     data: [
@@ -52,12 +58,12 @@ async function main() {
       { userId: alice.id, coinId: "bitcoin" },
       { userId: alice.id, coinId: "ethereum" },
       { userId: alice.id, coinId: "solana" },
- 
+
       // John
       { userId: john.id, coinId: "bitcoin" },
       { userId: john.id, coinId: "dogecoin" },
       { userId: john.id, coinId: "cardano" },
- 
+
       // Jane
       { userId: jane.id, coinId: "avalanche-2" },
       { userId: jane.id, coinId: "polkadot" },
@@ -65,8 +71,9 @@ async function main() {
     ],
     skipDuplicates: true,
   });
+
   console.log("[SEED] Watchlists created");
- 
+
   // --- SIMULATOR ACCOUNTS ---
   const [aliceSim, johnSim, janeSim] = await Promise.all([
     prisma.simulatorAccount.upsert({
@@ -100,12 +107,13 @@ async function main() {
       },
     }),
   ]);
+
   console.log("[SEED] Simulator accounts created");
- 
+
   // --- PORTFOLIOS ---
   await prisma.portfolio.createMany({
     data: [
-      // Alice’s holdings
+      // Alice
       {
         simulatorAccountId: aliceSim.id,
         coinSymbol: "BTC",
@@ -118,8 +126,8 @@ async function main() {
         amountOwned: 5.2,
         averageEntryPriceUsd: 2200.0,
       },
- 
-      // John’s holdings
+
+      // John
       {
         simulatorAccountId: johnSim.id,
         coinSymbol: "DOGE",
@@ -132,8 +140,8 @@ async function main() {
         amountOwned: 800,
         averageEntryPriceUsd: 0.45,
       },
- 
-      // Jane’s holdings
+
+      // Jane
       {
         simulatorAccountId: janeSim.id,
         coinSymbol: "SOL",
@@ -149,54 +157,55 @@ async function main() {
     ],
     skipDuplicates: true,
   });
+
   console.log("[SEED] Portfolios created");
- 
+
   // --- ORDERS ---
   const [aliceOrder, johnOrder, janeOrder] = await Promise.all([
     prisma.order.create({
       data: {
         simulatorAccountId: aliceSim.id,
         coinSymbol: "BTC",
-        orderType: "BUY",
-        orderKind: "LIMIT",
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
         amount: 0.2,
         price: 38000.0,
-        status: "PENDING",
+        status: OrderStatus.PENDING,
       },
     }),
     prisma.order.create({
       data: {
         simulatorAccountId: johnSim.id,
         coinSymbol: "DOGE",
-        orderType: "SELL",
-        orderKind: "MARKET",
+        orderType: TradeType.SELL,
+        orderKind: OrderKind.MARKET,
         amount: 500,
         price: null,
-        status: "EXECUTED",
+        status: OrderStatus.EXECUTED,
       },
     }),
     prisma.order.create({
       data: {
         simulatorAccountId: janeSim.id,
         coinSymbol: "DOT",
-        orderType: "BUY",
-        orderKind: "LIMIT",
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
         amount: 60,
         price: 5.5,
-        status: "PENDING",
+        status: OrderStatus.PENDING,
       },
     }),
   ]);
+
   console.log("[SEED] Orders created");
- 
+
   // --- TRADE HISTORY ---
   await prisma.tradeHistory.createMany({
     data: [
-      // Alice executed past trades
       {
         simulatorAccountId: aliceSim.id,
         orderId: aliceOrder.id,
-        tradeType: "BUY",
+        tradeType: TradeType.BUY,
         coinSymbol: "BTC",
         amountTraded: 0.1,
         tradePrice: 39500.0,
@@ -204,28 +213,24 @@ async function main() {
       },
       {
         simulatorAccountId: aliceSim.id,
-        tradeType: "SELL",
+        tradeType: TradeType.SELL,
         coinSymbol: "ETH",
         amountTraded: 1.0,
         tradePrice: 2450.0,
         tradeTotal: 2450.0,
       },
- 
-      // John’s history
       {
         simulatorAccountId: johnSim.id,
         orderId: johnOrder.id,
-        tradeType: "SELL",
+        tradeType: TradeType.SELL,
         coinSymbol: "DOGE",
         amountTraded: 500.0,
         tradePrice: 0.075,
         tradeTotal: 37.5,
       },
- 
-      // Jane’s history
       {
         simulatorAccountId: janeSim.id,
-        tradeType: "BUY",
+        tradeType: TradeType.BUY,
         coinSymbol: "SOL",
         amountTraded: 10.0,
         tradePrice: 120.0,
@@ -233,7 +238,7 @@ async function main() {
       },
       {
         simulatorAccountId: janeSim.id,
-        tradeType: "SELL",
+        tradeType: TradeType.SELL,
         coinSymbol: "DOT",
         amountTraded: 20.0,
         tradePrice: 6.8,
@@ -241,16 +246,17 @@ async function main() {
       },
     ],
   });
+
   console.log("[SEED] Trade history created");
 }
- 
+
 main()
-  .then(() => {
-    console.log("Prisma Seed: Database seeding complete!");
-  })
-  .catch((e) => {
-    console.error("Prisma Seed: Failed to seed data", e);
-  })
-  .finally(async () => {
+  .then(async () => {
+    console.log("[SEED] Database seeding complete!");
     await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error("[SEED] Failed to seed data", e);
+    await prisma.$disconnect();
+    process.exit(1);
   });
