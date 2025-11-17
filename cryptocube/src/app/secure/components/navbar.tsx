@@ -8,7 +8,7 @@ import { Search, User } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userId = (session?.user as { id?: string })?.id;
 
   const links = [
@@ -20,9 +20,16 @@ export default function Navbar() {
     { href: "/secure/coins?q=", icon: <Search size={20} /> },
   ];
 
-  // user icon link (used for the clickable icon itself)
+  
+  // Détermine si l'utilisateur est réellement authentifié 
+
+  const isAuthenticated =
+    status === "authenticated" &&
+    !!(session?.user && ((session.user as any).id || (session.user as any).email));
+
+  // lien icône utilisateur (utilisé pour l'icône cliquable)
   const userLink = {
-    href: session ? "/secure/account/details" : "/auth/login",
+    href: isAuthenticated ? "/secure/account/details" : "/auth/signin",
     icon: <User size={20} />,
   };
 
@@ -109,7 +116,7 @@ export default function Navbar() {
                   : "opacity-0 scale-95 pointer-events-none")
               }
             >
-              {!session ? (
+              {!isAuthenticated ? (
                 <Link
                   href="/auth/signin"
                   role="menuitem"
