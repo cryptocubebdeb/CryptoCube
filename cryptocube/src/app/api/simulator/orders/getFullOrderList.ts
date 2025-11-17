@@ -25,11 +25,7 @@ export async function GET(req: Request) {
                 { status: 404 }
             );
         }
-        
-        const orders = await prisma.order.findMany({
-            where: { simulatorAccountId: simulatorAccount.id },
-            orderBy: { createdAt: "desc" },
-        });
+        const orders = simulatorAccount.orders || [];
         return Response.json({ orders });
         
     } catch (error) {

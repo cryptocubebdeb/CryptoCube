@@ -138,10 +138,32 @@ model Order {
   createdAt  DateTime  @default(now())
   executedAt DateTime?
 
-  trades TradeHistory[] // instead of single trade reference
+  trades TradeHistory[]
+
+  bestBuyForBook  OrderBook? @relation("BestBuyOrder")
+  bestSellForBook OrderBook? @relation("BestSellOrder")
 
   @@index([coinSymbol])
 }
+
+
+model OrderBook {
+  id           Int    @id @default(autoincrement())
+  coinSymbol   String @unique
+
+  // references to best orders
+  bestBuyOrderId  Int? @unique
+  bestSellOrderId Int? @unique
+
+  bestBuyOrder  Order? @relation("BestBuyOrder", fields: [bestBuyOrderId], references: [id])
+  bestSellOrder Order? @relation("BestSellOrder", fields: [bestSellOrderId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([coinSymbol])
+}
+
 
 model TradeHistory {
   id                 Int              @id @default(autoincrement())
