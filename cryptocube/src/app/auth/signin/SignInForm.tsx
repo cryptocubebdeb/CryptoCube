@@ -75,7 +75,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
       return;
     }
 
-    router.push("/secure/about"); // change to /secure/dashboard when that page exists
+    router.push("/secure/dashboard"); // change to /secure/dashboard when that page exists
   }
 
   const handleMicrosoftSignIn = async () =>
