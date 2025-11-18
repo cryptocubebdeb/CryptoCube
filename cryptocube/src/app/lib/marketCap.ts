@@ -1,8 +1,5 @@
 /**
  * Helpers liés à la capitalisation totale.
- *
- * Toute la documentation est en français — ces fonctions visent à être
- * réutilisables depuis plusieurs composants (ex: `CoinsPageContent`).
  */
 import { CoinData } from './definitions';
 
@@ -14,13 +11,6 @@ import { CoinData } from './definitions';
  * Méthode : pour chaque coin on estime la capitalisation précédente via :
  *   prevMarketCap = market_cap / (1 + price_change_percentage_24h / 100)
  * Puis on somme totalNow et totalPrev et on calcule le pourcentage global.
- *
- * Retourne `undefined` si aucune donnée de variation 24h n'est disponible ou si
- * le calcul n'est pas possible.
- *
- * Limites : c'est une approximation raisonnable si l'offre en circulation est
- * fixe. Pour une valeur exacte, il faudrait un champ explicite `market_cap_change_24h`
- * ou des séries historiques.
  */
 export function computeTotalMarketCapChangePercent(coins: CoinData[] | undefined): number | undefined {
     if (!coins || coins.length === 0) return undefined;

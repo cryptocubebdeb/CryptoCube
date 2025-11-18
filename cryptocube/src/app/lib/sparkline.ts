@@ -1,28 +1,21 @@
 import { CoinData } from './definitions';
 
 /**
- * Convertit un tableau de valeurs numériques en chaîne de points utilisable
- * dans l'attribut `points` d'un élément SVG <polyline>.
- *
- * - values: tableau de nombres (ex. série de prix)
- * - width / height / padding: dimensions du canvas SVG pour normaliser les coordonnées
- * - Retour: chaîne "x1,y1 x2,y2 ..." ou chaîne vide si pas de valeurs
- *
- * Comportement important:
- * - Les valeurs sont normalisées entre min et max pour occuper l'espace vertical
- * - L'axe Y est inversé (valeurs élevées en haut) pour correspondre au rendu SVG
- * - Si toutes les valeurs sont identiques on évite la division par zéro en utilisant range = 1
- * - Complexité: O(n)
+*prend tes valeurs (ex: prix du coin) et les convertit en coordonnées utilisables pour dessiner la courbe.
+*
  */
 export function buildSparklinePoints(values: number[], width = 120, height = 60, padding = 4): string {
   if (!values || values.length === 0) return '';
+  //Trouver le minimum / maximum du tableau
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max === min ? 1 : max - min;
+
   return values
-    .map((v, i) => {
-      const x = (i / (values.length - 1)) * (width - padding * 2) + padding;
-      const normalized = (v - min) / range; // 0..1
+  //Transformer chaque valeur en un point (x,y)
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * (width - padding * 2) + padding;
+      const normalized = (value - min) / range; // 0..1
       const y = height - (normalized * (height - padding * 2) + padding); // flip Y
       return `${x},${y}`;
     })
@@ -30,67 +23,52 @@ export function buildSparklinePoints(values: number[], width = 120, height = 60,
 }
 
 /**
- * Agrège (somme) les séries "sparkline" présentes sur les objets CoinData.
- *
- * - Parcourt le tableau `coins` et, si au moins un coin contient
- *   `sparkline_in_7d.price`, construit un tableau `agg` de la même
- *   longueur contenant la somme des valeurs à chaque index temporel.
- * - Retourne `null` si aucune série sparkline n'a été trouvée.
- *
- * Remarques:
- * - On suppose que toutes les séries prises en compte ont la même longueur
- *   (pas de rééchantillonnage effectué). Les coins dont la série a une
- *   longueur différente sont ignorés.
+ *Additionner toutes les courbes sparkline des coins
+ *pour afficher une sparkline globale du marché crypto
  */
 export function aggregateSparklines(coins: CoinData[]): number[] | null {
   const sample = coins.find(
     (c) => c.sparkline_in_7d && Array.isArray(c.sparkline_in_7d.price) && c.sparkline_in_7d.price.length > 0
   );
   if (!sample) return null;
+
   const len = sample!.sparkline_in_7d!.price.length;
-  const agg = new Array<number>(len).fill(0);
-  for (const c of coins) {
-    const p = c.sparkline_in_7d?.price;
+  const total = new Array<number>(len).fill(0);
+  for (const coin of coins) {
+    const p = coin.sparkline_in_7d?.price;
     if (p && p.length === len) {
-      for (let i = 0; i < len; i++) agg[i] += p[i];
+      for (let i = 0; i < len; i++) 
+        total[i] += p[i];
     }
   }
-  return agg;
+  return total;
 }
 
 /**
- * Construit une série approximative représentant le "volume" en agrégeant
- * les sparklines prix des coins pondérées par le ratio
- *   weight = total_volume / current_price
- *
- * Rationale:
- * - Si on multiplie le prix par une estimation du nombre d'unités tradées
- *   (total_volume / current_price) on obtient une mesure proche de la
- *   valeur tradée au fil du temps. En sommant ces contributions on obtient
- *   un proxy global de volume temporel.
- *
- * - Retourne `null` si aucune sparkline n'est disponible.
- * - Utilise des valeurs de secours (0 / 1) pour éviter division par zéro
- *   si `total_volume` ou `current_price` sont absents.
+ *Crée une série qui représente une estimation du volume
+    *global du marché crypto basé sur les volumes des coins individuels.
  */
 export function aggregateVolumeProxy(coins: CoinData[]): number[] | null {
   const sample = coins.find(
     (c) => c.sparkline_in_7d && Array.isArray(c.sparkline_in_7d.price) && c.sparkline_in_7d.price.length > 0
   );
   if (!sample) return null;
-  const len = sample!.sparkline_in_7d!.price.length;
-  const agg = new Array<number>(len).fill(0);
 
-  for (const c of coins) {
-    const p = c.sparkline_in_7d?.price;
+  const len = sample!.sparkline_in_7d!.price.length;
+  const total = new Array<number>(len).fill(0);
+
+  for (const coin of coins) {
+    const p = coin.sparkline_in_7d?.price;
     if (p && p.length === len) {
-      // compute weight = total_volume / current_price (approx units traded available)
-      const weight = (c.total_volume || 0) / (c.current_price || 1);
+
+      //On estime combien d’unités du coin ont été tradées
+      const weight = (coin.total_volume || 0) / (coin.current_price || 1);
       for (let i = 0; i < len; i++) {
-        agg[i] += p[i] * weight;
+        //On multiplie chaque point de la sparkline par cette estimation
+        total[i] += p[i] * weight;
       }
     }
   }
 
-  return agg;
+  return total;
 }

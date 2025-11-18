@@ -13,7 +13,7 @@ import { CoinData, CategoryData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { getCategories } from '../../lib/getCategories';
 import { getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
-import { buildSparklinePoints, aggregateSparklines, aggregateVolumeProxy } from '@/app/lib/sparkline';
+import { buildSparklinePoints, aggregateSparklines} from '@/app/lib/sparkline';
 import { computeTotalMarketCapChangePercent } from '@/app/lib/marketCap';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -94,9 +94,6 @@ export default function Page() {
     const aggregatedSparkline = React.useMemo(() => aggregateSparklines(coins), [coins]);
 
     const marketSparkPoints = aggregatedSparkline ? buildSparklinePoints(aggregatedSparkline, 140, 60) : null;
-    // Construire une série proxy séparée pour le volume 
-    const aggregatedVolumeProxy = React.useMemo(() => aggregateVolumeProxy(coins), [coins]);
-    const volumeSparkPoints = aggregatedVolumeProxy ? buildSparklinePoints(aggregatedVolumeProxy, 140, 60) : null;
 
     const totalMarketCapChangePercent = React.useMemo(() => computeTotalMarketCapChangePercent(coins), [coins]);
 
@@ -362,11 +359,11 @@ export default function Page() {
                                                 <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}</div>
                                                 <div style={{ fontSize: '1rem', marginTop: '0.25rem' }}>{formatPercentage(totalMarketCapChangePercent)}</div>
                                             </div>
-                                            <div style={{ width: 140, height: 60 }}>
-                                                {/* sparkline dynamique (agrégée) ou fallback */}
-                                                <svg width="140" height="60" viewBox="0 0 140 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <div style={{ width: 170, height: 60 }}>
+                                                {/*chart capitalisation*/}
+                                                <svg width="130" height="90" viewBox="0 0 130 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     {marketSparkPoints ? (
-                                                        <polyline points={marketSparkPoints} stroke="#ea2a4aff" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                                        <polyline points={marketSparkPoints} stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
                                                     ) : (
                                                         <polyline points="0,40 20,32 40,20 60,24 80,18 100,22 120,28" stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
                                                     )}
@@ -375,21 +372,43 @@ export default function Page() {
                                         </div>
                                     </div>
 
-                                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
+                                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
                                         <div className="flex items-start justify-between">
                                             <div>
                                                 <div className="text-sm text-white/80">24h Trading Volume</div>
                                                 {/* on additionne le volume de tous les coins (total_volume) */}
                                                 <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
                                             </div>
-                                            <div style={{ width: 140, height: 60 }}>
-                                                <svg width="140" height="60" viewBox="0 0 140 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    {volumeSparkPoints ? (
-                                                        <polyline points={volumeSparkPoints} stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                                    ) : (
-                                                        <polyline points="0,30 20,28 40,34 60,26 80,34 100,36 120,32" stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                                    )}
-                                                </svg>
+                                            <div style={{ width: 240, height: '100px', display: 'flex', alignItems: 'flex-start' }}>
+                                                {/* Mini-barres : limiter la hauteur pour ne pas dépasser le container */}
+                                                {topTraded.length === 0 ? (
+                                                    <div className="text-sm text-white/60">Pas de données</div>
+                                                ) : (
+                                                    <div className="space-y-1 w-full" style={{ maxHeight: '150px', overflow: 'hidden' }}>
+                                                        {(() => {
+                                                            const maxVol = Math.max(...topTraded.map(c => c.total_volume || 0), 1);
+                                                            return topTraded.map((c) => {
+                                                                const vol = c.total_volume || 0;
+                                                                const pct = Math.round((vol / maxVol) * 100);
+                                                                return (
+                                                                    <div key={c.id} className="flex items-center gap-2" style={{ lineHeight: 1 }}>
+                                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                        <img src={c.image} alt={c.name} className="w-6 h-6 rounded-full" onError={(e)=>{(e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='}} />
+                                                                        <div className="flex-1">
+                                                                            <div className="flex items-center justify-between">
+                                                                                <div className="text-sm font-medium uppercase">{c.symbol}</div>
+                                                                                <div className="text-xs text-white/80">{getFormatMarketCap(vol)}</div>
+                                                                            </div>
+                                                                            <div className="w-full h-2 bg-white/10 rounded mt-1 overflow-hidden">
+                                                                                <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', transition: 'width 360ms ease' }} />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            });
+                                                        })()}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
