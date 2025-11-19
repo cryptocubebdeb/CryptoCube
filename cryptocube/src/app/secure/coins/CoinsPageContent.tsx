@@ -133,7 +133,7 @@ export default function Page() {
         }
     };
 
-    // Filtrage combiné onglet + recherche + filtres avancés (doit être défini avant la pagination)
+    // Filtrage combiné onglet + recherche + filtres avancés 
     const tabFilteredCoins = getFilteredCoinsByTab(coins, activeTab);
     const advancedFilteredCoins = applyAdvancedFilters(tabFilteredCoins, advancedFilters, userWatchlist);
     const searchFilteredCoins = advancedFilteredCoins.filter(coin =>
@@ -380,7 +380,7 @@ export default function Page() {
                                                 <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
                                             </div>
                                             <div style={{ width: 240, height: '100px', display: 'flex', alignItems: 'flex-start' }}>
-                                                {/* Mini-barres : limiter la hauteur pour ne pas dépasser le container */}
+                                                {/* Mini-barres */}
                                                 {topTraded.length === 0 ? (
                                                     <div className="text-sm text-white/60">Pas de données</div>
                                                 ) : (
