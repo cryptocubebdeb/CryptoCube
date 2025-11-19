@@ -11,7 +11,7 @@ import { applyAdvancedFilters, defaultFilters, type FiltersState } from '@/app/l
 import { CoinData, CategoryData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { getCategories } from '../../lib/getCategories';
-import { getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
+import { getFormatMarketCap, getFormatPercentage, getFormatPrix } from '@/app/lib/getFormatData';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
