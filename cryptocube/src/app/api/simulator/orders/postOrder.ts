@@ -1,7 +1,7 @@
 import { getAuthSession } from "@/app/lib/getServerSession";
 import { PrismaClient } from '@prisma/client';
 import { getCoin } from '../../../lib/getCoin';
-import { recomputeOrderBook } from "@/app/lib/orderBook";
+import { recomputeOrderBook } from "../../../../../worker/orderBook";
 
 const prisma = new PrismaClient();
 
@@ -100,6 +100,7 @@ export async function POST(req: Request) {
             },
         });
 
+        //Recompute order book if limit order
         if (orderKind.toLowerCase() === "limit") {
             await recomputeOrderBook(symbol);
         }

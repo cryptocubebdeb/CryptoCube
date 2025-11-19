@@ -1,6 +1,6 @@
 import { PrismaClient, OrderStatus, OrderKind } from "@prisma/client";
 import { getAuthSession } from "@/app/lib/getServerSession";
-import { recomputeOrderBook } from "@/app/lib/orderBook";
+import { recomputeOrderBook } from "../../../../../worker/orderBook";
 
 const prisma = new PrismaClient();
 

@@ -2,11 +2,19 @@
   "name": "cryptocube-v2",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "ts-node": {
+  "transpileOnly": true,
+  "compilerOptions": {
+    "module": "CommonJS"
+  }
+},
   "scripts": {
     "dev": "node server.js",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "worker": "node ./worker/start.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -39,6 +47,7 @@
     "eslint-config-next": "16.0.1",
     "prisma": "^6.19.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   },
   "prisma": {

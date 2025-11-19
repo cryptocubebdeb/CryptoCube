@@ -30,6 +30,7 @@ export async function GET(req: Request) {
             where: { simulatorAccountId: simulatorAccount.id },
             orderBy: { createdAt: "desc" },
         });
+        
         return Response.json({ orders });
         
     } catch (error) {

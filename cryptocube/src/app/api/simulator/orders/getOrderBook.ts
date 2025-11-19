@@ -9,12 +9,11 @@ export async function GET(req: Request) {
 
     if (!symbol) {
       return Response.json(
-        { error: "Missing ?symbol= parameter" },
+        { error: "Missing symbol parameter" },
         { status: 400 }
       );
     }
 
-    // Fetch the orderbook entry AND load the orders
     const orderBook = await prisma.orderBook.findUnique({
       where: { coinSymbol: symbol },
       include: {
