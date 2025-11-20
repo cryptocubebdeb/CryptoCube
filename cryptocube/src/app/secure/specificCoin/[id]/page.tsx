@@ -9,6 +9,7 @@ import { getCoinNews } from "../../../lib/getCoinNews";
 import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
 import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
 import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
+import BuyBouton from "../../components/SpecificCoin/BuyButton";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -17,7 +18,7 @@ export default async function Page({
 }: {
     params: Promise<{ id: string }>;
 }) {
-    const { id } = await params; 
+    const { id } = await params;
     console.log("[SpecificCoinPage] id =", id);
 
     // --- Fetch data ---
@@ -67,6 +68,21 @@ export default async function Page({
     const PercentageChangeIn7d = coinData?.market_data?.price_change_percentage_7d ?? null; // % change in the past 7 days
     const price7dAgo = currentPrice / (1 + PercentageChangeIn7d / 100); // Price 7 days ago, based on the % change
     const priceDifferenceIn7d = currentPrice - price7dAgo; // Price diff
+
+    // --- Check if this coin is tradable on Binance ---
+    const binanceSymbol = symbole.toUpperCase() + "USDT";
+
+    let isTradable = false;
+    try {
+        const binanceCheck = await fetch(
+            `https://api.binance.com/api/v3/ticker/bookTicker?symbol=${binanceSymbol}`,
+            { cache: "no-store" }
+        );
+        isTradable = binanceCheck.ok;
+    } catch {
+        isTradable = false;
+    }
+
 
     /*
         This is a temporary risk score, it is only based on the percentage change of the past week. 
@@ -134,6 +150,28 @@ export default async function Page({
                                 {priceChangePercentage?.toFixed(2)}% (24h)
                             </span>
                         </div>
+
+                        {/*------------- Buy Section -------------*/}
+                        <div className="mt-6">
+                            <h2 className="text-2xl text-white/90 mb-3">Trade</h2>
+
+                            {isTradable ? (
+                                <BuyBouton
+                                    symbol={symbole.toUpperCase()}
+                                    binanceSymbol={binanceSymbol}
+                                />
+                            ) : (
+                                <div className="bg-white/10 p-4 rounded-md text-white/70">
+                                    <p className="text-red-400 font-semibold">
+                                        This coin is not tradable on Binance.
+                                    </p>
+                                    <p className="text-sm mt-1">
+                                        The simulator supports only Binance-listed assets.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+
 
                         {/*------------- Market Stats -------------*/}
                         <div className="mt-6">
