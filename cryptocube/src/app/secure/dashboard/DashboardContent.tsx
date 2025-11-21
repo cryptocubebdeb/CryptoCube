@@ -106,7 +106,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
-                Market Overview
+                Aperçu du marché
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -124,9 +124,9 @@ export default function DashboardContent() {
               height: '400px',
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-                Top winning coins of the day
-            </Typography>
+      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+        Top des hausses du jour
+      </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
@@ -171,9 +171,9 @@ export default function DashboardContent() {
               height: '285px',
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-                Top losing coins of the day
-            </Typography>
+      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+        Top des baisses du jour
+      </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
                 <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>
@@ -198,7 +198,7 @@ export default function DashboardContent() {
             marginBottom: '24px'
           }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
-              Watchlist
+              Liste de suivi
             </Typography>
             <Button
               variant="outlined"
@@ -216,7 +216,7 @@ export default function DashboardContent() {
                 }
               }}
             >
-              View more
+              Voir plus
             </Button>
           </div>
 
