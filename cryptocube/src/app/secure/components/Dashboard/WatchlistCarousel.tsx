@@ -173,7 +173,8 @@ export default function WatchlistCarousel() {
               key={coin.id}
               onClick={() => handleCoinClick(coin.id)}
               sx={{
-                backgroundColor: '#1F2937',
+                backgroundColor: '#181f29ff',
+                boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)',
                 borderRadius: '16px',
                 padding: '20px',
                 cursor: 'pointer',

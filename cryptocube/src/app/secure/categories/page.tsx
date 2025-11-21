@@ -128,7 +128,7 @@ export default function Page()
                     flexDirection: 'row',
                     gap: '3em',
                     justifyContent: 'center',
-                    marginBottom: '4rem',
+                    marginBottom: '4rem'
                 }}
             >
                 {topSections.map((section) => {
@@ -140,6 +140,7 @@ export default function Page()
                             onClick={() => setActiveTopTab(section.title.toLowerCase())}
                             sx={{
                                 backgroundColor: isActive ? '#232330ff' : '#303039ff',
+                                boxShadow: '10px 10px 5px rgba(0, 0, 0, 0.2)',
                                 color: isActive ? 'white' : 'gray',
                                 borderColor: isActive ? '#2d2d3fff' : 'transparent',
                                 borderWidth: isActive ? '3px' : '0px',
@@ -186,7 +187,8 @@ export default function Page()
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            padding: '1.5rem'
+                            padding: '1.5rem',
+                            boxShadow: '10px 10px 5px rgba(0, 0, 0, 0.2)'
                         }}
                     >
                         <div
