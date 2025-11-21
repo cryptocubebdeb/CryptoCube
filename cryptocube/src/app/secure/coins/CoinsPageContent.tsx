@@ -15,7 +15,6 @@ import { getCategories } from '../../lib/getCategories';
 import { getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
 import { buildSparklinePoints, aggregateSparklines} from '@/app/lib/sparkline';
 import { computeTotalMarketCapChangePercent } from '@/app/lib/marketCap';
-import { getFormatMarketCap, getFormatPercentage, getFormatPrix } from '@/app/lib/getFormatData';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
