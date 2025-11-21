@@ -62,11 +62,11 @@ export default function Page()
                 return [...categories]
                     .sort((first, second) => second.market_cap - first.market_cap)
                     .slice(0, 4);
-            case 'gainers':
+            case 'gagnants':
                 return [...categories]
                     .sort((first, second) => second.market_cap_change_24h - first.market_cap_change_24h)
                     .slice(0, 4);
-            case 'losers':
+            case 'perdants':
                 return [...categories]
                     .sort((first, second) => first.market_cap_change_24h - second.market_cap_change_24h)
                     .slice(0, 4);
@@ -76,8 +76,8 @@ export default function Page()
     };
 
     const topPopulaires = getFilteredCategoriesByTab(categories, 'populaires');
-    const topGainers = getFilteredCategoriesByTab(categories, 'gainers');
-    const topLosers = getFilteredCategoriesByTab(categories, 'losers');
+    const topGainers = getFilteredCategoriesByTab(categories, 'gagnants');
+    const topLosers = getFilteredCategoriesByTab(categories, 'perdants');
 
     const topSections = [
         {
@@ -86,12 +86,12 @@ export default function Page()
             data: topPopulaires
         },
         {
-            title: 'Gainers',
+            title: 'Gagnants',
             icon: <TrendingUpIcon style={{ width: '35px', height: '35px' }}/>,
             data: topGainers
         },
         {
-            title: 'Losers',
+            title: 'Perdants',
             icon: <TrendingDownIcon style={{ width: '35px', height: '35px' }}/>,
             data: topLosers
         }
@@ -128,7 +128,7 @@ export default function Page()
                     flexDirection: 'row',
                     gap: '3em',
                     justifyContent: 'center',
-                    marginBottom: '4rem',
+                    marginBottom: '4rem'
                 }}
             >
                 {topSections.map((section) => {
@@ -140,6 +140,7 @@ export default function Page()
                             onClick={() => setActiveTopTab(section.title.toLowerCase())}
                             sx={{
                                 backgroundColor: isActive ? '#232330ff' : '#303039ff',
+                                boxShadow: '10px 10px 5px rgba(0, 0, 0, 0.2)',
                                 color: isActive ? 'white' : 'gray',
                                 borderColor: isActive ? '#2d2d3fff' : 'transparent',
                                 borderWidth: isActive ? '3px' : '0px',
@@ -186,7 +187,8 @@ export default function Page()
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
-                            padding: '1.5rem'
+                            padding: '1.5rem',
+                            boxShadow: '10px 10px 5px rgba(0, 0, 0, 0.2)'
                         }}
                     >
                         <div
@@ -251,11 +253,11 @@ export default function Page()
                                                 ))}
                                             </>
                                         ) : (
-                                            <span className="text-gray-500">No coins</span>
+                                            <span className="text-gray-500">Aucune cryptomonnaie</span>
                                         )}
                                     </div>
                                 ) : (
-                                    <span className="text-gray-500">No coins</span>
+                                    <span className="text-gray-500">Aucune cryptomonnaie</span>
                                 )}
                             </div>
                         </div>
@@ -313,7 +315,7 @@ export default function Page()
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th> {/* NA */}
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
                                     <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Volume 24h</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Market Cap</th>
+                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Capitalisation</th>
                                 </tr>
                             </thead>
                             <tbody>

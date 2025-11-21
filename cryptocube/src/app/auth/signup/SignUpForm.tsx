@@ -77,7 +77,7 @@ export function SignUpForm() {
             const signInRes = await signIn("credentials", {
                 email,
                 password,
-                callbackUrl: "/secure/about",
+                callbackUrl: "/secure/dashboard",
             });
 
             setLoading(false);

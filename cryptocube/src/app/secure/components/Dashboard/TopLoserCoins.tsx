@@ -40,7 +40,7 @@ export default function TopLoserCoins(): React.JSX.Element {
     if (loading) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
-                Loading top losing coins...
+                Chargement des plus fortes baisses...
             </Typography>
         );
     }
@@ -48,7 +48,7 @@ export default function TopLoserCoins(): React.JSX.Element {
     if (!coins.length) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'error.main' }}>
-                Failed to load top losing coins.
+                Impossible de charger les plus fortes baisses.
             </Typography>
         );
     }

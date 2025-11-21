@@ -49,11 +49,11 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
   }, [coinId]);
 
   if (isLoading)
-    return <div className="text-white/60 mt-4">Loading market data...</div>;
+    return <div className="text-white/60 mt-4">Chargement des données du marché...</div>;
   if (!marketTickers.length)
     return (
       <div className="text-white/60 mt-4">
-        No market data available for this coin.
+        Aucune donnée de marché disponible pour cette cryptomonnaie.
       </div>
     );
 
@@ -92,7 +92,7 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
       className="border border-white/10 rounded-md p-6 text-white/85 shadow-md"
     >
       <h2 className="text-2xl mb-5 font-semibold">
-        Markets for {coinId.toUpperCase()}
+        Marchés pour {coinId.toUpperCase()}
       </h2>
 
       {/* Fixed-layout table keeps columns consistent */}
@@ -113,13 +113,13 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
           <thead className="border-b border-white/20 text-white/70 uppercase">
             <tr>
               <th className="py-2 px-3 text-center">#</th>
-              <th className="py-2 px-3">Exchange</th>
-              <th className="py-2 px-3">Pair</th>
-              <th className="py-2 px-3 text-right">Price (USD)</th>
-              <th className="py-2 px-3 text-right">Spread</th>
-              <th className="py-2 px-3 text-right">24h Volume (USD)</th>
-              <th className="py-2 px-3 text-right">Volume %</th>
-              <th className="py-2 px-3 text-center">Last Update</th>
+              <th className="py-2 px-3">Bourse</th>
+              <th className="py-2 px-3">Paire</th>
+              <th className="py-2 px-3 text-right">Prix (USD)</th>
+              <th className="py-2 px-3 text-right">Écart</th>
+              <th className="py-2 px-3 text-right">Volume (24h) (USD)</th>
+              <th className="py-2 px-3 text-right">Part du volume (%)</th>
+              <th className="py-2 px-3 text-center">Dernière mise à jour</th>
               <th className="py-2 px-3 text-center">Score</th>
             </tr>
           </thead>

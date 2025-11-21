@@ -40,11 +40,11 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
 
     // --- Handle loading or empty state ---
     if (isLoading)
-        return <div className="text-white/60 mt-4">Loading treasury data...</div>;
+        return <div className="text-white/60 mt-4">Chargement des données de trésorerie...</div>;
     if (!companies.length)
         return (
             <div className="text-white/60 mt-4">
-                No public treasury data available for this coin.
+                Aucune donnée publique de trésorerie disponible pour cette cryptomonnaie.
             </div>
         );
 
@@ -52,7 +52,7 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
     return (
         <div className="border border-white/10 rounded-md p-6 text-white/85 shadow-md">
             <h2 className="text-2xl mb-5 font-semibold">
-                Public Treasuries Holding {coinId.toUpperCase()}
+                Trésoreries publiques détenant {coinId.toUpperCase()}
             </h2>
 
             {/* Table container */}
@@ -60,10 +60,10 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
                 <table className="w-full text-left border-collapse text-sm">
                     <thead className="border-b border-white/20 text-white/70 uppercase">
                         <tr>
-                            <th className="py-2 px-3">Company</th>
-                            <th className="py-2 px-3">Country</th>
-                            <th className="py-2 px-3 text-right">Holdings</th>
-                            <th className="py-2 px-3 text-right">Value (USD)</th>
+                            <th className="py-2 px-3">Entreprise</th>
+                            <th className="py-2 px-3">Pays</th>
+                            <th className="py-2 px-3 text-right">Avoirs</th>
+                            <th className="py-2 px-3 text-right">Valeur (USD)</th>
                         </tr>
                     </thead>
 

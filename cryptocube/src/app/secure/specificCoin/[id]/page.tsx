@@ -161,22 +161,22 @@ export default async function Page({
 
                         {/*------------- Market Stats -------------*/}
                         <div className="mt-6">
-                            <h2 className="text-2xl text-white/90 mb-3">Market Stats</h2>
+                            <h2 className="text-2xl text-white/90 mb-3">Statistiques du marché</h2>
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Market Cap</span>
+                                    <span className="text-white/70">Capitalisation</span>
                                     <span className="font-medium">${marketCap?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Fully Diluted Valuation</span>
+                                    <span className="text-white/70">Valorisation entièrement diluée</span>
                                     <span className="font-medium">${fdv?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">24h Trading Volume</span>
+                                    <span className="text-white/70">Volume (24h)</span>
                                     <span className="font-medium">${totalVolume?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Rank</span>
+                                    <span className="text-white/70">Rang</span>
                                     <span className="font-medium">#{rank}</span>
                                 </div>
                             </div>
@@ -184,18 +184,18 @@ export default async function Page({
 
                         {/*------------- Price Performance -------------*/}
                         <div className="mt-8">
-                            <h2 className="text-2xl text-white/90 mb-3">Price Performance</h2>
+                            <h2 className="text-2xl text-white/90 mb-3">Performance des prix</h2>
                             <div className="divide-y divide-white/10">
 
                                 {/* 24h Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">24h Range</span>
+                                    <span className="text-white/70">Fourchette 24h</span>
                                     <span className="font-medium text-right">
                                         ${low24h?.toLocaleString("en-CA")} - ${high24h?.toLocaleString("en-CA")}
                                         <div className="text-base text-white/50">
-                                            From Low: <span className={`${fromLow24h >= 0 ? "text-green-500" : "text-red-500"}`}>
+                                            Depuis le bas : <span className={`${fromLow24h >= 0 ? "text-green-500" : "text-red-500"}`}>
                                                 {fromLow24h?.toFixed(2)}%
-                                            </span> · From High:
+                                            </span> · Depuis le haut :
                                             <span className={`${fromHigh24h >= 0 ? "text-green-500" : "text-red-500"} ml-1`}>
                                                 {fromHigh24h?.toFixed(2)}%
                                             </span>
@@ -205,7 +205,7 @@ export default async function Page({
 
                                 {/* 7-Day Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70 ">7-Day Change</span>
+                                    <span className="text-white/70 ">Variation sur 7 jours</span>
                                     <span
                                         className={`font-medium text-right ${priceDifferenceIn7d >= 0 ? "text-green-500" : "text-red-500"}`}
                                     >
@@ -223,7 +223,7 @@ export default async function Page({
 
                                 {/* All-Time High */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">All-Time High</span>
+                                    <span className="text-white/70">Plus haut historique</span>
                                     <span className="font-medium text-right">
                                         ${ath?.toLocaleString("en-CA")}
                                         <span className={`ml-2 ${athChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
@@ -235,7 +235,7 @@ export default async function Page({
 
                                 {/* All-Time Low */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">All-Time Low</span>
+                                    <span className="text-white/70">Plus bas historique</span>
                                     <span className="font-medium text-right">
                                         ${atl?.toLocaleString("en-CA")}
                                         <span className={`ml-2 ${atlChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
@@ -249,18 +249,18 @@ export default async function Page({
 
                         {/* ------------- Supply Metrics ------------- */}
                         <div className="mt-8">
-                            <h2 className="text-2xl text-white/90 mb-3">Supply Metrics</h2>
+                            <h2 className="text-2xl text-white/90 mb-3">Métriques d'offre</h2>
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Circulating Supply</span>
+                                    <span className="text-white/70">Offre en circulation</span>
                                     <span className="font-medium">{circulatingSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Total Supply</span>
+                                    <span className="text-white/70">Offre totale</span>
                                     <span className="font-medium">{totalSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Max Supply</span>
+                                    <span className="text-white/70">Offre maximale</span>
                                     <span className="font-medium">{maxSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                             </div>
@@ -268,14 +268,14 @@ export default async function Page({
 
                         {/*------------- Gauges Section -------------*/}
                         <div className="mt-10 border border-white/10 rounded-md p-6">
-                            <h2 className="text-2xl text-white/90 mb-6 text-center">Market Insights</h2>
+                            <h2 className="text-2xl text-white/90 mb-6 text-center">Aperçu du marché</h2>
 
                             {/* Volatility Index */}
                             <div className="flex flex-col items-center mb-8">
-                                <h3 className="text-lg text-white/80 mb-3">{name} Volatility Index</h3>
+                                <h3 className="text-lg text-white/80 mb-3">Indice de volatilité — {name}</h3>
                                 <RiskGauge value={Math.round(riskScore)} />
                                 <p className="text-white/60 text-sm mt-3">
-                                    Based on 7-day change: {Math.round(PercentageChangeIn7d)}%
+                                    Basé sur la variation sur 7 jours : {Math.round(PercentageChangeIn7d)}%
                                 </p>
                             </div>
 
@@ -283,17 +283,17 @@ export default async function Page({
                             <div className="flex justify-center gap-10 flex-wrap">
                                 {/* Fear & Greed */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3">Market Sentiment</h3>
+                                    <h3 className="text-lg text-white/80 mb-3">Sentiment du marché</h3>
                                     <RiskGauge value={Math.round(fearGreedValue)} />
                                     <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
                                 </div>
 
                                 {/* Global Market */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3">Global Market</h3>
+                                    <h3 className="text-lg text-white/80 mb-3">Marché global</h3>
                                     <RiskGauge value={Math.round(marketHealth)} />
                                     <p className="text-sm text-white/60 mt-2">
-                                        {marketHealth >= 55 ? "Growing" : marketHealth <= 45 ? "Cooling" : "Stable"}
+                                        {marketHealth >= 55 ? "En croissance" : marketHealth <= 45 ? "En repli" : "Stable"}
                                     </p>
                                 </div>
                             </div>
@@ -314,16 +314,16 @@ export default async function Page({
                         {/* Extra coin fundamentals */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
                             <div>
-                                <span className="block text-white/50">Launch Date</span>
-                                <span>{coinData?.genesis_date || "Unknown"}</span>
+                                <span className="block text-white/50">Date de lancement</span>
+                                <span>{coinData?.genesis_date || "Inconnu"}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50">Hashing Algorithm</span>
-                                <span>{coinData?.hashing_algorithm || "Unknown"}</span>
+                                <span className="block text-white/50">Algorithme de hachage</span>
+                                <span>{coinData?.hashing_algorithm || "Inconnu"}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50">Category</span>
-                                <span>{coinData?.categories?.[0] || "Unknown"}</span>
+                                <span className="block text-white/50">Catégorie</span>
+                                <span>{coinData?.categories?.[0] || "Inconnu"}</span>
                             </div>
                         </div>
 
@@ -335,28 +335,28 @@ export default async function Page({
                                 {/* ------------- Website ------------- */}
                                 <div className="flex flex-wrap gap-3 mt-6 text-sm">
                                     {coinData?.links?.subreddit_url && (
-                                        <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                            Reddit
-                                        </a>
-                                    )}
-                                    {coinData?.links?.repos_url?.github?.[0] && (
-                                        <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                            GitHub
-                                        </a>
-                                    )}
-                                    {coinData?.links?.homepage?.[0] && (
-                                        <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                            Website
-                                        </a>
-                                    )}
+                                            <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                                Reddit
+                                            </a>
+                                        )}
+                                        {coinData?.links?.repos_url?.github?.[0] && (
+                                            <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                                GitHub
+                                            </a>
+                                        )}
+                                        {coinData?.links?.homepage?.[0] && (
+                                            <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                                Site
+                                            </a>
+                                        )}
                                 </div>
                             </div>
 
                             <details className="group bg-[#12141A] border border-white/10 rounded-md">
                                 <summary className="cursor-pointer list-none px-4 py-3 text-white/75 hover:text-white transition text-sm sm:text-base select-none">
-                                    <span className="mr-2 font-medium">About {name}</span>
-                                    <span className="text-white/50 group-open:hidden">· Show more</span>
-                                    <span className="text-white/50 hidden group-open:inline">· Show less</span>
+                                    <span className="mr-2 font-medium">À propos de {name}</span>
+                                    <span className="text-white/50 group-open:hidden">· Voir plus</span>
+                                    <span className="text-white/50 hidden group-open:inline">· Voir moins</span>
                                 </summary>
 
                                 <div className="px-4 pb-5">
@@ -370,7 +370,7 @@ export default async function Page({
                                         dangerouslySetInnerHTML={{ __html: coinDescription }}
                                     />
                                     <p className="text-white/50 text-sm italic mt-6">
-                                        Updated {new Date(coinData.last_updated).toLocaleString()} · Data source: CoinGecko
+                                        Mis à jour {new Date(coinData.last_updated).toLocaleString()} · Source : CoinGecko
                                     </p>
                                 </div>
                             </details>
@@ -379,18 +379,18 @@ export default async function Page({
 
                         {/* ------------- Global Prices ------------- */}
                         <div className="mt-2 rounded-md p-3">
-                            <h2 className="text-2xl text-white/90 mb-5">Global Prices</h2>
+                            <h2 className="text-2xl text-white/90 mb-5">Prix globaux</h2>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-6 text-sm text-white/80">
                                 {[
-                                    { code: "usd", label: "USD (US Dollar)" },
-                                    { code: "cad", label: "CAD (Canadian Dollar)" },
+                                    { code: "usd", label: "USD (Dollar américain)" },
+                                    { code: "cad", label: "CAD (Dollar canadien)" },
                                     { code: "eur", label: "EUR (Euro)" },
-                                    { code: "gbp", label: "GBP (British Pound)" },
-                                    { code: "jpy", label: "JPY (Japanese Yen)" },
-                                    { code: "aud", label: "AUD (Australian Dollar)" },
-                                    { code: "chf", label: "CHF (Swiss Franc)" },
-                                    { code: "inr", label: "INR (Indian Rupee)" },
+                                    { code: "gbp", label: "GBP (Livre sterling)" },
+                                    { code: "jpy", label: "JPY (Yen japonais)" },
+                                    { code: "aud", label: "AUD (Dollar australien)" },
+                                    { code: "chf", label: "CHF (Franc suisse)" },
+                                    { code: "inr", label: "INR (Roupie indienne)" },
                                 ].map(({ code, label }) => {
                                     const value = coinData?.market_data?.current_price?.[code];
                                     return (
@@ -411,7 +411,7 @@ export default async function Page({
                             </div>
 
                             <p className="text-white/50 text-xs mt-5 text-center">
-                                Prices updated in real time from CoinGecko
+                                Prix mis à jour en temps réel depuis CoinGecko
                             </p>
                         </div>
 

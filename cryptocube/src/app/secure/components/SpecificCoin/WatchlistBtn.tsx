@@ -61,7 +61,7 @@ export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
           : "border-white/30 text-white hover:bg-white/10"
       }`}
     >
-      {isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+      {isInWatchlist ? "Retirer de la liste de suivi" : "Ajouter à la liste de suivi"}
     </button>
   );
 }
