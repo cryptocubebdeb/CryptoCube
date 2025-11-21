@@ -5,6 +5,7 @@ import { Geologica } from "next/font/google";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Navbar from "@/app/secure/components/navbar";
 
 // MUI
 import Button from "@mui/material/Button";
@@ -217,6 +218,8 @@ export default function Page() {
 
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
+      {/* Header */}
+      <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
         <h1 className="text-3xl mb-9 mt-12">Inscription</h1>
 

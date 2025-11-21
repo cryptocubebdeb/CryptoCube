@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Geologica } from "next/font/google";
+import Navbar from "@/app/secure/components/navbar";
 
 // MUI
 import Button from "@mui/material/Button";
@@ -74,7 +75,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
       return;
     }
 
-    router.push("/secure/about"); // change to /secure/dashboard when that page exists
+    router.push("/secure/dashboard"); // change to /secure/dashboard when that page exists
   }
 
   const handleMicrosoftSignIn = async () =>
@@ -102,6 +103,9 @@ export function SignInForm({ urlError }: { urlError?: string }) {
 
   return (
     <div className={`h-screen flex flex-col ${geologica.className}`}>
+
+      {/* Header */}
+      <Navbar />
 
       <div className="flex flex-col flex-1 justify-center items-center">
         <h1 className="text-3xl mb-9 mt-12">Connexion</h1>

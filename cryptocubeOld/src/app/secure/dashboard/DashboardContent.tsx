@@ -207,7 +207,7 @@ export default function DashboardContent() {
             </Typography>
             <Button
               variant="outlined"
-              href="/secure/account/watchlist/main"
+              href="/secure/account/watchlist"
               sx={{
                 borderRadius: '12px',
                 borderColor: '#3B82F6',

@@ -93,7 +93,7 @@ export default function Page() {
 
       {/* Main Content Area */}
       <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
-        <h2 className="title mb-12">Ma Watchlist</h2>
+        <h2 className="title mb-12">Watchlist</h2>
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
@@ -122,6 +122,7 @@ export default function Page() {
               coins={watchlistCoins}
               rankOffset={0}
               showSparkline={true}
+              onRowClick={(coinId: string) => { window.location.href = `/secure/specificCoin/${coinId}` }}
               renderStar={(coinId: string) => (
                 <button
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => removeCoin(e, coinId)}
