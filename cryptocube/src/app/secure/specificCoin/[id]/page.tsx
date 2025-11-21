@@ -9,7 +9,7 @@ import { getCoinNews } from "../../../lib/getCoinNews";
 import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
 import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
 import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
-import BuyBouton from "../../components/SpecificCoin/BuyButton";
+import BuySection from "../../components/SpecificCoin/BuySection";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -152,26 +152,12 @@ export default async function Page({
                         </div>
 
                         {/*------------- Buy Section -------------*/}
-                        <div className="mt-6">
-                            <h2 className="text-2xl text-white/90 mb-3">Trade</h2>
-
-                            {isTradable ? (
-                                <BuyBouton
-                                    symbol={symbole.toUpperCase()}
-                                    binanceSymbol={binanceSymbol}
-                                />
-                            ) : (
-                                <div className="bg-white/10 p-4 rounded-md text-white/70">
-                                    <p className="text-red-400 font-semibold">
-                                        This coin is not tradable on Binance.
-                                    </p>
-                                    <p className="text-sm mt-1">
-                                        The simulator supports only Binance-listed assets.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
+                        <BuySection
+                            coinId={id}                     
+                            symbol={symbole.toUpperCase()} 
+                            price={currentPrice}
+                            logo={logo}
+                        />
 
                         {/*------------- Market Stats -------------*/}
                         <div className="mt-6">

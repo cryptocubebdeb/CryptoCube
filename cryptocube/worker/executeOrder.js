@@ -38,6 +38,10 @@ export async function executeOrder({
             otherwise update amount owned and the weighted average price    */
         if (type === TradeType.BUY) {
 
+            if (Number(account.currentCashBalance) < totalOrderValue) {
+                throw new Error("Insufficient cash balance");
+            }
+
             // Remove cash equal to the total value of the order
             await transactionDatabase.simulatorAccount.update({
                 where: { id: simulatorAccountId },

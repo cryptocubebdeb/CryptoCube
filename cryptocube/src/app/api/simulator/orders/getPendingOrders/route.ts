@@ -28,7 +28,7 @@ export async function GET() {
             }
         });
 
-        return NextResponse.json({ pending });
+        return NextResponse.json({ orders: pending });
     } catch (error: any) {
         return NextResponse.json(
             { error: error.message },

@@ -15,7 +15,7 @@ export default function Navbar() {
     { href: "/secure/dashboard", text: "Accueil" },
     { href: "/secure/coins", text: "Coins" },
     { href: "/secure/categories", text: "Catégories" },
-    { href: "/secure/simulator/Home", text: "Simulateur" },
+    { href: "/secure/simulator/", text: "Simulateur" },
     { href: "/secure/about", text: "À propos" },
     { href: "/secure/coins?q=", icon: <Search size={20} /> },
   ];

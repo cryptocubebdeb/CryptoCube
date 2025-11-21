@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import Toolbar from "../components/Portfolio/Toolbar"
 
-const sectionsIds = ["home", "wallet", "search", "percent", "activity"];
+const sectionsIds = ["home", "wallet", "search", "percent", "orders", "activity"];
 
 export default function SimulatorLayout({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSection] = useState("home");
