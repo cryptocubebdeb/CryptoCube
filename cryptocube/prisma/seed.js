@@ -4,6 +4,21 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+/**
+ * Map of tickers to CoinGecko IDs.
+ * This prevents mistakes and keeps everything consistent.
+ */
+const COINS = {
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  solana: "solana",
+  dogecoin: "dogecoin",
+  cardano: "cardano",
+  avalanche: "avalanche-2",
+  polkadot: "polkadot",
+  chainlink: "chainlink"
+};
+
 async function main() {
   const hashedPassword = await bcrypt.hash("Password123!", 10);
 
@@ -49,17 +64,17 @@ async function main() {
   // WATCHLISTS
   await prisma.watchlistItem.createMany({
     data: [
-      { userId: alice.id, coinId: "bitcoin" },
-      { userId: alice.id, coinId: "ethereum" },
-      { userId: alice.id, coinId: "solana" },
+      { userId: alice.id, coinId: COINS.bitcoin },
+      { userId: alice.id, coinId: COINS.ethereum },
+      { userId: alice.id, coinId: COINS.solana },
 
-      { userId: john.id, coinId: "bitcoin" },
-      { userId: john.id, coinId: "dogecoin" },
-      { userId: john.id, coinId: "cardano" },
+      { userId: john.id, coinId: COINS.bitcoin },
+      { userId: john.id, coinId: COINS.dogecoin },
+      { userId: john.id, coinId: COINS.cardano },
 
-      { userId: jane.id, coinId: "avalanche-2" },
-      { userId: jane.id, coinId: "polkadot" },
-      { userId: jane.id, coinId: "chainlink" }
+      { userId: jane.id, coinId: COINS.avalanche },
+      { userId: jane.id, coinId: COINS.polkadot },
+      { userId: jane.id, coinId: COINS.chainlink }
     ],
     skipDuplicates: true
   });
@@ -99,106 +114,183 @@ async function main() {
 
   console.log("[SEED] Simulator accounts created");
 
-  // REALISTIC MATCHABLE ORDERS
+  // =============================
+  // PORTFOLIO ENTRIES
+  // =============================
+  await prisma.portfolio.createMany({
+    data: [
+      // Alice owns some BTC + ETH + SOL
+      {
+        simulatorAccountId: aliceSim.id,
+        coinId: COINS.bitcoin,
+        coinSymbol: "BTC",
+        amountOwned: 0.02,
+        averageEntryPriceUsd: 95000
+      },
+      {
+        simulatorAccountId: aliceSim.id,
+        coinId: COINS.ethereum,
+        coinSymbol: "ETH",
+        amountOwned: 0.4,
+        averageEntryPriceUsd: 3000
+      },
+      {
+        simulatorAccountId: aliceSim.id,
+        coinId: COINS.solana,
+        coinSymbol: "SOL",
+        amountOwned: 3,
+        averageEntryPriceUsd: 160
+      },
+
+      // John portfolio
+      {
+        simulatorAccountId: johnSim.id,
+        coinId: COINS.bitcoin,
+        coinSymbol: "BTC",
+        amountOwned: 0.005,
+        averageEntryPriceUsd: 91000
+      },
+      {
+        simulatorAccountId: johnSim.id,
+        coinId: COINS.dogecoin,
+        coinSymbol: "DOGE",
+        amountOwned: 500,
+        averageEntryPriceUsd: 0.12
+      },
+
+      // Jane portfolio
+      {
+        simulatorAccountId: janeSim.id,
+        coinId: COINS.polkadot,
+        coinSymbol: "DOT",
+        amountOwned: 50,
+        averageEntryPriceUsd: 7.5
+      },
+      {
+        simulatorAccountId: janeSim.id,
+        coinId: COINS.chainlink,
+        coinSymbol: "LINK",
+        amountOwned: 20,
+        averageEntryPriceUsd: 14
+      }
+    ],
+    skipDuplicates: true
+  });
+
+  console.log("[SEED] Portfolio created");
+
+  // ==============
+  // REALISTIC ORDERS
+  // ==============
+
+  // BTC
   await prisma.order.createMany({
     data: [
-      // BTC (~96k)
       {
         simulatorAccountId: aliceSim.id,
         coinSymbol: "BTC",
+        coinId: COINS.bitcoin,
         orderType: TradeType.BUY,
         orderKind: OrderKind.LIMIT,
         amount: 0.01,
-        price: 96000, // matchable
+        price: 96000,
         status: OrderStatus.PENDING
       },
       {
         simulatorAccountId: johnSim.id,
         coinSymbol: "BTC",
+        coinId: COINS.bitcoin,
         orderType: TradeType.BUY,
         orderKind: OrderKind.LIMIT,
         amount: 0.005,
-        price: 90000 // not matchable
+        price: 90000
       },
       {
         simulatorAccountId: janeSim.id,
         coinSymbol: "BTC",
+        coinId: COINS.bitcoin,
         orderType: TradeType.SELL,
         orderKind: OrderKind.LIMIT,
         amount: 0.02,
-        price: 94000, // matchable
+        price: 94000,
         status: OrderStatus.PENDING
       }
     ]
   });
 
-  // ETH (~3200)
+  // ETH
   await prisma.order.createMany({
     data: [
       {
         simulatorAccountId: aliceSim.id,
         coinSymbol: "ETH",
+        coinId: COINS.ethereum,
         orderType: TradeType.BUY,
         orderKind: OrderKind.LIMIT,
         amount: 0.5,
-        price: 3300, // matchable
+        price: 3300,
         status: OrderStatus.PENDING
       },
       {
         simulatorAccountId: janeSim.id,
         coinSymbol: "ETH",
+        coinId: COINS.ethereum,
         orderType: TradeType.SELL,
         orderKind: OrderKind.LIMIT,
         amount: 1.2,
-        price: 3100, // matchable
+        price: 3100,
         status: OrderStatus.PENDING
       }
     ]
   });
 
-  // DOGE (~0.16)
+  // DOGE
   await prisma.order.createMany({
     data: [
       {
         simulatorAccountId: johnSim.id,
         coinSymbol: "DOGE",
+        coinId: COINS.dogecoin,
         orderType: TradeType.BUY,
         orderKind: OrderKind.LIMIT,
         amount: 1500,
-        price: 0.17, // matchable
+        price: 0.17,
         status: OrderStatus.PENDING
       },
       {
         simulatorAccountId: aliceSim.id,
         coinSymbol: "DOGE",
+        coinId: COINS.dogecoin,
         orderType: TradeType.SELL,
         orderKind: OrderKind.LIMIT,
         amount: 2000,
-        price: 0.155, // matchable
+        price: 0.155,
         status: OrderStatus.PENDING
       }
     ]
   });
 
-  // DOT (~7)
+  // DOT
   await prisma.order.createMany({
     data: [
       {
         simulatorAccountId: janeSim.id,
         coinSymbol: "DOT",
+        coinId: COINS.polkadot,
         orderType: TradeType.BUY,
         orderKind: OrderKind.LIMIT,
         amount: 30,
-        price: 7.2, // matchable
+        price: 7.2,
         status: OrderStatus.PENDING
       },
       {
         simulatorAccountId: johnSim.id,
         coinSymbol: "DOT",
+        coinId: COINS.polkadot,
         orderType: TradeType.SELL,
         orderKind: OrderKind.LIMIT,
         amount: 40,
-        price: 6.9, // matchable
+        price: 6.9,
         status: OrderStatus.PENDING
       }
     ]

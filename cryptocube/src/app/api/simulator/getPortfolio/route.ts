@@ -15,31 +15,51 @@ export async function GET() {
             );
         }
 
-        //Get or create the user’s simulatorAccount
+        // Get or create simulator account
         let simulator = await prisma.simulatorAccount.findUnique({
             where: { userId: session.user.id },
             include: {
-                portfolio: true
+                portfolio: {
+                    select: {
+                        id: true,
+                        coinSymbol: true,
+                        coinId: true,                 // ⬅️ make sure this is selected
+                        amountOwned: true,
+                        averageEntryPriceUsd: true,
+                    }
+                }
             }
         });
 
         if (!simulator) {
-            // Auto-create account if missing
             simulator = await prisma.simulatorAccount.create({
                 data: {
                     userId: session.user.id,
                     initialCashBalance: 10000,
                     currentCashBalance: 10000
                 },
-                include: { portfolio: true }
+                include: {
+                    portfolio: {
+                        select: {
+                            id: true,
+                            coinSymbol: true,
+                            coinId: true,
+                            amountOwned: true,
+                            averageEntryPriceUsd: true,
+                        }
+                    }
+                }
             });
         }
 
-        // Format response so frontend gets EXACT names it expects
+        // Return data in frontend-friendly format
         return NextResponse.json({
             currentCash: Number(simulator.currentCashBalance),
+
             portfolio: simulator.portfolio.map((p) => ({
+                id: p.id,
                 coinSymbol: p.coinSymbol,
+                coinId: p.coinId,                                   // ⬅️ now included
                 amountOwned: Number(p.amountOwned),
                 averageEntryPriceUsd: Number(p.averageEntryPriceUsd)
             }))

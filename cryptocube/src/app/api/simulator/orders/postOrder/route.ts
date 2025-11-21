@@ -48,6 +48,7 @@ export async function POST(req: Request) {
             data: {
                 simulatorAccountId: simulatorAccount.id,
                 coinSymbol: tradeSymbol,
+                coinId: coinId, 
                 orderType: orderSell.toUpperCase(),
                 orderKind: orderKind.toUpperCase(),
                 amount: quantity,

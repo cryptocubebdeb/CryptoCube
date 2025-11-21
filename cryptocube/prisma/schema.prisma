@@ -96,6 +96,7 @@ model SimulatorAccount {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  
   initialCashBalance Decimal @db.Decimal(18, 2)
   currentCashBalance Decimal @db.Decimal(18, 2)
   realizedProfitUsd  Decimal @default(0) @db.Decimal(18, 2)
@@ -113,6 +114,7 @@ model Portfolio {
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
+  coinId               String
   coinSymbol           String
   amountOwned          Decimal @db.Decimal(38, 18)
   averageEntryPriceUsd Decimal @db.Decimal(18, 8)
@@ -128,7 +130,8 @@ model Order {
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  coinSymbol String
+  coinId     String  //Bitcoin
+  coinSymbol String   //BTC
   orderType  TradeType
   orderKind  OrderKind
   amount     Decimal     @db.Decimal(38, 18)

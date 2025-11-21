@@ -1,6 +1,7 @@
 export type PortfolioItem = {
   id: number;
   coinSymbol: string;
+  coinId: string;
   amountOwned: number;
   averageEntryPriceUsd: number;
 };

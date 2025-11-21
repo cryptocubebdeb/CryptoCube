@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react"
 import Toolbar from "../components/Portfolio/Toolbar"
+import TradeSidePanel from "./components/TradeSidePanel";
 
 const sectionsIds = ["home", "wallet", "search", "percent", "orders", "activity"];
 
 export default function SimulatorLayout({ children }: { children: React.ReactNode }) {
   const [activeSection, setActiveSection] = useState("home");
-  
+
   useEffect(() => {
     const handleScroll = () => {
       let current = "home"; // Par défault
@@ -32,7 +33,7 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
+
   return (
     <>
       {/* Left sidebar */}
@@ -44,10 +45,11 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
       </main>
 
       {/* Right panel */}
-      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[#15171E] p-6 mr-5 border-l border-[#23252c]">
-        <h2 className="text-xl font-bold mb-6 text-center">Trade</h2>
+      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[#15171E] p-6 mr-5 border-l border-[#23252c] overflow-y-auto">
+        <TradeSidePanel />
       </aside>
+
     </>
-      
+
   )
 }
