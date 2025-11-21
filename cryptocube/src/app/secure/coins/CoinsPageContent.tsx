@@ -82,15 +82,16 @@ export default function Page() {
             .slice(0, 3);
     }, [coins]);
 
+    // Top 3 par volume 
     const topTraded = React.useMemo(() => {
         return [...coins]
             .sort((a, b) => (b.total_volume || 0) - (a.total_volume || 0))
-            .slice(0, 3);
+            .slice(0, 3); //3 premiers
     }, [coins]);
 
     const router = useRouter();
 
-    // Agréger les sparklines et construire les points via les helpers dans `lib`
+    // Agréger les sparklines pour le graphique de capitalisation totale
     const aggregatedSparkline = React.useMemo(() => aggregateSparklines(coins), [coins]);
 
     const marketSparkPoints = aggregatedSparkline ? buildSparklinePoints(aggregatedSparkline, 140, 60) : null;
@@ -372,6 +373,8 @@ export default function Page() {
                                         </div>
                                     </div>
 
+
+
                                     <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
                                         <div className="flex items-start justify-between">
                                             <div>
@@ -386,13 +389,17 @@ export default function Page() {
                                                 ) : (
                                                     <div className="space-y-1 w-full" style={{ maxHeight: '150px', overflow: 'hidden' }}>
                                                         {(() => {
+
+                                                            // Trouver le volume max pour le pourcentage
                                                             const maxVol = Math.max(...topTraded.map(c => c.total_volume || 0), 1);
+                                                
                                                             return topTraded.map((c) => {
                                                                 const vol = c.total_volume || 0;
+                                                                //calcul du pourcentage
                                                                 const pct = Math.round((vol / maxVol) * 100);
                                                                 return (
                                                                     <div key={c.id} className="flex items-center gap-2" style={{ lineHeight: 1 }}>
-                                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                        {/*  */}
                                                                         <img src={c.image} alt={c.name} className="w-6 h-6 rounded-full" onError={(e)=>{(e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='}} />
                                                                         <div className="flex-1">
                                                                             <div className="flex items-center justify-between">
@@ -400,6 +407,7 @@ export default function Page() {
                                                                                 <div className="text-xs text-white/80">{getFormatMarketCap(vol)}</div>
                                                                             </div>
                                                                             <div className="w-full h-2 bg-white/10 rounded mt-1 overflow-hidden">
+                                                                            {/* la barre de volume  */}
                                                                                 <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', transition: 'width 360ms ease' }} />
                                                                             </div>
                                                                         </div>
@@ -412,6 +420,8 @@ export default function Page() {
                                             </div>
                                         </div>
                                     </div>
+
+
                                 </div>
                     {/* Top Gagnants */}
                     <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF' }}>

@@ -44,31 +44,5 @@ export function aggregateSparklines(coins: CoinData[]): number[] | null {
   return total;
 }
 
-/**
- *Crée une série qui représente une estimation du volume
-    *global du marché crypto basé sur les volumes des coins individuels.
- */
-export function aggregateVolumeProxy(coins: CoinData[]): number[] | null {
-  const sample = coins.find(
-    (c) => c.sparkline_in_7d && Array.isArray(c.sparkline_in_7d.price) && c.sparkline_in_7d.price.length > 0
-  );
-  if (!sample) return null;
 
-  const len = sample!.sparkline_in_7d!.price.length;
-  const total = new Array<number>(len).fill(0);
 
-  for (const coin of coins) {
-    const p = coin.sparkline_in_7d?.price;
-    if (p && p.length === len) {
-
-      //On estime combien d’unités du coin ont été tradées
-      const weight = (coin.total_volume || 0) / (coin.current_price || 1);
-      for (let i = 0; i < len; i++) {
-        //On multiplie chaque point de la sparkline par cette estimation
-        total[i] += p[i] * weight;
-      }
-    }
-  }
-
-  return total;
-}
