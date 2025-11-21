@@ -43,15 +43,15 @@ export default function MarketOverviewGauges(): React.JSX.Element {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
                 <Typography variant="body2" sx={{ color: 'white' }}>
-                    Loading market data...
+                    Chargement des données du marché...
                 </Typography>
             </Box>
         );
     }
 
     const getMarketStatus = (health: number) => {
-        if (health >= 55) return "Growing";
-        if (health <= 45) return "Cooling";
+        if (health >= 55) return "En croissance";
+        if (health <= 45) return "En repli";
         return "Stable";
     };
 
@@ -68,7 +68,7 @@ export default function MarketOverviewGauges(): React.JSX.Element {
             {/* Fear & Greed Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography variant="body1" sx={{ fontSize: '18px' , color: 'white', mb: -1.5, textAlign: 'center' }}>
-                    Market Sentiment
+                    Sentiment du marché
                 </Typography>
                 <RiskGauge value={Math.round(fearGreedValue)} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>
@@ -79,7 +79,7 @@ export default function MarketOverviewGauges(): React.JSX.Element {
             {/* Global Market Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography variant="body1" sx={{ fontSize: '18px', color: 'white', mb: -1.5, textAlign: 'center' }}>
-                    Global Market
+                    Marché global
                 </Typography>
                 <RiskGauge value={Math.round(marketHealth)} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>

@@ -69,7 +69,7 @@ export default function WatchlistCarousel() {
     return (
       <Box sx={{ textAlign: 'center', py: 8, color: '#9CA3AF' }}>
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <Typography>Chargement de votre watchlist...</Typography>
+        <Typography>Chargement de votre liste de suivi...</Typography>
       </Box>
     );
   }
@@ -86,10 +86,10 @@ export default function WatchlistCarousel() {
     return (
       <Box sx={{ textAlign: 'center', py: 8, color: '#9CA3AF' }}>
         <Typography variant="h6" gutterBottom>
-          Votre watchlist est vide
+          Votre liste de suivi est vide
         </Typography>
         <Typography variant="body2" sx={{ mt: 1 }}>
-          Ajoutez des cryptomonnaies à votre watchlist depuis la page{' '}
+          Ajoutez des cryptomonnaies à votre liste de suivi depuis la page{' '}
           <a href="/secure/coins" style={{ color: '#3B82F6', textDecoration: 'underline' }}>
             Coins
           </a>

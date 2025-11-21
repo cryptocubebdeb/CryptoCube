@@ -279,7 +279,7 @@ export default function Page() {
                                     paddingLeft: '1.5rem',
                                 }}
                             >
-                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Market Cap</h1>
+                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Capitalisation</h1>
                                 <div
                                     style={{
                                         marginTop: '0.5rem',
@@ -321,7 +321,7 @@ export default function Page() {
                         <SearchBar
                             searchTerm={searchTerm}
                             onSearchChange={setSearchTerm}
-                            placeholder="Explore crypto..."
+                            placeholder="Explorer les cryptos..."
                         />
                     </div>
                 </div>
@@ -341,7 +341,7 @@ export default function Page() {
                             <SearchBar
                                 searchTerm={searchTerm}
                                 onSearchChange={setSearchTerm}
-                                placeholder="Explore crypto..."
+                                placeholder="Explorer les cryptos..."
                             />
                         </div>
                     </div>
@@ -378,7 +378,7 @@ export default function Page() {
                                     <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
                                         <div className="flex items-start justify-between">
                                             <div>
-                                                <div className="text-sm text-white/80">24h Trading Volume</div>
+                                                <div className="text-sm text-white/80">Volume (24h)</div>
                                                 {/* on additionne le volume de tous les coins (total_volume) */}
                                                 <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
                                             </div>
@@ -597,7 +597,7 @@ export default function Page() {
                                     transition: 'background 0.3s',
                                 }}
                             >
-                                Refresh
+                                Rafraîchir
                             </Button>
                         </div>
                     </div>
@@ -626,7 +626,7 @@ export default function Page() {
                                                 <button
                                                     onClick={(e) => toggleWatch(e, coinId)}
                                                     className={`transition-colors p-1 rounded ${userWatchlist.has(coinId) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${watchlistLoading ? 'opacity-50' : ''}`}
-                                                    aria-label={userWatchlist.has(coinId) ? 'Remove from watchlist' : 'Add to watchlist'}
+                                                    aria-label={userWatchlist.has(coinId) ? 'Retirer de la liste de suivi' : 'Ajouter à la liste de suivi'}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
                                                         <path

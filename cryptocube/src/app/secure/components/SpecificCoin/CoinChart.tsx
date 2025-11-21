@@ -6,7 +6,7 @@ import LineChart from "./LineChart";
 import WatchlistButton from "./WatchlistBtn";
 
 type RawPoint = { time: number; price: number };
-type Point = { x: number; y: number }; //each point in the graphic must have a price for a specific time
+type Point = { x: number; y: number }; // chaque point du graphique doit avoir un prix pour un instant donné
 
 type params = {
   coinId: string;
@@ -14,7 +14,7 @@ type params = {
 };
 
 export default function CoinChart({ coinId, currency = "cad" }: params) {
-  const [days, setDays] = useState(30); //default 30 days
+  const [days, setDays] = useState(30); // valeur par défaut : 30 jours
   const [data, setData] = useState<Point[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,10 +40,10 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
 
   const ranges = [
     { label: "24H", value: 1 },
-    { label: "7D", value: 7 },
-    { label: "30D", value: 30 },
-    { label: "90D", value: 90 },
-    { label: "1Y", value: 365 },
+    { label: "7J", value: 7 },
+    { label: "30J", value: 30 },
+    { label: "90J", value: 90 },
+    { label: "1A", value: 365 },
     //{ label: "5Y", value: 1825 },
     //FIGURE OUT HOW TO ADD A MAX RANGE { label: "MAX", value: "max" },
   ]
@@ -53,10 +53,10 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
       {/* === Header Row === */}
       <div className="flex justify-between items-center mb-4">
 
-        {/* Watchlist button (left) */}
+  {/* Bouton liste de suivi (gauche) */}
         <WatchlistButton coinId={coinId} />
 
-        {/* Time range buttons */}
+  {/* Boutons de plage temporelle */}
         <div className="flex gap-2 mb-4">
           {ranges.map(range => (
             <button
@@ -75,7 +75,7 @@ export default function CoinChart({ coinId, currency = "cad" }: params) {
 
       {/* Chart */}
       {loading ? (
-        <p className="text-white/60">Loading chart...</p>
+        <p className="text-white/60">Chargement du graphique...</p>
       ) : (
         <LineChart width={window.innerWidth * 0.9} height={window.innerHeight} data={data} />
       )}

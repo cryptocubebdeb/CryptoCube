@@ -42,7 +42,7 @@ export default function TopWinningCoins(): React.JSX.Element {
     if (loading) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
-                Loading top winning coins...
+                Chargement des meilleures hausses...
             </Typography>
         );
     }
@@ -50,7 +50,7 @@ export default function TopWinningCoins(): React.JSX.Element {
     if (!coins.length) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'error.main' }}>
-                Failed to load top winning coins.
+                Impossible de charger les meilleures hausses.
             </Typography>
         );
     }
