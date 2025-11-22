@@ -109,6 +109,7 @@ model SimulatorAccount {
   trades    TradeHistory[]
 }
 
+//This is more like a portfolio item, should've changed the name
 model Portfolio {
   id                 Int              @id @default(autoincrement())
   simulatorAccountId Int
