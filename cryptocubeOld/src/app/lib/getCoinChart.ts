@@ -3,7 +3,7 @@ const URL_API = "https://api.coingecko.com/api/v3";
 export async function getCoinChart(
   id: string,
   days: number = 30,
-  currency: string = "cad"
+  currency: string = "usd"
 ) {
   const API_KEY = process.env.COINGECKO_API_KEY;
   if (!API_KEY) {

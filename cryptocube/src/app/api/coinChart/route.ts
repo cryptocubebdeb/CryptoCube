@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const coinId = searchParams.get("coinId");
   const days = Number(searchParams.get("days") || 30);
-  const currency = searchParams.get("currency") || "cad";
+  const currency = searchParams.get("currency") || "usd";
 
   try {
     const data = await getCoinChart(coinId!, days, currency);

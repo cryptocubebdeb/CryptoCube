@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     const [coinData, series] = await Promise.all([
         getCoin(id),
-        getCoinChart(id, 30, "cad"),
+        getCoinChart(id, 30, "usd"),
     ]);
 
 

@@ -96,6 +96,7 @@ model SimulatorAccount {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  
   initialCashBalance Decimal @db.Decimal(18, 2)
   currentCashBalance Decimal @db.Decimal(18, 2)
   realizedProfitUsd  Decimal @default(0) @db.Decimal(18, 2)
@@ -103,16 +104,18 @@ model SimulatorAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  portfolio    Portfolio[]
-  orders       Order[]
-  tradeHistory TradeHistory[]
+  portfolio Portfolio[] //The full portfolio contains multiple of rows for each coin brought by the user 
+  orders    Order[]
+  trades    TradeHistory[]
 }
 
+//This is more like a portfolio item, should've changed the name
 model Portfolio {
   id                 Int              @id @default(autoincrement())
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
+  coinId               String
   coinSymbol           String
   amountOwned          Decimal @db.Decimal(38, 18)
   averageEntryPriceUsd Decimal @db.Decimal(18, 8)
@@ -128,28 +131,53 @@ model Order {
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
+  coinId     String
   coinSymbol String
   orderType  TradeType
   orderKind  OrderKind
-  amount     Decimal     @db.Decimal(38, 18)
-  price      Decimal?    @db.Decimal(18, 8)
-  status     OrderStatus @default(PENDING)
+  amount     Decimal        @db.Decimal(38, 18)
+  price      Decimal?       @db.Decimal(18, 8)
+  status     OrderStatus    @default(PENDING)
 
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime       @default(now())
   executedAt DateTime?
+  executedPrice Decimal?    @db.Decimal(18, 8)   // <-- ADD THIS
 
-  tradeHistory TradeHistory? @relation("OrderTradeHistory")
+  trades TradeHistory[]
+
+  bestBuyForBook  OrderBook? @relation("BestBuyOrder")
+  bestSellForBook OrderBook? @relation("BestSellOrder")
 
   @@index([coinSymbol])
 }
+
+
+
+model OrderBook {
+  id           Int    @id @default(autoincrement())
+  coinSymbol   String @unique
+
+  // references to best orders
+  bestBuyOrderId  Int? @unique
+  bestSellOrderId Int? @unique
+
+  bestBuyOrder  Order? @relation("BestBuyOrder", fields: [bestBuyOrderId], references: [id])
+  bestSellOrder Order? @relation("BestSellOrder", fields: [bestSellOrderId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([coinSymbol])
+}
+
 
 model TradeHistory {
   id                 Int              @id @default(autoincrement())
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  orderId Int?   @unique
-  order   Order? @relation("OrderTradeHistory", fields: [orderId], references: [id])
+  orderId Int?
+  order   Order?     @relation(fields: [orderId], references: [id])
 
   tradeType    TradeType
   coinSymbol   String

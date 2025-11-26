@@ -36,7 +36,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "worker/computeLocalOrderBook.js", "worker/coinWorker.js", "worker/start.js", "worker/orderWorker.js", "worker/mainWorker.js", "workworker/processOrder.jssrc/server/websocketBiance.js"  ],
   "exclude": [
     "node_modules"
   ]
