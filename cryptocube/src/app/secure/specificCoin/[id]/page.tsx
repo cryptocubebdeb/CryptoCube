@@ -24,7 +24,7 @@ export default async function Page({
     // --- Fetch data ---
     const [coinData, series] = await Promise.all([
         getCoin(id),
-        getCoinChart(id, 30, "cad"),
+        getCoinChart(id, 30, "usd"),
     ]);
 
     let news: Awaited<ReturnType<typeof getCoinNews>> = [];
@@ -37,27 +37,26 @@ export default async function Page({
     // --- Basic coin info ---
     const name = coinData?.name ?? id; // Name of the current crypto
     const logo = coinData?.image?.large as string | undefined; // Image of the crypto logo
-    const symbole = coinData?.symbol ?? id; // Acronym of the crypto (ex: Bitcoin → BTC)
+    const symbol = coinData?.symbol; // Acronym of the crypto (ex: Bitcoin → BTC)
     const rank = coinData?.market_cap_rank; // Global market rank of the crypto
     const coinDescription = coinData?.description?.en ?? "";
     const websiteUrl = coinData?.links?.homepage?.[0] || null;
 
     // --- Market data ---
-    const currentPrice = coinData?.market_data?.current_price?.cad; // Current price in CAD
+    const currentPrice = coinData?.market_data?.current_price?.usd; // Current price in USD
     const priceChangePercentage = coinData?.market_data?.price_change_percentage_24h; // Value change in the past 24h in %
-    const marketCap = coinData?.market_data?.market_cap?.cad; // Market capitalization in CAD
-    const totalVolume = coinData?.market_data?.total_volume?.cad; // 24h trading volume in CAD
-    const fdv = coinData?.market_data?.fully_diluted_valuation?.cad; // Fully Diluted Valuation (if all coins were in circulation)
-
+    const marketCap = coinData?.market_data?.market_cap?.usd; // Market capitalization in USD
+    const totalVolume = coinData?.market_data?.total_volume?.usd; // 24h trading volume in USD
+    const fdv = coinData?.market_data?.fully_diluted_valuation?.usd; // Fully Diluted Valuation (if all coins were in circulation)
     // --- Price stats ---
-    const high24h = coinData?.market_data?.high_24h?.cad; // Highest price in the last 24h
-    const low24h = coinData?.market_data?.low_24h?.cad; // Lowest price in the last 24h
-    const ath = coinData?.market_data?.ath?.cad; // All-time high price
-    const atl = coinData?.market_data?.atl?.cad; // All-time low price
-    const athChangePercentage = coinData?.market_data?.ath_change_percentage?.cad; // % difference from ATH
-    const atlChangePercentage = coinData?.market_data?.atl_change_percentage?.cad; // % difference from ATL
-    const athDate = coinData?.market_data?.ath_date?.cad; // date string of the all-time high
-    const atlDate = coinData?.market_data?.atl_date?.cad; // date string of the all-time low
+    const high24h = coinData?.market_data?.high_24h?.usd; // Highest price in the last 24h
+    const low24h = coinData?.market_data?.low_24h?.usd; // Lowest price in the last 24h
+    const ath = coinData?.market_data?.ath?.usd; // All-time high price
+    const atl = coinData?.market_data?.atl?.usd; // All-time low price
+    const athChangePercentage = coinData?.market_data?.ath_change_percentage?.usd; // % difference from ATH
+    const atlChangePercentage = coinData?.market_data?.atl_change_percentage?.usd; // % difference from ATL
+    const athDate = coinData?.market_data?.ath_date?.usd; // date string of the all-time high
+    const atlDate = coinData?.market_data?.atl_date?.usd; // date string of the all-time low
 
     const formattedAthDate = new Date(athDate).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric", });
     const formattedAtlDate = new Date(atlDate).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric", });
@@ -70,7 +69,7 @@ export default async function Page({
     const priceDifferenceIn7d = currentPrice - price7dAgo; // Price diff
 
     // --- Check if this coin is tradable on Binance ---
-    const binanceSymbol = symbole.toUpperCase() + "USDT";
+    const binanceSymbol = symbol.toUpperCase() + "USDT";
 
     let isTradable = false;
     try {
@@ -131,7 +130,7 @@ export default async function Page({
                             )}
                             <div className="flex items-baseline gap-2">
                                 <h1 className="text-3xl">{name}</h1>
-                                <span className="text-lg text-white/60 uppercase">{symbole}</span>
+                                <span className="text-lg text-white/60 uppercase">{symbol}</span>
                             </div>
                         </div>
 
@@ -154,7 +153,7 @@ export default async function Page({
                         {/*------------- Buy Section -------------*/}
                         <BuySection
                             coinId={id}                     
-                            symbol={symbole.toUpperCase()} 
+                            symbol={coinData?.symbol.toUpperCase()} 
                             price={currentPrice}
                             logo={logo}
                         />
@@ -214,7 +213,7 @@ export default async function Page({
                                         <span className="text-white/60 ml-1">
                                             ({priceDifferenceIn7d >= 0 ? "+" : "-"}{Math.abs(priceDifferenceIn7d).toLocaleString("en-CA", {
                                                 style: "currency",
-                                                currency: "CAD",
+                                                currency: "usd",
                                                 maximumFractionDigits: 0,
                                             })})
                                         </span>
@@ -307,7 +306,7 @@ export default async function Page({
                         {/* Chart container */}
                         <div className="text-white rounded-[4px] shadow-md relative">
                             <div className="w-full min-h-[700px]">
-                                <CoinChart coinId={id} currency="cad" />
+                                <CoinChart coinId={id} currency="usd" />
                             </div>
                         </div>
 

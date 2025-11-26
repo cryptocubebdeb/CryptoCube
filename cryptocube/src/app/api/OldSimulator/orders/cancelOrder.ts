@@ -1,6 +1,6 @@
 import { PrismaClient, OrderStatus, OrderKind } from "@prisma/client";
 import { getAuthSession } from "@/app/lib/getServerSession";
-import { recomputeOrderBook } from "../../../../../worker/orderBook";
+import { recomputeLocalOrderBook } from "../../../../../worker/computeLocalOrderBook";
 
 const prisma = new PrismaClient();
 
@@ -48,7 +48,7 @@ export async function DELETE(req: Request, { params }: { params: { orderId: stri
     });
 
     // Recompute OrderBook
-    await recomputeOrderBook(order.coinSymbol);
+    await recomputeLocalOrderBook(order.coinSymbol);
 
     return Response.json(
       { ok: true, message: "Order canceled successfully" },

@@ -1,13 +1,11 @@
-// symbolWorker.js
-
 import WebSocket from "ws";
-import { updateBinanceOrderBook } from "./updateBinanceOrderBook.js";
-import { matchLocalOrders } from "./orderMatch.js";
+import { updateBinanceOrderBook } from "./updateInMemoryBinanceOrderBook.js";
+import { matchLocalOrders } from "./matchPendingOrders.js";
 
 /*
     This file creates one worker for each coin symbol.
 
-    What a symbol worker does:
+    What a coin worker does:
         - Opens one WebSocket connection to Binance for that coin
         - Keeps an in-memory order book for bids and asks
         - It tries to match local pending orders

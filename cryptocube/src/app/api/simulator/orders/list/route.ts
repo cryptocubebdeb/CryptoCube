@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { getAuthSession } from "@/app/lib/getServerSession";
 import { OrderKind, TradeType, OrderStatus } from "@prisma/client";
+import fs from "fs";
+import path from "path";
 
-//Get /simulator/orders : route to get all orders for the authenticated user
+//Get route to get all orders for the authenticated user
 export async function GET() {
     try {
-        const session = await getAuthSession(); 
+        const session = await getAuthSession();
         if (!session?.user?.id) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -43,14 +45,14 @@ export async function GET() {
 // Post /simulator/orders : route to create a new order for the authenticated user
 export async function POST(request: Request) {
     try {
-        const session = await getAuthSession(); 
+        const session = await getAuthSession();
         if (!session?.user?.id) {
             return NextResponse.json(
                 { error: "Not authenticated" },
                 { status: 401 }
             );
         }
-        
+
         const simulatorAccount = await prisma.simulatorAccount.findUnique({
             where: { userId: session.user.id },
         });
@@ -105,14 +107,14 @@ export async function POST(request: Request) {
         const newOrder = await prisma.order.create({
             data: {
                 simulatorAccountId: simulatorAccount.id,
-                coinId,
-                coinSymbol,
+                coinId: coinId,              // <-- THIS MUST EXIST
+                coinSymbol: coinSymbol,      // ex: BTC
                 orderType: orderType.toUpperCase() === "BUY" ? TradeType.BUY : TradeType.SELL,
                 orderKind: normalizedOrderKind,
-                amount: amount.toString(), // convert to string to match prisma decimal type
+                amount: amount.toString(),
                 price: finalPrice,
-                status: OrderStatus.PENDING,
-            },
+                status: OrderStatus.PENDING
+            }
         });
 
         return NextResponse.json({ order: newOrder }, { status: 201 });

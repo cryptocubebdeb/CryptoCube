@@ -1,175 +1,261 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function TradePanel({
     mode,          // "BUY" or "SELL"
-    symbol,      
-    coinId,
-    price,
-    logo,
-    holding,       
-    currentCash   
+    symbol,        // ex: BTC
+    coinId,        // ex: bitcoin
+    price,         // live market price
+    logo,          // coin image
+    holding,       // user holding for this coin
+    currentCash,   // cash from simulator
 }) {
-    // Which input mode the user is typing: CAD or CRYPTO
+    // UI state
+    const [orderKind, setOrderKind] = useState<"MARKET" | "LIMIT">("MARKET");
+    const [inputValue, setInputValue] = useState(""); 
+    const [limitPrice, setLimitPrice] = useState("");
     const [inputMode, setInputMode] = useState<"FIAT" | "CRYPTO">("FIAT");
-
-    // Text input value
-    const [value, setValue] = useState("");
-
-    // Loading state when placing order
-    const [loading, setLoading] = useState(false);
-
-    // User feedback message
     const [message, setMessage] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
-    // Max values user can use
-    const maxFiat = Number(currentCash ?? 0);
-    const maxOwned = Number(holding?.amountOwned ?? 0);
+    // Price used for the calculation (limit or market)
+    const limitPriceNumber = Number(limitPrice);
+    const effectivePrice =
+        orderKind === "LIMIT" && limitPriceNumber > 0
+            ? limitPriceNumber
+            : price;
 
-    // Convert input to crypto amount
-    const cryptoAmount = inputMode === "CRYPTO" ? Number(value) : Number(value) / price;
+    // Convert between fiat and crypto
+    const cryptoAmount =
+        inputMode === "CRYPTO"
+            ? Number(inputValue || 0)
+            : effectivePrice > 0
+                ? Number(inputValue || 0) / effectivePrice
+                : 0;
 
-    // Convert input to fiat amount
-    const fiatAmount = inputMode === "FIAT" ? Number(value) : Number(value) * price;
+    const fiatAmount =
+        inputMode === "FIAT"
+            ? Number(inputValue || 0)
+            : Number(inputValue || 0) * effectivePrice;
 
-    // Fills the input with the maximum available value
-    function fillMax() {
+    // MAX button logic based on buy/sell + input mode
+    function handleMax() {
+        const amountOwned = Number(holding?.amountOwned || 0);
+
         if (mode === "BUY") {
-            // BUY: max limited by money
             if (inputMode === "FIAT") {
-                setValue(maxFiat.toString());
+                setInputValue(currentCash.toString());
             } else {
-                setValue((maxFiat / price).toFixed(6));
+                const maxCrypto =
+                    effectivePrice > 0 ? currentCash / effectivePrice : 0;
+                setInputValue(maxCrypto.toFixed(6));
             }
         } else {
-            // SELL: max limited by amount owned
             if (inputMode === "CRYPTO") {
-                setValue(maxOwned.toString());
+                setInputValue(amountOwned.toString());
             } else {
-                setValue((maxOwned * price).toFixed(2));
+                setInputValue((amountOwned * effectivePrice).toFixed(2));
             }
         }
     }
 
-    // Submit the order to backend
-    async function submit() {
-        setLoading(true);
+    // Submit final order
+    async function submitOrder() {
+        setSubmitting(true);
         setMessage("");
 
-        // Check if amount is valid
-        if (!cryptoAmount || cryptoAmount <= 0) {
-            setMessage("Enter a valid amount");
-            setLoading(false);
+        if (!inputValue || Number(inputValue) <= 0) {
+            setMessage("Enter a valid amount.");
+            setSubmitting(false);
             return;
         }
 
-        // BUY checks
-        if (mode === "BUY" && fiatAmount > currentCash) {
-            setMessage("Not enough funds");
-            setLoading(false);
+        if (cryptoAmount <= 0) {
+            setMessage("Amount too small.");
+            setSubmitting(false);
             return;
         }
 
-        // SELL checks
-        if (mode === "SELL" && cryptoAmount > maxOwned) {
-            setMessage("Not enough coins");
-            setLoading(false);
+        if (orderKind === "LIMIT" && (!limitPrice || limitPriceNumber <= 0)) {
+            setMessage("Enter a valid limit price.");
+            setSubmitting(false);
             return;
+        }
+
+        if (mode === "BUY") {
+            const requiredCash = cryptoAmount * effectivePrice;
+            if (requiredCash > currentCash) {
+                setMessage("Not enough cash.");
+                setSubmitting(false);
+                return;
+            }
+        }
+
+        if (mode === "SELL") {
+            const amountOwned = Number(holding?.amountOwned || 0);
+            if (cryptoAmount > amountOwned) {
+                setMessage("Not enough coins.");
+                setSubmitting(false);
+                return;
+            }
         }
 
         try {
-            const res = await fetch("/api/simulator/orders/postOrder", {
+            // shape of the payload (same structure as side panel)
+            const requestBody = {
+                coinId,
+                coinSymbol: symbol.toUpperCase(),
+                amount: cryptoAmount,
+                orderType: mode,
+                orderKind,
+                price: orderKind === "LIMIT" ? limitPriceNumber : null,
+            };
+
+            const response = await fetch("/api/simulator/orders/list", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    coinId,
-                    tradeSymbol: symbol.toUpperCase() + "USDT",
-                    quantity: cryptoAmount,
-                    orderKind: "limit",
-                    orderSell: mode.toLowerCase(),
-                    price: Number(price)
-                })
+                body: JSON.stringify(requestBody),
             });
 
-            const data = await res.json();
-            setLoading(false);
+            const data = await response.json();
 
-            if (!res.ok) {
-                setMessage(data.error);
-                return;
+            if (!response.ok) {
+                setMessage(data.error || "Order failed.");
+            } else {
+                setMessage(`${orderKind} ${mode} order placed.`);
+                setInputValue("");
+                if (orderKind === "MARKET") setLimitPrice("");
             }
-
-            // Success
-            setMessage(`${mode} order placed`);
-            setValue(""); // clear input
-        } catch (err) {
-            setMessage("Failed to place order");
-            setLoading(false);
+        } catch {
+            setMessage("Network error.");
+        } finally {
+            setSubmitting(false);
         }
     }
 
+    // Render panel
     return (
-        <div className="p-3 bg-white/5 rounded-md space-y-3 text-sm">
+        <div className="bg-[#0e1117] border border-white/10 p-4 rounded-lg text-white space-y-4">
 
             {/* Header */}
-            <div className="flex items-center gap-2">
-                {logo && <img src={logo} className="w-5 h-5 rounded" />}
-                <span className="text-white font-semibold">
-                    {mode} {symbol}
-                </span>
+            <div className="flex items-center gap-3">
+                {logo && (
+                    <Image
+                        src={logo}
+                        alt="coin logo"
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                    />
+                )}
+                <h3 className="text-lg font-semibold">
+                    {mode} {symbol.toUpperCase()}
+                </h3>
             </div>
 
-            {/* CAD / CRYPTO toggle */}
-            <div className="flex gap-2 text-xs">
+            {/* Market / Limit selection */}
+            <div className="flex bg-white/5 rounded-md overflow-hidden">
+                {["MARKET", "LIMIT"].map((type) => (
+                    <button
+                        key={type}
+                        onClick={() => setOrderKind(type as any)}
+                        className={`flex-1 py-2 text-sm font-semibold ${
+                            orderKind === type
+                                ? "bg-yellow-400 text-black"
+                                : "text-white/60 hover:bg-white/10"
+                        }`}
+                    >
+                        {type}
+                    </button>
+                ))}
+            </div>
+
+            {/* Limit price input */}
+            {orderKind === "LIMIT" && (
+                <input
+                    type="text"
+                    inputMode="decimal"
+                    value={limitPrice}
+                    onChange={(e) => setLimitPrice(e.target.value)}
+                    placeholder="Limit price"
+                    className="w-full bg-[#0e1117] border border-white/20 rounded-md px-3 py-2 text-sm"
+                />
+            )}
+
+            {/* Amount input */}
+            <div className="flex flex-col items-center">
+                <span className="text-[10px] text-white/40 uppercase">
+                    {inputMode === "FIAT" ? "FIAT" : symbol.toUpperCase()}
+                </span>
+
+                <input
+                    type="text"
+                    inputMode="decimal"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="0"
+                    className="bg-transparent text-center text-4xl font-semibold outline-none w-full py-2"
+                />
+            </div>
+
+            {/* Max button */}
+            <div className="flex justify-center">
+                <button
+                    onClick={handleMax}
+                    className="px-3 py-1 bg-white/10 rounded-md text-xs"
+                >
+                    MAX
+                </button>
+            </div>
+
+            {/* Input mode (fiat / crypto) */}
+            <div className="flex gap-2">
                 <button
                     onClick={() => setInputMode("FIAT")}
-                    className={`flex-1 py-1 rounded ${
-                        inputMode === "FIAT" ? "bg-yellow-400 text-black" : "bg-white/10 text-white/60"}`}
-                > CAD </button>
+                    className={`flex-1 py-2 text-sm rounded-md ${
+                        inputMode === "FIAT"
+                            ? "bg-yellow-400 text-black"
+                            : "bg-white/10 text-white/60"
+                    }`}
+                >
+                    Fiat
+                </button>
 
                 <button
                     onClick={() => setInputMode("CRYPTO")}
-                    className={`flex-1 py-1 rounded ${
-                        inputMode === "CRYPTO" ? "bg-yellow-400 text-black" : "bg-white/10 text-white/60"
+                    className={`flex-1 py-2 text-sm rounded-md ${
+                        inputMode === "CRYPTO"
+                            ? "bg-yellow-400 text-black"
+                            : "bg-white/10 text-white/60"
                     }`}
-                > {symbol} </button>
+                >
+                    {symbol.toUpperCase()}
+                </button>
             </div>
 
-            {/* Amount input */}
-            <div className="flex items-center gap-2">
-                <input
-                    type="number"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder={
-                        inputMode === "FIAT" ? "Amount in CAD" : `Amount in ${symbol}` }
-                    className="w-full p-2 rounded bg-black/30 border border-white/20 text-white text-sm"
-                />
+            {/* Conversion preview */}
+            <p className="text-center text-xs text-white/50">
+                {inputMode === "FIAT"
+                    ? `≈ ${cryptoAmount.toFixed(6)} ${symbol}`
+                    : `≈ $${fiatAmount.toFixed(2)}`}
+            </p>
 
-                <button
-                    onClick={fillMax}
-                    className="px-3 py-1 bg-white/10 text-white/70 hover:bg-white/20 text-xs rounded"
-                > MAX </button>
-            </div>
-
-            {/* Conversion display */}
-            <div className="text-white/60 text-xs">
-                {inputMode === "FIAT" ? `≈ ${cryptoAmount.toFixed(6)} ${symbol}` : `≈ $${fiatAmount.toFixed(2)} CAD`}
-            </div>
-
-            {/* Submit */}
+            {/* Submit button */}
             <button
-                onClick={submit}
-                disabled={loading}
-                className="w-full py-1.5 bg-yellow-400 text-black rounded font-semibold text-xs hover:bg-yellow-300 disabled:opacity-50"
+                onClick={submitOrder}
+                disabled={submitting}
+                className="w-full py-2 bg-yellow-400 text-black font-semibold rounded-md disabled:opacity-50"
             >
-                {loading ? "Processing..." : `${mode} ${symbol}`}
+                {submitting ? "Sending…" : `${mode} ${symbol}`}
             </button>
 
-            {/* Message */}
+            {/* Status message */}
             {message && (
-                <p className="text-white/70 text-xs">{message}</p>
+                <p className="text-xs text-center text-yellow-300 mt-1">
+                    {message}
+                </p>
             )}
         </div>
     );

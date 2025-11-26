@@ -10,10 +10,10 @@ type Point = { x: number; y: number }; // chaque point du graphique doit avoir u
 
 type params = {
   coinId: string;
-  currency?: string;   // default "cad"
+  currency?: string;   // default "usd"
 };
 
-export default function CoinChart({ coinId, currency = "cad" }: params) {
+export default function CoinChart({ coinId, currency = "usd" }: params) {
   const [days, setDays] = useState(30); // valeur par défaut : 30 jours
   const [data, setData] = useState<Point[]>([]);
   const [loading, setLoading] = useState(true);

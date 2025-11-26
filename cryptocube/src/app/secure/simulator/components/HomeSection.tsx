@@ -3,78 +3,99 @@
 import { useEffect, useState } from "react";
 import PortfolioChart from "../../components/Portfolio/PortfolioChart";
 
-// Import your TypeScript interfaces
-import {
-  PortfolioItem,
-  PendingOrder,
-  TradeItem
-} from "@/app/api/simulator/simulatorTypes";
-
-/*
-  This is the HOME section of the simulator.
-    - portfolio chart
-    - cash balance
-    - portfolio value (later)
-    - number of pending + executed trades
-*/
-
 export default function HomeSection() {
-  // Portfolio holdings
-  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
+  // Store user's current cash balance
+  const [cash, setCash] = useState(0);
 
-  // Cash that the user has in the simulator
-  const [cashBalance, setCashBalance] = useState(0);
+  // Store user's coin holdings
+  const [holdings, setHoldings] = useState<any[]>([]);
 
-  // Orders that are waiting to be executed
-  const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
+  // Store pending orders (submitted but not executed)
+  const [pendingOrders, setPendingOrders] = useState<any[]>([]);
 
-  // Orders that have executed
-  const [tradeHistory, setTradeHistory] = useState<TradeItem[]>([]);
+  // Store executed orders (already completed trades)
+  const [executedOrders, setExecutedOrders] = useState<any[]>([]);
 
-  // Show loading while fetching data
+  // Loading state while fetching data
   const [loading, setLoading] = useState(true);
 
-  // Load all simulator data when the component appears
+  // Load portfolio, pending orders, and executed orders on component mount
   useEffect(() => {
     async function loadData() {
       try {
-        // Make all API calls at the same time
-        const [portfolioRes, pendingRes, historyRes] = await Promise.all([
-          fetch("/api/simulator/getPortfolio"),
-          fetch("/api/simulator/orders/getPendingOrders"),
-          fetch("/api/simulator/orders/getExecutedOrders"),
+        // Fetch all three API endpoints in parallel for efficiency
+        const [portfolioRes, pendingRes, executedRes] = await Promise.all([
+          fetch("/api/simulator/portfolio"),
+          fetch("/api/simulator/orders/list/pending"),
+          fetch("/api/simulator/orders/list/executed"),
         ]);
 
-        // Convert responses to JSON
+        // Parse JSON responses
         const portfolioData = await portfolioRes.json();
         const pendingData = await pendingRes.json();
-        const historyData = await historyRes.json();
+        const executedData = await executedRes.json();
 
-        // Store into React state
-        setPortfolio(Array.isArray(portfolioData.portfolio) ? portfolioData.portfolio : []);
-        setCashBalance(Number(portfolioData.currentCash || 0));
+        // Set state values safely
+        setCash(Number(portfolioData.cash || 0));
+        setHoldings(Array.isArray(portfolioData.holdings) ? portfolioData.holdings : []);
 
         setPendingOrders(Array.isArray(pendingData.orders) ? pendingData.orders : []);
-        setTradeHistory(Array.isArray(historyData.trades) ? historyData.trades : []);
-
-      } catch (error) {
-        console.error("Error loading simulator data:", error);
+        setExecutedOrders(Array.isArray(executedData.orders) ? executedData.orders : []);
+      } catch (err) {
+        // If API fails, reset all state to defaults and log the error
+        console.error("Failed to load home data:", err);
+        setCash(0);
+        setHoldings([]);
+        setPendingOrders([]);
+        setExecutedOrders([]);
       }
 
+      // Mark loading as complete
       setLoading(false);
     }
 
     loadData();
   }, []);
 
-  const portfolioValue = 0;
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-[#11131b] border border-[#23252c] rounded-xl p-6">
 
-      {/* Portfolio Chart */}
+      {/* ================= Header Overview ================= */}
+      <div className="flex flex-col gap-2">
+        <h2 className="text-xl font-bold text-yellow-400">Overview</h2>
+
+        {loading ? (
+          // Display loading text while fetching data
+          <p className="text-slate-400 text-sm">Loading data…</p>
+        ) : (
+          // Display summary of key portfolio information
+          <div className="grid grid-cols-3 gap-4 text-sm">
+
+            {/* Cash Balance */}
+            <div>
+              <p className="text-slate-400">Cash</p>
+              <p className="text-white font-semibold">${cash.toFixed(2)}</p>
+            </div>
+
+            {/* Number of Coin Holdings */}
+            <div>
+              <p className="text-slate-400">Holdings</p>
+              <p className="text-white font-semibold">{holdings.length}</p>
+            </div>
+
+            {/* Number of Pending Orders */}
+            <div>
+              <p className="text-slate-400">Pending Orders</p>
+              <p className="text-white font-semibold">{pendingOrders.length}</p>
+            </div>
+
+          </div>
+        )}
+      </div>
+
+      {/* ================= Portfolio Chart ================= */}
+      {/* Displays a visual chart of user's portfolio holdings */}
       <PortfolioChart />
-
     </div>
   );
 }

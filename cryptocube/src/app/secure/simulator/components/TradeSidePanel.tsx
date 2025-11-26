@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-type PanelPortfolioItem = {
+type Holding = {
+  id: number;
   coinId: string;
   coinSymbol: string;
   amountOwned: number;
@@ -11,121 +12,119 @@ type PanelPortfolioItem = {
 };
 
 export default function TradeSidePanel() {
-
   const [mode, setMode] = useState<"BUY" | "SELL">("BUY");
+  const [orderKind, setOrderKind] = useState<"MARKET" | "LIMIT">("MARKET");
 
-  const [portfolio, setPortfolio] = useState<PanelPortfolioItem[]>([]);
+  const [holdings, setHoldings] = useState<Holding[]>([]);
   const [cash, setCash] = useState(0);
 
   const [coinId, setCoinId] = useState("");
   const [symbol, setSymbol] = useState("");
-
   const [price, setPrice] = useState(0);
   const [logoUrl, setLogoUrl] = useState("");
 
   const [inputMode, setInputMode] = useState<"FIAT" | "CRYPTO">("FIAT");
   const [value, setValue] = useState("");
+  const [limitPrice, setLimitPrice] = useState("");
 
-  // UI feedback
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  // Load portfolio
   useEffect(() => {
-    async function loadPortfolio() {
+    async function load() {
       try {
-        const res = await fetch("/api/simulator/getPortfolio");
+        const res = await fetch("/api/simulator/portfolio");
         const data = await res.json();
 
-        const list: PanelPortfolioItem[] = Array.isArray(data.portfolio)
-          ? data.portfolio
-          : [];
+        setCash(Number(data.cash || 0));
 
-        setPortfolio(list);
-        setCash(Number(data.currentCash || 0));
+        const list: Holding[] = Array.isArray(data.holdings)
+          ? data.holdings
+          : [];
+        setHoldings(list);
 
         if (list.length > 0) {
           setCoinId(list[0].coinId);
           setSymbol(list[0].coinSymbol);
         }
       } catch (err) {
-        console.error("Failed to load portfolio", err);
+        console.error("Failed to load portfolio for trading", err);
+        setCash(0);
+        setHoldings([]);
       } finally {
         setLoading(false);
       }
     }
 
-    loadPortfolio();
+    load();
   }, []);
 
+  // Load price + logo
   useEffect(() => {
-    // If no coin is selected yet, do nothing
     if (!coinId) return;
 
-    async function loadCoinData() {
+    async function loadCoin() {
       try {
         const res = await fetch(
           `https://api.coingecko.com/api/v3/coins/${coinId}`
         );
         const data = await res.json();
 
-        // Current CAD price
-        setPrice(data?.market_data?.current_price?.cad ?? 0);
-
-        // Small logo url
+        setPrice(data?.market_data?.current_price?.usd ?? 0);
         setLogoUrl(data?.image?.small ?? "");
-      } catch (err) {
-        console.error("Failed to load coin data", err);
+      } catch {
         setPrice(0);
         setLogoUrl("");
       }
     }
 
-    loadCoinData();
+    loadCoin();
   }, [coinId]);
 
-  // How many coins the current input represents
+  const limitPriceNum = Number(limitPrice || 0);
+  const effectivePrice =
+    orderKind === "LIMIT" && limitPriceNum > 0 ? limitPriceNum : price;
+
   const cryptoAmount =
     inputMode === "CRYPTO"
       ? Number(value || 0)
-      : price > 0
-      ? Number(value || 0) / price
-      : 0;
+      : effectivePrice > 0
+        ? Number(value || 0) / effectivePrice
+        : 0;
 
   const fiatAmount =
     inputMode === "FIAT"
       ? Number(value || 0)
-      : Number(value || 0) * price;
+      : Number(value || 0) * effectivePrice;
 
+  // Max button
   function handleMax() {
+    if (!coinId) return;
+
     if (mode === "BUY") {
-      // Max = all cash
-      if (inputMode === "FIAT") {
-        setValue(cash.toString());
-      } else {
-        // Max coins = cash / price
-        const maxCoin = price > 0 ? cash / price : 0;
-        setValue(maxCoin.toFixed(6));
+      if (inputMode === "FIAT") setValue(cash.toString());
+      else {
+        const max = effectivePrice > 0 ? cash / effectivePrice : 0;
+        setValue(max.toFixed(6));
       }
     } else {
-      // SELL mode: find how much of this coin the user owns
-      const holding = portfolio.find((p) => p.coinId === coinId);
+      const holding = holdings.find((h) => h.coinId === coinId);
       const owned = Number(holding?.amountOwned || 0);
-
-      if (inputMode === "CRYPTO") {
-        setValue(owned.toString());
-      } else {
-        const maxCad = owned * price;
-        setValue(maxCad.toFixed(2));
+      if (inputMode === "CRYPTO") setValue(owned.toString());
+      else {
+        const maxUsd = owned * effectivePrice;
+        setValue(maxUsd.toFixed(2));
       }
     }
   }
 
+  // Submit
   async function submitOrder() {
     setSubmitting(true);
     setMsg("");
 
-    // Basic validation
     if (!coinId || !symbol) {
       setMsg("No coin selected.");
       setSubmitting(false);
@@ -138,18 +137,57 @@ export default function TradeSidePanel() {
       return;
     }
 
+    const amountCoins = cryptoAmount;
+    if (amountCoins <= 0) {
+      setMsg("Amount is too small.");
+      setSubmitting(false);
+      return;
+    }
+
+    if (orderKind === "LIMIT" && (!limitPrice || limitPriceNum <= 0)) {
+      setMsg("Enter a valid limit price.");
+      setSubmitting(false);
+      return;
+    }
+
+    if (mode === "BUY") {
+      const needed = amountCoins * effectivePrice;
+      if (needed > cash) {
+        setMsg("Not enough cash.");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    if (mode === "SELL") {
+      const holding = holdings.find((h) => h.coinId === coinId);
+      const owned = Number(holding?.amountOwned || 0);
+      if (!holding || owned <= 0) {
+        setMsg("You do not own this coin.");
+        setSubmitting(false);
+        return;
+      }
+      if (amountCoins > owned) {
+        setMsg("Not enough coins.");
+        setSubmitting(false);
+        return;
+      }
+    }
+
     try {
-      const res = await fetch("/api/simulator/orders/postOrder", {
+      const body = {
+        coinId,
+        coinSymbol: symbol,
+        amount: amountCoins,
+        orderType: mode,
+        orderKind,
+        price: orderKind === "LIMIT" ? limitPriceNum : undefined,
+      };
+
+      const res = await fetch("/api/simulator/orders/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          coinId,               // ex: "bitcoin"
-          tradeSymbol: symbol,  // ex: "BTCUSDT" or "BTC"
-          quantity: cryptoAmount,
-          orderKind: "market",
-          orderSell: mode.toLowerCase(), // "buy" or "sell"
-          price,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
@@ -157,11 +195,11 @@ export default function TradeSidePanel() {
       if (!res.ok) {
         setMsg(data.error || "Order failed.");
       } else {
-        setMsg(`${mode} order placed.`);
+        setMsg(`${orderKind} ${mode} order placed.`);
         setValue("");
+        if (orderKind === "MARKET") setLimitPrice("");
       }
     } catch (err) {
-      console.error("Order error:", err);
       setMsg("Network error while placing order.");
     } finally {
       setSubmitting(false);
@@ -169,85 +207,87 @@ export default function TradeSidePanel() {
   }
 
   if (loading) {
-    return (
-      <div className="text-white/60 text-sm">
-        Loading…
-      </div>
-    );
-  }
-
-  // If user has no portfolio yet
-  if (!portfolio.length) {
-    return (
-      <div className="text-white/70 text-sm">
-        You don&apos;t own any coins yet.  
-        Go to a coin page to place your first BUY order.
-      </div>
-    );
+    return <div className="text-white/60 text-sm">Loading trading panel…</div>;
   }
 
   return (
     <div className="flex flex-col h-full text-white space-y-6">
-
-      {/* Title */}
       <h2 className="text-xl font-bold text-center text-yellow-400">
         Trade
       </h2>
 
-      {/* BUY / SELL tabs */}
+      {/* BUY / SELL */}
       <div className="flex bg-white/5 rounded-md overflow-hidden">
-        {["BUY", "SELL"].map((tab) => (
+        {["BUY", "SELL"].map((t) => (
           <button
-            key={tab}
-            onClick={() => setMode(tab as "BUY" | "SELL")}
-            className={`flex-1 py-2 text-sm font-semibold transition
-              ${mode === tab ? "bg-yellow-400 text-black" : "text-white/60 hover:bg-white/10"}
-            `}
+            key={t}
+            onClick={() => {
+              setMode(t as "BUY" | "SELL");
+              setMsg("");
+            }}
+            className={`flex-1 py-2 text-sm font-semibold ${mode === t
+                ? "bg-yellow-400 text-black"
+                : "text-white/60 hover:bg-white/10"
+              }`}
           >
-            {tab}
+            {t}
           </button>
         ))}
       </div>
 
-      {/* Coin selector */}
+      {/* MARKET / LIMIT */}
+      <div className="flex bg-white/5 rounded-md overflow-hidden">
+        {["MARKET", "LIMIT"].map((k) => (
+          <button
+            key={k}
+            onClick={() => setOrderKind(k as "MARKET" | "LIMIT")}
+            className={`flex-1 py-1.5 text-xs font-semibold ${orderKind === k
+                ? "bg-yellow-400 text-black"
+                : "text-white/60 hover:bg-white/10"
+              }`}
+          >
+            {k}
+          </button>
+        ))}
+      </div>
+
+      {orderKind === "LIMIT" && (
+        <div>
+          <p className="text-xs text-slate-400 mb-1">Limit price (USD)</p>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={limitPrice}
+            onChange={(e) => setLimitPrice(e.target.value)}
+            className="w-full bg-[#0e1117] border border-white/10 rounded-xl px-3 py-2 text-sm outline-none"
+          />
+        </div>
+      )}
+
+      {/* Select coin */}
       <div>
         <p className="text-xs text-slate-400 mb-1">Select Coin</p>
-
         <div className="relative">
           <select
-            className="
-              appearance-none
-              w-full bg-[#0e1117] border border-white/10 rounded-xl
-              px-10 py-3 text-sm
-            "
+            className="appearance-none w-full bg-[#0e1117] border border-white/10 rounded-xl px-10 py-3 text-sm"
             value={coinId}
             onChange={(e) => {
-              const selected = portfolio.find(
-                (c) => c.coinId === e.target.value
-              );
-
-              if (!selected) {
-                console.warn("Selected coin not found in portfolio");
-                return;
-              }
-
-              setCoinId(selected.coinId);
-              setSymbol(selected.coinSymbol);
+              const found = holdings.find((h) => h.coinId === e.target.value);
+              setCoinId(e.target.value);
+              setSymbol(found?.coinSymbol || symbol);
             }}
           >
-            {portfolio.map((item) => (
-              <option key={item.coinId} value={item.coinId}>
-                {item.coinSymbol}
+            {holdings.map((h) => (
+              <option key={h.coinId} value={h.coinId}>
+                {h.coinSymbol}
               </option>
             ))}
           </select>
 
-          {/* Custom arrow */}
           <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-white/40">
             ▼
           </div>
 
-          {/* Coin logo */}
           {logoUrl && (
             <Image
               src={logoUrl}
@@ -260,47 +300,34 @@ export default function TradeSidePanel() {
         </div>
       </div>
 
-      {/* Big centered input */}
+      {/* Amount input */}
       <div className="mt-1 flex flex-col items-center">
         <span className="text-[10px] tracking-[0.25em] text-slate-500 uppercase">
-          {inputMode === "FIAT" ? "CA$" : symbol}
+          {inputMode === "FIAT" ? "USD" : symbol}
         </span>
-
         <input
-          type="text"              
-          inputMode="decimal"     
+          type="text"
+          inputMode="decimal"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="0"
-          className="
-            w-full bg-transparent text-center text-5xl font-semibold
-            outline-none text-white py-3
-          "
+          className="w-full bg-transparent text-center text-5xl font-semibold outline-none text-white py-3"
         />
       </div>
 
-      {/* Quick amount buttons */}
+      {/* MAX */}
       <div className="flex justify-center gap-3 mt-3">
         {mode === "BUY" ? (
           <>
-            <button
-              onClick={() => setValue("20")}
-              className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
-            >
-              CA$20
-            </button>
-            <button
-              onClick={() => setValue("50")}
-              className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
-            >
-              CA$50
-            </button>
-            <button
-              onClick={() => setValue("100")}
-              className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
-            >
-              CA$100
-            </button>
+            {[20, 50, 100].map((usd) => (
+              <button
+                key={usd}
+                onClick={() => setValue(usd.toString())}
+                className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
+              >
+                USD{usd}
+              </button>
+            ))}
             <button
               onClick={handleMax}
               className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
@@ -318,22 +345,24 @@ export default function TradeSidePanel() {
         )}
       </div>
 
-      {/* CAD / Coin toggle */}
+      {/* Toggle USD/coin */}
       <div className="flex gap-2 text-xs">
         <button
           onClick={() => setInputMode("FIAT")}
-          className={`flex-1 py-2 rounded-md 
-            ${inputMode === "FIAT" ? "bg-yellow-400 text-black" : "bg-white/10 text-white/60"}
-          `}
+          className={`flex-1 py-2 rounded-md ${inputMode === "FIAT"
+              ? "bg-yellow-400 text-black"
+              : "bg-white/10 text-white/60"
+            }`}
         >
-          CAD
+          USD
         </button>
 
         <button
           onClick={() => setInputMode("CRYPTO")}
-          className={`flex-1 py-2 rounded-md 
-            ${inputMode === "CRYPTO" ? "bg-yellow-400 text-black" : "bg-white/10 text-white/60"}
-          `}
+          className={`flex-1 py-2 rounded-md ${inputMode === "CRYPTO"
+              ? "bg-yellow-400 text-black"
+              : "bg-white/10 text-white/60"
+            }`}
         >
           {symbol}
         </button>
@@ -343,22 +372,22 @@ export default function TradeSidePanel() {
       <p className="text-xs text-center text-slate-400">
         {inputMode === "FIAT"
           ? `≈ ${cryptoAmount.toFixed(6)} ${symbol}`
-          : `≈ $${fiatAmount.toFixed(2)} CAD`}
+          : `≈ $${fiatAmount.toFixed(2)} USD`}
       </p>
 
-      {/* Submit button */}
+      {/* Submit */}
       <button
         onClick={submitOrder}
         disabled={submitting}
         className="w-full py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300 disabled:opacity-60"
       >
-        {submitting ? "Processing…" : `${mode} ${symbol}`}
+        {submitting
+          ? "Processing…"
+          : `${mode} ${symbol} (${orderKind.toLowerCase()})`}
       </button>
 
       {msg && (
-        <p className="text-xs text-center text-yellow-300 mt-1">
-          {msg}
-        </p>
+        <p className="text-xs text-center text-yellow-300 mt-1">{msg}</p>
       )}
     </div>
   );

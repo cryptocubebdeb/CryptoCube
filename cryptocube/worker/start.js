@@ -1,5 +1,5 @@
 import { PrismaClient, OrderStatus } from "@prisma/client";
-import { orderWorkerManager } from "./orderWorkerManager.js";
+import { orderWorkerManager } from "./workerManager.js";
 
 const prismaClient = new PrismaClient();
 

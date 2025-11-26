@@ -104,7 +104,7 @@ model SimulatorAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  portfolio Portfolio[]
+  portfolio Portfolio[] //The full portfolio contains multiple of rows for each coin brought by the user 
   orders    Order[]
   trades    TradeHistory[]
 }
@@ -131,16 +131,17 @@ model Order {
   simulatorAccountId Int
   simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
 
-  coinId     String  //Bitcoin
-  coinSymbol String   //BTC
+  coinId     String
+  coinSymbol String
   orderType  TradeType
   orderKind  OrderKind
-  amount     Decimal     @db.Decimal(38, 18)
-  price      Decimal?    @db.Decimal(18, 8)
-  status     OrderStatus @default(PENDING)
+  amount     Decimal        @db.Decimal(38, 18)
+  price      Decimal?       @db.Decimal(18, 8)
+  status     OrderStatus    @default(PENDING)
 
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime       @default(now())
   executedAt DateTime?
+  executedPrice Decimal?    @db.Decimal(18, 8)   // <-- ADD THIS
 
   trades TradeHistory[]
 
@@ -149,6 +150,7 @@ model Order {
 
   @@index([coinSymbol])
 }
+
 
 
 model OrderBook {
