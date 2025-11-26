@@ -10,6 +10,7 @@ import CoinMarkets from "../../components/SpecificCoin/CoinMarkets";
 import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
 import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
 import BuySection from "../../components/SpecificCoin/BuySection";
+import LiveBinanceTrades from "../../components/SpecificCoin/LiveBinanceTrades";
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -109,15 +110,17 @@ export default async function Page({
 
     return (
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
-            <div className="flex flex-1 justify-center w-full">
+            <div className="flex flex-1 justify-center w-full pt-10">
                 {/* Main container */}
-                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start">
+                <div className="w-full max-w-[1600px] xl:px-8 flex items-start gap-10">
 
                     {/* Right column - details */}
-                    <div className="flex-[0.27] text-white p-8 text-xl rounded-[2px] shadow-md border-r border-white/20">
+                    <div className="basis-[360px] shrink-0 text-white text-xl rounded-[2px] shadow-md border-r border-white/20 pr-6">
+
+
 
                         {/* Crypto Name and Logo */}
-                        <div className="flex items-center gap-4 p-4">
+                        <div className="flex items-center gap-4 ">
                             {logo && (
                                 <Image
                                     src={logo}
@@ -152,8 +155,8 @@ export default async function Page({
 
                         {/*------------- Buy Section -------------*/}
                         <BuySection
-                            coinId={id}                     
-                            symbol={coinData?.symbol.toUpperCase()} 
+                            coinId={id}
+                            symbol={coinData?.symbol.toUpperCase()}
                             price={currentPrice}
                             logo={logo}
                         />
@@ -301,7 +304,7 @@ export default async function Page({
                     </div>
 
                     {/* Left column - chart + risk analysis */}
-                    <div className="flex-[0.73] flex flex-col gap-6 pl-6">
+                    <div className="flex-1 flex flex-col gap-6">
 
                         {/* Chart container */}
                         <div className="text-white rounded-[4px] shadow-md relative">
@@ -309,6 +312,8 @@ export default async function Page({
                                 <CoinChart coinId={id} currency="usd" />
                             </div>
                         </div>
+
+
 
                         {/* Extra coin fundamentals */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
@@ -326,6 +331,9 @@ export default async function Page({
                             </div>
                         </div>
 
+                        {/* Live Binance Trades */}
+                        <LiveBinanceTrades symbol={symbol.toUpperCase()} />
+
                         {/* ------------- Description ------------- */}
                         <div className="mt-8">
                             <div className="flex items-baseline justify-between mb-3">
@@ -334,20 +342,20 @@ export default async function Page({
                                 {/* ------------- Website ------------- */}
                                 <div className="flex flex-wrap gap-3 mt-6 text-sm">
                                     {coinData?.links?.subreddit_url && (
-                                            <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                                Reddit
-                                            </a>
-                                        )}
-                                        {coinData?.links?.repos_url?.github?.[0] && (
-                                            <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                                GitHub
-                                            </a>
-                                        )}
-                                        {coinData?.links?.homepage?.[0] && (
-                                            <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                                Site
-                                            </a>
-                                        )}
+                                        <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            Reddit
+                                        </a>
+                                    )}
+                                    {coinData?.links?.repos_url?.github?.[0] && (
+                                        <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            GitHub
+                                        </a>
+                                    )}
+                                    {coinData?.links?.homepage?.[0] && (
+                                        <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                            Site
+                                        </a>
+                                    )}
                                 </div>
                             </div>
 
