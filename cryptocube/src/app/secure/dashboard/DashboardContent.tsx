@@ -14,9 +14,6 @@ export default function DashboardContent() {
 
   return (
     <>
-      {/* Search Bar */}
-      {/* <SearchBar /> */}
-
       <div
           style={{
               borderRadius: '20px',
@@ -31,7 +28,8 @@ export default function DashboardContent() {
               marginLeft: 'auto',
               marginRight: 'auto',
               width: '90%',
-              height: '500px'
+              height: '500px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
           }}
       >
           <Typography variant="h4"
@@ -50,7 +48,7 @@ export default function DashboardContent() {
 
           <Button
                 variant="outlined"
-                href="/secure/simulator"
+                href="/secure/simulator/accueil"
                 sx={{
                     mt: 5,
                     mb: 1,
@@ -103,6 +101,7 @@ export default function DashboardContent() {
               display: 'flex',
               flexDirection: 'column',
               textAlign: 'center',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
@@ -122,11 +121,12 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '400px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-        Top des hausses du jour
-      </Typography>
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+              Top des hausses du jour
+            </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
@@ -151,6 +151,7 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '435px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
@@ -169,11 +170,12 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '285px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-        Top des baisses du jour
-      </Typography>
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+              Top des baisses du jour
+            </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
                 <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PortfolioChart from "../../components/Portfolio/PortfolioChart";
+import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
 
 export default function HomeSection() {
   // Store user's current cash balance

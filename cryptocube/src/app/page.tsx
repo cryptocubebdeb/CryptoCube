@@ -10,7 +10,7 @@ export default function Page() {
       <Navbar />
       <div
         style={{
-          backgroundImage: "url('images/landingpagebg.png')",
+          backgroundImage: "url('images/landingbg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

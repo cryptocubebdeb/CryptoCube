@@ -147,7 +147,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
         <Link href="/secure/dashboard" className="font-bold text-2xl">
-          CryptoCube
+          Crypto<span className="text-yellow-400">Cube</span>
         </Link>
 
         <ul className="flex flex-row items-center gap-6 ">
