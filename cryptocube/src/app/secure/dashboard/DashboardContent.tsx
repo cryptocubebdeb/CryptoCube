@@ -48,7 +48,7 @@ export default function DashboardContent() {
 
           <Button
                 variant="outlined"
-                href="/secure/simulator"
+                href="/secure/simulator/accueil"
                 sx={{
                     mt: 5,
                     mb: 1,

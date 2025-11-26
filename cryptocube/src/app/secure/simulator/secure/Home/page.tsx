@@ -1,4 +1,4 @@
-import PortfolioChart from "../../components/Portfolio/PortfolioChart";
+import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
 
 export default function SimulatorHome() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react"
-import Toolbar from "../components/Portfolio/Toolbar"
+import Toolbar from "../../components/Portfolio/Toolbar"
 
 const sectionsIds = ["home", "wallet", "search", "percent", "activity"];
 
