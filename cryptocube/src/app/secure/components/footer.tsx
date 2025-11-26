@@ -11,7 +11,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
           <div className="flex-1">
-            <Link href="/" className="font-bold text-xl block mt-7">CryptoCube</Link>
+            <Link href="/" className="font-bold text-xl block mt-7">Crypto<span className="text-yellow-400">Cube</span></Link>
           </div>
 
           <div className="flex-1 flex justify-between">

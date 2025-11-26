@@ -57,7 +57,7 @@ export default function SimulateurAccueil()
                 } 
             }}
         >
-            Créer un portfolio dans le simulateur
+            Créer un portfolio
         </Button>
     </div> 
   </>
