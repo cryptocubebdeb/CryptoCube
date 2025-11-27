@@ -8,67 +8,99 @@ import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
 import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
+import HomeSection from "../simulator/secure/components/HomeSection";
+import { useEffect, useState } from 'react';
+import { set } from 'lodash';
 
 export default function DashboardContent() {
   const { data: session } = useSession();
+  const [hasPortfolio, setHasPortfolio] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // --- Check if user has a portfolio ---
+  useEffect(() => {
+    async function checkPortfolio() {
+      try {
+        const res = await fetch("/api/simulator/portfolio");
+        const data = await res.json();
+        // Portfolio existe si data != null
+        setHasPortfolio(data && typeof data.cash !== "undefined");
+      } catch {
+        setHasPortfolio(false);
+      }
+      setLoading(false);
+    }
+    checkPortfolio();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white">
+        Chargement...
+      </div>
+    );
+  }
 
   return (
     <>
       <div
-          style={{
-              borderRadius: '20px',
-              padding: '16px',
-              backgroundColor: '#141418ff',
-              textAlign: 'center',
-              flexDirection: 'column',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '32px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              width: '90%',
-              height: '500px',
-              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
-          }}
+        style={{
+          borderRadius: '20px',
+          padding: '16px',
+          backgroundColor: '#141418ff',
+          textAlign: 'center',
+          flexDirection: 'column',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '32px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          width: '90%',
+          height: '500px',
+          boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
+        }}
       >
-          <Typography variant="h4"
+        {hasPortfolio ? (
+          <HomeSection />
+        ) : (
+          <>
+            <Typography variant="h4"
               sx={{ mb: '30px', fontWeight: 'bold' }}
-        >
-              Jouez vos pièces. Dominez le marché.
-          </Typography>
-
-          <Typography variant="h6" sx={{ mt: 2 }}>
-              Essayez dès maintenant notre simulateur gratuit de trading crypto.
-          </Typography>
-
-          <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
-               Sans portefeuille. Sans risque.
-          </Typography>
-
-          <Button
-                variant="outlined"
-                href="/secure/simulator/accueil"
-                sx={{
-                    mt: 5,
-                    mb: 1,
-                    padding: '16px 40px',
-                    borderRadius: '15px',
-                    borderColor: '#FFDD00',
-                    borderWidth: '1.5px',
-                    color: '#FFDD00',
-                    fontWeight: 'bold',
-                    transition: 'all 0.3s ease',
-                    '&:hover': { 
-                        backgroundColor: '#e6c200', 
-                        color: 'black',
-                        borderColor: '#e6c200',
-                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
-                    } 
-                }}
             >
-                Essayez le simulateur
+              Jouez vos pièces. Dominez le marché.
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 2 }}>
+              Essayez dès maintenant notre simulateur gratuit de trading crypto.
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
+              Sans portefeuille. Sans risque.
+            </Typography>
+            <Button
+              variant="outlined"
+              href="/secure/simulator/accueil"
+              sx={{
+                mt: 5,
+                mb: 1,
+                padding: '16px 40px',
+                borderRadius: '15px',
+                borderColor: '#FFDD00',
+                borderWidth: '1.5px',
+                color: '#FFDD00',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: '#e6c200',
+                  color: 'black',
+                  borderColor: '#e6c200',
+                  boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                }
+              }}
+            >
+              Essayez le simulateur
             </Button>
+          </>
+        )}
       </div>
 
       <div
@@ -105,11 +137,10 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
-                Aperçu du marché
+              Aperçu du marché
             </Typography>
-
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <MarketOverviewGauges />
+              <MarketOverviewGauges />
             </Box>
           </div>
 
@@ -128,7 +159,7 @@ export default function DashboardContent() {
               Top des hausses du jour
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
-                <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
+              <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
           </div>
         </div>
@@ -155,10 +186,10 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
-                Nouvelles de la journée
+              Nouvelles de la journée
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
-                <DailyNews /> {/* Dans components/DailyNews.tsx */}
+              <DailyNews /> {/* Dans components/DailyNews.tsx */}
             </Box>
           </div>
 
@@ -177,7 +208,7 @@ export default function DashboardContent() {
               Top des baisses du jour
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
-                <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
+              <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>
           </div>
         </div>
@@ -192,10 +223,11 @@ export default function DashboardContent() {
             backgroundColor: '#141418ff',
             borderRadius: '16px',
             padding: '24px',
-          }}>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: '24px'
           }}>
@@ -221,7 +253,6 @@ export default function DashboardContent() {
               Voir plus
             </Button>
           </div>
-
           <WatchlistCarousel />
         </div>
       )}

@@ -37,7 +37,7 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
   return (
     <>
       {/* Left sidebar */}
-      <Toolbar activeSection={activeSection} />
+      <Toolbar activeSection={activeSection}/>
 
       {/* Main content */}
       <main className="min-h-screen ml-20 mr-[360px] pt-[20px] p-8">
@@ -45,7 +45,7 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
       </main>
 
       {/* Right panel */}
-      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[#15171E] p-6 mr-5 border-l border-[#23252c] overflow-y-auto">
+      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[#15171E] p-6 mr-5 border-l border-[#23252c] overflow-y-auto mt-2">
         <TradeSidePanel />
       </aside>
 
