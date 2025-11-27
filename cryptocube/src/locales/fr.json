@@ -21,5 +21,77 @@
     "statTransactions": "transactions analysées",
 
     "join": "Rejoignez CryptoCube aujourd'hui et transformez votre expérience crypto."
-  }
+  },
+
+  "settings": {
+    "title": "Mes Paramètres",
+    "loading": "Chargement...",
+    "mustLogin": "Veuillez vous connecter pour accéder à vos paramètres",
+    "language": "Langue"
+  },
+  "dashboard": {
+  "playAndDominate": "Jouez vos pièces. Dominez le marché.",
+  "trySimulator": "Essayez dès maintenant notre simulateur gratuit de trading crypto.",
+  "noRisk": "Sans portefeuille. Sans risque.",
+  "marketOverview": "Aperçu du marché",
+  "topGainers": "Top des hausses du jour",
+  "dailyNews": "Nouvelles de la journée",
+  "topLosers": "Top des baisses du jour",
+  "watchlist": "Liste de suivi",
+  "viewMore": "Voir plus",
+  "heroTitle": "Naviguez dans le monde de la cryptomonnaie en toute simplicité.",
+  "heroSubtitle": "Simple. Rapide. Transparent.",
+  "trySimulatorButton": "Essayez le simulateur"
+},
+"gauges": {
+  "loading": "Chargement des données du marché...",
+  "sentiment": "Sentiment du marché",
+  "globalMarket": "Marché global",
+  "growth": "En croissance",
+  "decline": "En repli",
+  "stable": "Stable"
+},
+"coinsPage": {
+  "heroTitle": "Naviguez dans le monde de la cryptomonnaie en toute simplicité.",
+  "heroSubtitle": "Simple. Rapide. Transparent.",
+  "explorePlaceholder": "Explorer les cryptos...",
+  
+  "loading": "Chargement des données...",
+  "noResults": "Aucun résultat trouvé",
+  "noData": "Pas encore de données",
+
+  "marketCap": "Capitalisation",
+  "volume24h": "Volume (24h)",
+  "topGainers": "Top 3 Gagnants (24h)",
+  "topVolume": "Top 3 par Volume (24h)",
+
+  "tabs": {
+    "all": "Tout",
+    "mostTraded": "Plus échangées",
+    "winners": "Gagnants"
+  },
+
+  "filters": "Filtres",
+  "refresh": "Rafraîchir",
+
+  "cryptoListAll": "Liste des cryptomonnaies",
+  "cryptoListMostTraded": "Cryptomonnaies les plus échangées",
+  "cryptoListWinners": "Top gagnants (24h)"
+},
+"coinsTable": {
+  "name": "Nom",
+  "price": "Prix",
+  "oneHour": "1h",
+  "twentyFourHours": "24h",
+  "sevenDays": "7j",
+  "marketCap": "Capitalisation",
+  "last7days": "Derniers 7 jours",
+  "noData": "Aucune donnée disponible"
+}
+
+
+
+
+  
+  
 }

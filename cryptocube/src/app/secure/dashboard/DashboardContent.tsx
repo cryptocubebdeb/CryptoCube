@@ -1,4 +1,6 @@
 "use client"
+
+import { useTranslation } from "react-i18next";
 import { useSession } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,6 +12,7 @@ import DailyNews from '../components/Dashboard/DailyNews';
 import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
 
 export default function DashboardContent() {
+  const { t } = useTranslation();
   const { data: session } = useSession();
 
   return (
@@ -34,19 +37,17 @@ export default function DashboardContent() {
               height: '500px'
           }}
       >
-          <Typography variant="h4"
-              sx={{ mb: '30px', fontWeight: 'bold' }}
-        >
-              Jouez vos pièces. Dominez le marché.
-          </Typography>
+          <Typography variant="h4" sx={{ mb: '30px', fontWeight: 'bold' }}>
+          {t("dashboard.playAndDominate")}
+        </Typography>
 
-          <Typography variant="h6" sx={{ mt: 2 }}>
-              Essayez dès maintenant notre simulateur gratuit de trading crypto.
-          </Typography>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          {t("dashboard.trySimulator")}
+        </Typography>
 
-          <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
-               Sans portefeuille. Sans risque.
-          </Typography>
+        <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
+          {t("dashboard.noRisk")}
+        </Typography>
 
           <Button
                 variant="outlined"
@@ -69,7 +70,7 @@ export default function DashboardContent() {
                     } 
                 }}
             >
-                Essayez le simulateur
+                 {t("dashboard.trySimulatorButton")}
             </Button>
       </div>
 
@@ -106,7 +107,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
-                Aperçu du marché
+                {t("dashboard.marketOverview")}
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -125,7 +126,7 @@ export default function DashboardContent() {
             }}
           >
       <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-        Top des hausses du jour
+         {t("dashboard.topGainers")}
       </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
@@ -154,7 +155,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
-                Nouvelles de la journée
+                {t("dashboard.dailyNews")}
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <DailyNews /> {/* Dans components/DailyNews.tsx */}
@@ -172,7 +173,7 @@ export default function DashboardContent() {
             }}
           >
       <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-        Top des baisses du jour
+        {t("dashboard.topLosers")}
       </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
                 <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
@@ -198,7 +199,7 @@ export default function DashboardContent() {
             marginBottom: '24px'
           }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
-              Liste de suivi
+              {t("dashboard.watchlist")}
             </Typography>
             <Button
               variant="outlined"
@@ -216,7 +217,7 @@ export default function DashboardContent() {
                 }
               }}
             >
-              Voir plus
+              {t("dashboard.viewMore")}
             </Button>
           </div>
 

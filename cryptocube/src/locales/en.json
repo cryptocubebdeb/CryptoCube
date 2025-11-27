@@ -21,5 +21,74 @@
     "statTransactions": "analyzed transactions",
 
     "join": "Join CryptoCube today and transform your crypto experience."
-  }
+  },
+
+  "settings": {
+    "title": "My Settings",
+    "loading": "Loading...",
+    "mustLogin": "Please log in to access your settings",
+    "language": "Language"
+  },
+  "dashboard": {
+  "playAndDominate": "Play your coins. Dominate the market.",
+  "trySimulator": "Try our free crypto trading simulator now.",
+  "noRisk": "No wallet. No risk.",
+  "marketOverview": "Market Overview",
+  "topGainers": "Top Gainers of the Day",
+  "dailyNews": "Daily News",
+  "topLosers": "Top Losers of the Day",
+  "watchlist": "Watchlist",
+  "viewMore": "View more",
+  "heroTitle": "Navigate the world of cryptocurrency with ease.",
+  "heroSubtitle": "Simple. Fast. Transparent.",
+  "trySimulatorButton": "Try the simulator"
+},
+"gauges": {
+  "loading": "Loading market data...",
+  "sentiment": "Market Sentiment",
+  "globalMarket": "Global Market",
+  "growth": "Growing",
+  "decline": "Declining",
+  "stable": "Stable"
+},
+"coinsPage": {
+  "heroTitle": "Navigate the world of cryptocurrency with ease.",
+  "heroSubtitle": "Simple. Fast. Transparent.",
+  "explorePlaceholder": "Explore cryptos...",
+
+  "loading": "Loading data...",
+  "noResults": "No results found",
+  "noData": "No data yet",
+
+  "marketCap": "Market Cap",
+  "volume24h": "24h Volume",
+  "topGainers": "Top 3 Gainers (24h)",
+  "topVolume": "Top 3 by Volume (24h)",
+
+  "tabs": {
+    "all": "All",
+    "mostTraded": "Most Traded",
+    "winners": "Winners"
+  },
+
+  "filters": "Filters",
+  "refresh": "Refresh",
+
+  "cryptoListAll": "Cryptocurrency List",
+  "cryptoListMostTraded": "Most Traded Cryptos",
+  "cryptoListWinners": "Top Winners (24h)"
+},
+"coinsTable": {
+  "name": "Name",
+  "price": "Price",
+  "oneHour": "1h",
+  "twentyFourHours": "24h",
+  "sevenDays": "7d",
+  "marketCap": "Market Cap",
+  "last7days": "Last 7 days",
+  "noData": "No data available"
+}
+
+
+
 }
