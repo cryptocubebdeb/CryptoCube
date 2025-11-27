@@ -15,7 +15,7 @@ export function buildSparklinePoints(values: number[], width = 120, height = 60,
   //Transformer chaque valeur en un point (x,y)
     .map((value, index) => {
       const x = (index / (values.length - 1)) * (width - padding * 2) + padding;
-      const normalized = (value - min) / range; // 0..1
+      const normalized = (value - min) / range; //Pour normaliser entre 0 et 1
       const y = height - (normalized * (height - padding * 2) + padding); // flip Y
       return `${x},${y}`;
     })

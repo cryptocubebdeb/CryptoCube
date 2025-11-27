@@ -1,10 +1,14 @@
 // src/app/page.tsx
+"use client";
 
+import "../i18n";
+import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/secure/components/navbar";
 
 export default function Page() {
+  const { t } = useTranslation();
   return (
     <>
       <Navbar />
@@ -19,20 +23,22 @@ export default function Page() {
         className="h-screen flex flex-col justify-start items-center space-y-6"
       >
         <h1 className="text-8xl mt-50 mb-15 font-bold text-center">
-          Crypto<span className="text-yellow-400">Cube</span>
+          {t("landing.title")}<span className="text-yellow-400">Cube</span>
         </h1>
 
-        <h2 className="text-5xl text-center">Ne te contente pas de suivre la crypto</h2>
-        <h2 className="text-5xl text-center underline text-yellow-500 mb-10">Décode-la.</h2>
+        <h2 className="text-5xl text-center">{t("landing.subtitle1")}</h2>
+        <h2 className="text-5xl text-center underline text-yellow-500 mb-10">
+          {t("landing.subtitle2")}
+        </h2>
 
         <h3 className="text-2xl text-center max-w-5xl px-4 mb-10">
-          CryptoCube t&apos;aide à repérer les risques, à analyser les tendances et à prendre des décisions plus éclairées sur le marché.
+          {t("landing.description")}
         </h3>
 
         {/* Redirectioner vers sign up si pas connecté, et vers dashboard si connecté */}
         <Link href="/auth/signup">
           <button className="text-2xl bg-yellow-400 px-10 py-5 text-black rounded-md font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-yellow-700/70 hover:shadow-lg cursor-pointer">
-            Commencer maintenant
+            {t("landing.ctaStart")}
           </button>
         </Link>
 
@@ -43,15 +49,16 @@ export default function Page() {
         >
           <div className="ml-60">
             <h2 className="text-5xl text-left mb-15 font-semibold">
-              Gardez un oeuil
+              {t("landing.trendTitle1")}
             </h2>
 
             <h2 className="text-5xl text-left ml-30 mb-15 font-semibold">
-              sur les <span className="text-yellow-400">cryptos</span> les
+              {t("landing.trendTitle2")}{" "}
+              <span className="text-yellow-400">{t("landing.trendHighlighted")}</span>
             </h2>
 
             <h2 className="text-5xl text-left mb-15 font-semibold">
-              plus en vue du marché
+              {t("landing.trendTitle3")}
             </h2>
           </div>
          
@@ -65,7 +72,10 @@ export default function Page() {
         </div>
 
         <h2 className="w-10/12 text-5xl text-center mt-50 mb-15 leading-relaxed font-semibold">
-          Boostez vos compétences en testant votre stratégie dans un <span className="text-yellow-400">simulateur de portefeuille.</span>
+          {t("landing.simulatorTitle").split("simulateur")[0]}
+          <span className="text-yellow-400">
+            {t("landing.simulatorTitle").split("simulateur")[1]}
+          </span>
         </h2>
 
         <Image
@@ -81,7 +91,7 @@ export default function Page() {
 
         <div className="flex flex-row w-full justify-center items-center mt-50">
           <h2 className="text-5xl italic text-center leading-relaxed font-semibold mr-10">
-            Les chiffres ne trompent jamais.
+            {t("landing.quote")}
           </h2>
 
           <hr className="border-t-4 rounded-md border-yellow-400 w-full max-w-3xl opacity-30" />
@@ -95,7 +105,8 @@ export default function Page() {
             className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
           >
             <h2 className="text-7xl text-center font-semibold">
-              2500+ <br/> <span className="text-4xl">investisseurs <br/> satisfaits</span>
+              2500+ <br />
+              <span className="text-4xl">{t("landing.statInvestors")}</span>
             </h2>
           </div>
 
@@ -106,7 +117,8 @@ export default function Page() {
             className="bg-zinc-900 self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
           >
             <h2 className="text-7xl text-center font-semibold">
-              $12M+ <br/> <span className="text-4xl">dans des portefeuilles sécurisés</span>
+              $12M+ <br />
+              <span className="text-4xl">{t("landing.statPortfolios")}</span>
             </h2>
           </div>
 
@@ -117,14 +129,17 @@ export default function Page() {
             className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
           >
             <h2 className="text-7xl text-center font-semibold">
-              50,000+<br/> <span className="text-4xl">transactions <br/> analysées</span>
+              50,000+ <br />
+              <span className="text-4xl">{t("landing.statTransactions")}</span>
             </h2>
           </div>
         </div>
         
         <Link href="/auth/signup">
           <h2 className="text-4xl text-center mt-90 mb-15 font-semibold hover:underline hover:scale-105 transform transition-all duration-200">
-            Rejoignez <span className="text-yellow-400">CryptoCube</span> aujourd&apos;hui et transformez votre expérience crypto.
+            {t("landing.join").split("CryptoCube")[0]}
+            <span className="text-yellow-400">CryptoCube</span>
+            {t("landing.join").split("CryptoCube")[1]}
           </h2>
         </Link>
        

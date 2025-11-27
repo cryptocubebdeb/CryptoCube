@@ -2,6 +2,7 @@
 
 import Sidebar from "../../components/Sidebar"
 import { useSession } from "next-auth/react"
+import LanguageSelector from "../../components/LanguageSelector"
 
 export default function Page() {
   const { data: session, status } = useSession()
@@ -33,8 +34,13 @@ export default function Page() {
       {/* Main Content Area */}
       <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
         <h2 className="title">Mes Paramètres</h2>
+       
+        <div className="mt-10 ml-10">
+          <h3 className="text-2xl mt-20 mb-6">Langue</h3>
+          <LanguageSelector />
+        </div>
 
-        {/* Language + Light/Dark mode*/}
+        {/*Light/Dark mode*/}
       </main>
     </div>
   )

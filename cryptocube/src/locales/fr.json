@@ -1,0 +1,25 @@
+{
+  "landing": {
+    "title": "CryptoCube",
+    "subtitle1": "Ne te contente pas de suivre la crypto",
+    "subtitle2": "Décode-la.",
+    "description": "CryptoCube t'aide à repérer les risques, à analyser les tendances et à prendre des décisions plus éclairées sur le marché.",
+
+    "ctaStart": "Commencer maintenant",
+
+    "trendTitle1": "Gardez un oeil",
+    "trendTitle2": "sur les",
+    "trendHighlighted": "cryptos",
+    "trendTitle3": "les plus en vue du marché",
+
+    "simulatorTitle": "Boostez vos compétences en testant votre stratégie dans un simulateur de portefeuille.",
+
+    "quote": "Les chiffres ne trompent jamais.",
+
+    "statInvestors": "investisseurs satisfaits",
+    "statPortfolios": "dans des portefeuilles sécurisés",
+    "statTransactions": "transactions analysées",
+
+    "join": "Rejoignez CryptoCube aujourd'hui et transformez votre expérience crypto."
+  }
+}

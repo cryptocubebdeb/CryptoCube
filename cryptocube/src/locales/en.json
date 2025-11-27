@@ -1,0 +1,25 @@
+{
+  "landing": {
+    "title": "CryptoCube",
+    "subtitle1": "Don't just follow crypto",
+    "subtitle2": "Decode it.",
+    "description": "CryptoCube helps you spot risks, analyze trends and make better decisions on the market.",
+
+    "ctaStart": "Start now",
+
+    "trendTitle1": "Keep an eye",
+    "trendTitle2": "on the",
+    "trendHighlighted": "cryptos",
+    "trendTitle3": "that are shaping the market",
+
+    "simulatorTitle": "Boost your skills by testing your strategy in a portfolio simulator.",
+
+    "quote": "Numbers never lie.",
+
+    "statInvestors": "satisfied investors",
+    "statPortfolios": "in secured portfolios",
+    "statTransactions": "analyzed transactions",
+
+    "join": "Join CryptoCube today and transform your crypto experience."
+  }
+}
