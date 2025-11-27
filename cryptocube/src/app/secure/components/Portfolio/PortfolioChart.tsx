@@ -2,7 +2,7 @@
 import { useRef, useEffect, useState } from "react";
 import LineChart from "../../components/SpecificCoin/LineChart";
 
-export default function PortfolioChart() {
+export default function PortfolioChart({ width, height }: { width?: number; height?: number }) {
     const containerRef = useRef<HTMLDivElement>(null); //access to the container div wrapping the chart
     const [dimensions, setDimensions] = useState({ width: 1200, height: 500 }); //default dimensions
 
@@ -31,19 +31,18 @@ export default function PortfolioChart() {
         { x: Date.now(), y: 78200 },
     ];
 
+    const chartWidth = width ?? 0.95 * dimensions.width;
+    const chartHeight = height ?? dimensions.height;
+
     return (
         <div
             ref={containerRef}
             className="shadow-md w-full max-w-[1600px] mx-auto"
         >
-            <h2 className="text-2xl font-semibold mb-6 text-center">
-                Portfolio Value Over Time
-            </h2>
-
             <div className="w-full">
                 <LineChart
-                    width={0.95 *dimensions.width}
-                    height={dimensions.height}
+                    width={chartWidth}
+                    height={chartHeight}
                     data={data}
                 />
             </div>

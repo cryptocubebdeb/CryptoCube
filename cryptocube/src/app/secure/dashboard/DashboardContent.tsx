@@ -9,13 +9,67 @@ import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
 import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
 import HomeSection from "../simulator/secure/components/HomeSection";
+import PortfolioChart from "../components/Portfolio/PortfolioChart";
 import { useEffect, useState } from 'react';
-import { set } from 'lodash';
+import { getFormatPrix } from '../../lib/getFormatData';
 
 export default function DashboardContent() {
+  const [loading, setLoading] = useState(true);
+
+  // Store user's current cash balance
+  const [cash, setCash] = useState(0);
+
+  // Store user's coin holdings
+  const [holdings, setHoldings] = useState<any[]>([]);
+
+  // Store pending orders (submitted but not executed)
+  const [pendingOrders, setPendingOrders] = useState<any[]>([]);
+
+  // Store executed orders (already completed trades)
+  const [executedOrders, setExecutedOrders] = useState<any[]>([]);
+
+  // Load portfolio, pending orders, and executed orders on component mount
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Fetch all three API endpoints in parallel for efficiency
+        const [portfolioRes, pendingRes, executedRes] = await Promise.all([
+          fetch("/api/simulator/portfolio"),
+          fetch("/api/simulator/orders/list/pending"),
+          fetch("/api/simulator/orders/list/executed"),
+        ]);
+
+        // Parse JSON responses
+        const portfolioData = await portfolioRes.json();
+        const pendingData = await pendingRes.json();
+        const executedData = await executedRes.json();
+
+        // Set state values safely
+        setCash(Number(portfolioData.cash || 0));
+        setHoldings(Array.isArray(portfolioData.holdings) ? portfolioData.holdings : []);
+
+        setPendingOrders(Array.isArray(pendingData.orders) ? pendingData.orders : []);
+        setExecutedOrders(Array.isArray(executedData.orders) ? executedData.orders : []);
+      } catch (err) {
+        // If API fails, reset all state to defaults and log the error
+        console.error("Failed to load home data:", err);
+        setCash(0);
+        setHoldings([]);
+        setPendingOrders([]);
+        setExecutedOrders([]);
+      }
+
+      // Mark loading as complete
+      setLoading(false);
+    }
+
+    loadData();
+  }, []);
+
+
+  // Verification de portfolio utilisateur
   const { data: session } = useSession();
   const [hasPortfolio, setHasPortfolio] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   // --- Check if user has a portfolio ---
   useEffect(() => {
@@ -51,18 +105,48 @@ export default function DashboardContent() {
           textAlign: 'center',
           flexDirection: 'column',
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: hasPortfolio ? 'flex-start' : 'center',
           alignItems: 'center',
           marginTop: '32px',
           marginLeft: 'auto',
           marginRight: 'auto',
           width: '90%',
-          height: '500px',
+          height: hasPortfolio ? '650px' : '500px',
           boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
         }}
+
+        // Lorsque l'utilisateur a un portfolio, il peut hover et cliquer vers simulateur
+        className={ hasPortfolio ? "cursor-pointer transition duration-300 hover:scale-102 hover:shadow-lg hover:bg-yellow-400" : ""}
+        onClick={ hasPortfolio ? () => window.location.href = '/secure/simulator/secure' : undefined }
       >
         {hasPortfolio ? (
-          <HomeSection />
+          <>
+            <div className="flex flex-col gap-2 mt-7 mb-5">
+              <h2 className="text-3xl font-bold mb-5 text-yellow-400">Portfolio Overview</h2>
+              {loading ? (
+                <p className="text-slate-400 text-sm">Loading data…</p>
+              ) : (
+                <div className="grid grid-cols-3 gap-50 mb-5 text-sm">
+                  <div>
+                    <p className="text-xl text-slate-400 mb-2">Cash</p>
+                    <p className="text-xl text-white font-semibold">{getFormatPrix(cash)}</p>
+                  </div>
+                  <div>
+                    <p className="text-xl text-slate-400 mb-2">Holdings</p>
+                    <p className="text-xl text-white font-semibold">{holdings.length}</p>
+                  </div>
+                  <div>
+                    <p className="text-xl text-slate-400 mb-2">Pending Orders</p>
+                    <p className="text-xl text-white font-semibold">{pendingOrders.length}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <PortfolioChart width={1400} height={380} />
+            </div>
+          </>
         ) : (
           <>
             <Typography variant="h4"
@@ -102,6 +186,7 @@ export default function DashboardContent() {
           </>
         )}
       </div>
+
 
       <div
         style={{
@@ -156,7 +241,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-              Top des hausses du jour
+              Top gagnants du jour
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
@@ -205,7 +290,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-              Top des baisses du jour
+              Top perdants du jour
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
               <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
