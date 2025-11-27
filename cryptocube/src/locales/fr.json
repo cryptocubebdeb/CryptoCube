@@ -87,6 +87,30 @@
   "marketCap": "Capitalisation",
   "last7days": "Derniers 7 jours",
   "noData": "Aucune donnée disponible"
+},
+"categories": {
+  "title": "Catégories de crypto",
+  "volume24h": "Volume échangé sur 24h",
+  "noCoins": "Aucune cryptomonnaie",
+  "viewCategory": "Voir",
+  "count": "Catégories",
+  "loading": "Chargement des données...",
+  "noData": "Aucune donnée disponible",
+
+  "top": {
+    "popular": "Populaires",
+    "winners": "Gagnants",
+    "losers": "Perdants"
+  },
+
+  "table": {
+    "category": "Catégorie",
+    "topCoins": "Top cryptos",
+    "assetCount": "# de contenus",
+    "change24h": "24h %",
+    "volume24h": "Volume 24h",
+    "marketCap": "Capitalisation"
+  }
 }
 
 

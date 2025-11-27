@@ -87,7 +87,32 @@
   "marketCap": "Market Cap",
   "last7days": "Last 7 days",
   "noData": "No data available"
+},
+"categories": {
+  "title": "Crypto Categories",
+  "volume24h": "24h Trading Volume",
+  "noCoins": "No cryptocurrencies",
+  "viewCategory": "View",
+  "count": "Categories",
+  "loading": "Loading data...",
+  "noData": "No data available",
+
+  "top": {
+    "popular": "Popular",
+    "winners": "Winners",
+    "losers": "Losers"
+  },
+
+  "table": {
+    "category": "Category",
+    "topCoins": "Top Coins",
+    "assetCount": "Asset Count",
+    "change24h": "24h %",
+    "volume24h": "24h Volume",
+    "marketCap": "Market Cap"
+  }
 }
+
 
 
 

@@ -9,9 +9,12 @@ import { getFormatMarketCap, getFormatPercentage } from "../../lib/getFormatData
 import Button from '@mui/material/Button';
 import { CategoryData } from "../../lib/definitions";
 import Image from 'next/image';
+import { useTranslation } from "react-i18next";
 
 export default function Page() 
 {
+    const { t } = useTranslation();
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(16); // 624 catégories / 40 par page  = 16 pages
     const [loading, setLoading] = useState(true);
@@ -75,25 +78,25 @@ export default function Page()
         }
     };
 
-    const topPopulaires = getFilteredCategoriesByTab(categories, 'populaires');
-    const topGainers = getFilteredCategoriesByTab(categories, 'gagnants');
-    const topLosers = getFilteredCategoriesByTab(categories, 'perdants');
-
+    
     const topSections = [
         {
-            title: 'Populaires',
+            key: "populaires",
+            title: t("categories.top.popular"),
             icon: <LocalFireDepartmentOutlinedIcon style={{ width: '35px', height: '35px' }}/>,
-            data: topPopulaires
+            data: getFilteredCategoriesByTab(categories, "populaires")
         },
         {
-            title: 'Gagnants',
+            key: "gagnants",
+            title: t("categories.top.winners"),
             icon: <TrendingUpIcon style={{ width: '35px', height: '35px' }}/>,
-            data: topGainers
+            data: getFilteredCategoriesByTab(categories, "gagnants")
         },
         {
-            title: 'Perdants',
+            key: "perdants",
+            title: t("categories.top.losers"),
             icon: <TrendingDownIcon style={{ width: '35px', height: '35px' }}/>,
-            data: topLosers
+            data: getFilteredCategoriesByTab(categories, "perdants")
         }
     ];
 
@@ -115,7 +118,7 @@ export default function Page()
         <div className="text-center mx-auto space-y-8 mb-15 mt-10">
             {/* Main Title */}
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                Catégories de crypto
+                {t("categories.title")}
             </h1>
         </div>
 
@@ -227,7 +230,7 @@ export default function Page()
                             {/* Volume 24h */}
                             <div>
                                 <h4 style={{fontSize: '2rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
-                                <h4 style={{fontSize: '1rem', opacity: 0.7}}>Volume échangé sur 24 h</h4>
+                                <h4 style={{fontSize: '1rem', opacity: 0.7}}>{t("categories.volume24h")}</h4>
                             </div>
                             
                             {/* Top 3 coins */}
@@ -253,11 +256,11 @@ export default function Page()
                                                 ))}
                                             </>
                                         ) : (
-                                            <span className="text-gray-500">Aucune cryptomonnaie</span>
+                                            <span className="text-gray-500">{t("categories.noCoins")}</span>
                                         )}
                                     </div>
                                 ) : (
-                                    <span className="text-gray-500">Aucune cryptomonnaie</span>
+                                    <span className="text-gray-500">{t("categories.noCoins")}</span>
                                 )}
                             </div>
                         </div>
@@ -281,7 +284,7 @@ export default function Page()
                                 }
                             }}
                         >
-                            Voir {category.name}
+                            {t("categories.viewCategory")} {category.name}
                         </Button>
                         
 
@@ -295,27 +298,39 @@ export default function Page()
         <div className="min-h-auto">
             <div className="max-w-[95rem] mx-auto">
                 <h1 className="text-xl md:text-2xl font-bold mb-10">
-                     {categories.length} Catégories
+                     {categories.length} {t("categories.count")}
                 </h1>
 
                 {/* Tableau des cryptomonnaies */}
                 {loading ? (
                     <div className="text-center py-20">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-500">Chargement des données...</p>
+                        <p className="mt-4 text-gray-500">{t("categories.loading")}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full table-fixed">
                             <thead>
                                 <tr className="border-b border-gray-400">
-                                    <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
-                                    <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Catégorie</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Top cryptos</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24"># de contenus</th> {/* NA */}
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h %</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Volume 24h</th>
-                                    <th className="text-right py-4 px-4 font-medium text-gray-500 w-36">Capitalisation</th>
+                                    <th className="py-4 px-4 text-left text-gray-500">#</th>
+                                        <th className="py-4 px-4 text-left text-gray-500">
+                                            {t("categories.table.category")}
+                                        </th>
+                                        <th className="py-4 px-4 text-right text-gray-500">
+                                            {t("categories.table.topCoins")}
+                                        </th>
+                                        <th className="py-4 px-4 text-right text-gray-500">
+                                            {t("categories.table.assetCount")}
+                                        </th>
+                                        <th className="py-4 px-4 text-right text-gray-500">
+                                            {t("categories.table.change24h")}
+                                        </th>
+                                        <th className="py-4 px-4 text-right text-gray-500">
+                                            {t("categories.table.volume24h")}
+                                        </th>
+                                        <th className="py-4 px-4 text-right text-gray-500">
+                                            {t("categories.table.marketCap")}
+                                        </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -325,10 +340,10 @@ export default function Page()
                                             <div className="flex flex-col items-center space-y-4">
                                                 <div className="text-4xl"></div>
                                                 <p className="text-xl">
-                                                    Aucune donnée disponible
+                                                   {t("categories.noData")}
                                                 </p>
                                                 <p className="text-sm">
-                                                    Les catégories vont être affichées ici
+                                                    {t("categories.noDataDescription")}
                                                 </p>
                                             </div>
                                         </td>
