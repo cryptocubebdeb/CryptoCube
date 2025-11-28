@@ -19,27 +19,13 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const userId = (session?.user as { id?: string })?.id;
 
-<<<<<<< HEAD
-=======
   const { t } = useTranslation();
 
-  const links = [
-    { href: "/secure/dashboard", text: "navbar.home" },
-    { href: "/secure/coins", text: "navbar.coins" },
-    { href: "/secure/categories", text: "navbar.categories" },
-    { href: "/secure/simulator/", text: "navbar.simulator" },
-    { href: "/secure/about", text: "navbar.about" },
-  ];
-
-  
-  // Détermine si l'utilisateur est réellement authentifié 
-
->>>>>>> main
+  // Determine if user is authenticated
   const isAuthenticated =
     status === "authenticated" &&
     !!(session?.user && ((session.user as any).id || (session.user as any).email));
 
-  // Si a un compte simulateur
   const [hasSimAccount, setHasSimAccount] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -59,19 +45,17 @@ export default function Navbar() {
     { href: "/secure/dashboard", text: "Accueil" },
     { href: "/secure/coins", text: "Coins" },
     { href: "/secure/categories", text: "Catégories" },
-      {
-        href: !isAuthenticated
+    {
+      href: !isAuthenticated
+        ? "/secure/simulator/accueil"
+        : hasSimAccount === false
           ? "/secure/simulator/accueil"
-          : hasSimAccount === false
-            ? "/secure/simulator/accueil"
-            : "/secure/simulator/secure",
-        text: "Simulateur"
-      },
+          : "/secure/simulator/secure",
+      text: "Simulateur"
+    },
     { href: "/secure/about", text: "À propos" },
   ];
 
-  
-  // lien icône utilisateur (utilisé pour l'icône cliquable)
   const userLink = {
     href: isAuthenticated ? "/secure/account/details" : "/auth/signin",
     icon: <User size={20} />,
@@ -80,14 +64,12 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const closeTimeout = useRef<number | null>(null);
 
-  // État de la recherche
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // utilisé pour détecter les clics en-dehors du conteneur (input + dropdown)
   const searchContainerRef = useRef<HTMLLIElement | null>(null);
 
   const clearCloseTimeout = () => {
@@ -110,39 +92,38 @@ export default function Navbar() {
     );
   };
 
-  useEffect(() => {
-    return () => clearCloseTimeout();
-  }, []);
+  useEffect(() => clearCloseTimeout, []);
 
-  // Nettoyage du debounce lors du démontage
   useEffect(() => {
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
   }, []);
 
-  // Fermer la recherche en cliquant à l'extérieur ou en appuyant sur Échap
   useEffect(() => {
     if (!searchOpen) return;
+
     const onClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
     };
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSearchOpen(false);
     };
+
     document.addEventListener("mousedown", onClickOutside);
     document.addEventListener("keydown", onKey);
+
     return () => {
       document.removeEventListener("mousedown", onClickOutside);
       document.removeEventListener("keydown", onKey);
     };
   }, [searchOpen]);
 
-  // Récupère les cryptos correspondantes via l'endpoint de recherche de CoinGecko
   const fetchSearchResults = async (q: string) => {
-    if (!q || q.trim().length === 0) {
+    if (!q.trim()) {
       setResults([]);
       setSearchLoading(false);
       return;
@@ -154,6 +135,7 @@ export default function Navbar() {
         `https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(q)}`
       );
       if (!res.ok) throw new Error("Search failed");
+
       const data = await res.json();
       const coins = (data.coins || []).slice(0, 8).map((c: any) => ({
         id: c.id,
@@ -161,22 +143,25 @@ export default function Navbar() {
         symbol: c.symbol,
         thumb: c.thumb,
       }));
+
       setResults(coins);
     } catch (err) {
-      console.error("Error searching coins:", err);
+      console.error("Search error:", err);
       setResults([]);
     } finally {
       setSearchLoading(false);
     }
   };
 
-  // Gestionnaire débouncé pour les changements de la requête
   const handleQueryChange = (v: string) => {
     setQuery(v);
+
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
+
     debounceRef.current = window.setTimeout(() => {
       fetchSearchResults(v);
     }, 300);
+
     setSearchOpen(true);
   };
 
@@ -184,19 +169,23 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
+
         <Link href="/secure/dashboard" className="font-bold text-2xl">
           Crypto<span className="text-yellow-400">Cube</span>
         </Link>
 
-        <ul className="flex flex-row items-center gap-6 ">
-          {/* liens principaux de navigation */}
+        <ul className="flex flex-row items-center gap-6">
+
           {links.map((link) => {
-            const active = !!link.text && pathname?.startsWith(link.href);
+            const active = pathname?.startsWith(link.href);
             return (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={["navbar-text uppercase text-base transition-colors", active ? "text-yellow-400" : "text-white/80 hover:text-white"].join(" ")}
+                  className={
+                    "navbar-text uppercase text-base transition-colors " +
+                    (active ? "text-yellow-400" : "text-white/80 hover:text-white")
+                  }
                 >
                   {t(link.text)}
                 </Link>
@@ -204,12 +193,11 @@ export default function Navbar() {
             );
           })}
 
-          {/* Bouton icône recherche - affiché uniquement quand la recherche est fermée */}
           {!searchOpen && (
             <li>
               <button
-                  type="button"
-                  aria-label={t("navbar.openSearch")}
+                type="button"
+                aria-label={t("navbar.openSearch")}
                 onClick={() => {
                   const willOpen = !searchOpen;
                   setSearchOpen(willOpen);
@@ -224,11 +212,13 @@ export default function Navbar() {
             </li>
           )}
 
-          {/* Search input (small) - animated open/close */}
-          {/* conteneur qui englobe l'input et le dropdown - ref pour détecter clic en-dehors */}
           <li className="relative" ref={searchContainerRef}>
+
             <div
-              className={"flex items-center bg-slate-800 rounded-full transition-all duration-200 " + (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")}
+              className={
+                "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
+                (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")
+              }
             >
               <input
                 type="text"
@@ -240,25 +230,21 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
-<<<<<<< HEAD
-                placeholder="Rechercher une crypto..."
-                className={"appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " + (searchOpen ? "w-full pl-2" : "w-0 pl-0")}
-=======
                 placeholder={t("navbar.searchPlaceholder")}
                 className={
                   "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
                   (searchOpen ? "w-full pl-2" : "w-0 pl-0")
                 }
->>>>>>> main
               />
             </div>
 
-            {/* Résultats dropdown*/}
             <div
-              className={"absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " + (searchOpen ? "opacity-100 scale-100 pointer-events-auto translate-y-0" : "opacity-0 scale-95 pointer-events-none -translate-y-2")}
+              className={
+                "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
+                (searchOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none")
+              }
               id="search-results"
               role="listbox"
-              aria-label={t("navbar.searchResults")}
             >
               {searchLoading ? (
                 <div className="px-3 py-2 text-sm text-white/70">{t("navbar.searching")}</div>
@@ -282,16 +268,13 @@ export default function Navbar() {
                     </div>
                   </Link>
                 ))
-              ) : (
-                //Si Aucun résultat trouvé
-                query.length > 0 ? (
-                  <div className="px-3 py-2 text-sm text-white/60">{t("navbar.noMatches")}</div>
-                ) : null
-              )}
+              ) : query.length > 0 ? (
+                <div className="px-3 py-2 text-sm text-white/60">{t("navbar.noMatches")}</div>
+              ) : null}
             </div>
+
           </li>
 
-          {/* Icône utilisateur avec menu déroulant au survol */}
           <li
             className="relative"
             onMouseEnter={openUserMenu}
@@ -308,12 +291,8 @@ export default function Navbar() {
               {userLink.icon}
             </Link>
 
-              <div
+            <div
               role="menu"
-<<<<<<< HEAD
-              aria-label="User menu"
-              className={"absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " + (userMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none")}
-=======
               aria-label={t("navbar.userMenu")}
               className={
                 "absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
@@ -321,7 +300,6 @@ export default function Navbar() {
                   ? "opacity-100 scale-100 pointer-events-auto"
                   : "opacity-0 scale-95 pointer-events-none")
               }
->>>>>>> main
             >
               {!isAuthenticated ? (
                 <Link
@@ -358,6 +336,7 @@ export default function Navbar() {
                   >
                     {t("navbar.settings")}
                   </Link>
+
                   <button
                     onClick={() => {
                       setUserMenuOpen(false);
@@ -371,7 +350,9 @@ export default function Navbar() {
                 </>
               )}
             </div>
+
           </li>
+
         </ul>
       </div>
     </header>

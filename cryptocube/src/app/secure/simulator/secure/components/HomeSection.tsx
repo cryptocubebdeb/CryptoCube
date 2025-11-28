@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-<<<<<<< HEAD:cryptocube/src/app/secure/simulator/secure/components/HomeSection.tsx
-import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
-=======
 import { useTranslation } from 'react-i18next';
-import PortfolioChart from "../../components/Portfolio/PortfolioChart";
->>>>>>> main:cryptocube/src/app/secure/simulator/components/HomeSection.tsx
+import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
 
 export default function HomeSection() {
   const { t } = useTranslation();

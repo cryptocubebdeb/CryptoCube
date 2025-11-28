@@ -88,7 +88,7 @@ function createLineChart(data: any[], {
     const Y = d3.map(data, y);
     const O = d3.map(data, d => d);
     const I = d3.map(data, (_, i) => i);
-    
+
 
 
     // Compute which data points are considered defined.
@@ -107,6 +107,7 @@ function createLineChart(data: any[], {
     const xScale = xType(xDomain, xRange);
     const yScale = yType(yDomain, yRange);
     const xAxis = d3.axisBottom(xScale).ticks(6).tickSizeOuter(0);
+
     const yAxis = d3.axisLeft(yScale).ticks(6).tickFormat((d) => formatAbbrev(Number(d)).replace("G", "B") as unknown as string);
 
     // Compute titles.
@@ -157,24 +158,25 @@ function createLineChart(data: any[], {
         .style("font-size", "20px")  // larger text
         .style("font-weight", "500");
 
+    const yAxisRight = d3.axisRight(yScale)
+        .ticks(6)
+        .tickFormat((d: any) => formatAbbrev(Number(d)).replace("G", "B"));
+
     svg.append("g")
         .attr("class", "y-axis")
-        .attr("transform", `translate(${width - marginRight + 20},0)`)
-        .call(d3.axisRight(yScale)                                // axis on right side
-            .ticks(6)
-            .tickFormat((d: any) => formatAbbrev(Number(d)).replace("G", "B"))
-        )
-        .call(yAxis)
+        .attr("transform", `translate(${width - marginRight},0)`)
+        .call(yAxisRight)
         .call(g => g.select(".domain").remove())
-        .call(g => g.selectAll(".tick line").clone()
-            .attr("x2", width - marginLeft - marginRight)
-            .attr("stroke-opacity", 0.1))
-        .call(g => g.append("text")
-            .attr("x", -marginLeft)
-            .attr("y", 20)
-            .attr("fill", "currentColor")
-            .attr("text-anchor", "start")
-            .text(yLabel ?? ""));
+        .call(g =>
+            g.selectAll(".tick line")
+                .attr("x2", - (width - marginLeft - marginRight)) // extend horizontally
+                .attr("stroke-opacity", 0.1)
+        )
+        .selectAll("text")
+        .attr("fill", "#ffffff40")
+        .style("font-size", "20px")
+        .style("font-weight", "500");
+
 
     const yTicks = d3.range(yDomain[0], yDomain[1], (yDomain[1] - yDomain[0]) / 7);
 
@@ -275,10 +277,10 @@ function createLineChart(data: any[], {
         tooltip.selectAll("*").remove();
 
         // === text content ===
-            const lines = [
-                { text: formatDate(date), color: "#9ca3af" },
-                { text: "Prix : ", color: "#b0b6c3", append: `$${formatNumber(value)}` },
-            ];
+        const lines = [
+            { text: formatDate(date), color: "#9ca3af" },
+            { text: "Prix : ", color: "#b0b6c3", append: `$${formatNumber(value)}` },
+        ];
 
         const text = tooltip.append("text")
             .attr("font-family", "Inter, sans-serif")

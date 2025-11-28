@@ -13,6 +13,11 @@ export default function SimulatorPage() {
         <HomeSection />
       </section>
 
+      {/* Analytics / Percent */}
+      <section id="percent" className="scroll-mt-32">
+        <PercentSection />
+      </section>
+
       {/* Portfolio / Wallet */}
       <section id="wallet" className="scroll-mt-32">
         <WalletSection />
@@ -33,11 +38,8 @@ export default function SimulatorPage() {
         <ActivitySection />
       </section>
 
-      {/* Analytics / Percent */}
-      <section id="percent" className="scroll-mt-32">
-        <PercentSection />
-      </section>
-      
+
+
     </div>
   );
 }

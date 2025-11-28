@@ -297,6 +297,67 @@ async function main() {
   });
 
   console.log("[SEED] Orders created");
+
+
+  // =============================
+  // MASSIVE PORTFOLIO HISTORY (730 days) FOR ALICE + JOHN
+  // =============================
+  console.log("[SEED] Generating massive portfolio history for Alice & John...");
+
+  const days = 730; // 2 years
+  const now = new Date();
+
+  /**
+   * Simulates price movement with realistic volatility.
+   */
+  function randomWalk(base, volatility = 0.04) {
+    const change = (Math.random() - 0.5) * volatility; // ±4%
+    const next = base * (1 + change);
+    return Math.max(next, 50); // never below 50$
+  }
+
+  // ========== ALICE ==========
+  let aliceValue = 75000;
+  const aliceHistory = [];
+
+  for (let i = days; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(now.getDate() - i);
+
+    aliceValue = randomWalk(aliceValue);
+
+    aliceHistory.push({
+      simulatorAccountId: aliceSim.id,
+      totalValueUsd: aliceValue,
+      createdAt: date,
+    });
+  }
+
+  // ========== JOHN ==========
+  let johnValue = 50000;
+  const johnHistory = [];
+
+  for (let i = days; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(now.getDate() - i);
+
+    johnValue = randomWalk(johnValue);
+
+    johnHistory.push({
+      simulatorAccountId: johnSim.id,
+      totalValueUsd: johnValue,
+      createdAt: date,
+    });
+  }
+
+  // Insert both large datasets
+  await prisma.portfolioHistory.createMany({
+    data: [...aliceHistory, ...johnHistory],
+  });
+
+  console.log(
+    `[SEED] Portfolio history created: ${aliceHistory.length + johnHistory.length} entries (Alice + John)`
+  );
 }
 
 main()

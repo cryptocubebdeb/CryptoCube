@@ -107,6 +107,8 @@ model SimulatorAccount {
   portfolio Portfolio[] //The full portfolio contains multiple of rows for each coin brought by the user 
   orders    Order[]
   trades    TradeHistory[]
+
+  portfolioHistory PortfolioHistory[]
 }
 
 //This is more like a portfolio item, should've changed the name
@@ -124,6 +126,17 @@ model Portfolio {
   updatedAt DateTime @updatedAt
 
   @@unique([simulatorAccountId, coinSymbol])
+}
+
+model PortfolioHistory {
+  id                 Int              @id @default(autoincrement())
+  simulatorAccountId Int
+  simulatorAccount   SimulatorAccount @relation(fields: [simulatorAccountId], references: [id], onDelete: Cascade)
+
+  totalValueUsd      Decimal @db.Decimal(18, 2)
+  createdAt          DateTime @default(now())
+
+  @@index([simulatorAccountId])
 }
 
 model Order {

@@ -112,21 +112,11 @@ export default async function Page({
 
     return (
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
-            <div className="flex flex-1 justify-center w-full pt-10">
+            <div className="flex flex-1 justify-center w-full pt-4">               
                 {/* Main container */}
-<<<<<<< HEAD
-                <div className="w-full mt-15 max-w-[1600px] xl:px-8 flex items-start gap-10">
-
-                    {/* Right column - details */}
-                    <div className="basis-[360px] shrink-0 text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20 pr-6">
-
-
-=======
-                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start mt-15">
-
+                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start gap-12 mt-10">
                     {/* Right column - details */}
                     <div className="flex-[0.27] text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20">
->>>>>>> main
 
                         {/* Crypto Name and Logo */}
                         <div className="flex items-center gap-4 p-4 pt-0">
@@ -260,11 +250,7 @@ export default async function Page({
 
                         {/* ------------- Supply Metrics ------------- */}
                         <div className="mt-8">
-<<<<<<< HEAD
-                            <h2 className="text-2xl text-white/90 mb-3">Métriques d&apos;offre</h2>
-=======
                             <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.supplyMetrics" /></h2>
->>>>>>> main
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
                                     <span className="text-white/70"><T k="specificCoin.circulatingSupply" /></span>
@@ -321,7 +307,7 @@ export default async function Page({
 
                         {/* Chart container */}
                         <div className="text-white rounded-[4px] shadow-md relative">
-                            <div className="w-full min-h-[700px]">
+                            <div className="w-full min-h-[450px] py-4">
                                 <CoinChart coinId={id} currency="usd" />
                             </div>
                         </div>

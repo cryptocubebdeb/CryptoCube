@@ -1,6 +1,4 @@
 "use client"
-
-import { useTranslation } from "react-i18next";
 import { useSession } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,13 +8,11 @@ import TopWinningCoins from '../components/Dashboard/TopWinningCoins';
 import TopLoserCoins from '../components/Dashboard/TopLoserCoins';
 import DailyNews from '../components/Dashboard/DailyNews';
 import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
-import HomeSection from "../simulator/secure/components/HomeSection";
 import PortfolioChart from "../components/Portfolio/PortfolioChart";
 import { useEffect, useState } from 'react';
 import { getFormatPrix } from '../../lib/getFormatData';
 
 export default function DashboardContent() {
-<<<<<<< HEAD
   const [loading, setLoading] = useState(true);
 
   // Store user's current cash balance
@@ -71,9 +67,6 @@ export default function DashboardContent() {
 
 
   // Verification de portfolio utilisateur
-=======
-  const { t } = useTranslation();
->>>>>>> main
   const { data: session } = useSession();
   const [hasPortfolio, setHasPortfolio] = useState(false);
 
@@ -95,7 +88,7 @@ export default function DashboardContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen text-white">
+      <div style={{ color: "var(--foreground)" }} className="flex items-center justify-center h-screen">
         Chargement...
       </div>
     );
@@ -104,11 +97,10 @@ export default function DashboardContent() {
   return (
     <>
       <div
-<<<<<<< HEAD
         style={{
           borderRadius: '20px',
           padding: '16px',
-          backgroundColor: '#141418ff',
+          backgroundColor: "var(--color-container-bg)",
           textAlign: 'center',
           flexDirection: 'column',
           display: 'flex',
@@ -123,28 +115,28 @@ export default function DashboardContent() {
         }}
 
         // Lorsque l'utilisateur a un portfolio, il peut hover et cliquer vers simulateur
-        className={ hasPortfolio ? "cursor-pointer transition duration-300 hover:scale-102 hover:shadow-lg hover:bg-yellow-400" : ""}
-        onClick={ hasPortfolio ? () => window.location.href = '/secure/simulator/secure' : undefined }
+        className={hasPortfolio ? "cursor-pointer transition duration-300 hover:scale-102 hover:shadow-lg hover:bg-yellow-400" : ""}
+        onClick={hasPortfolio ? () => window.location.href = '/secure/simulator/secure' : undefined}
       >
         {hasPortfolio ? (
           <>
             <div className="flex flex-col gap-2 mt-7 mb-5">
-              <h2 className="text-3xl font-bold mb-5 text-yellow-400">Portfolio Overview</h2>
+              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt" }}>Portfolio Overview</h2>
               {loading ? (
                 <p className="text-slate-400 text-sm">Loading data…</p>
               ) : (
                 <div className="grid grid-cols-3 gap-50 mb-5 text-sm">
                   <div>
-                    <p className="text-xl text-slate-400 mb-2">Cash</p>
-                    <p className="text-xl text-white font-semibold">{getFormatPrix(cash)}</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Cash</p>
+                    <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{getFormatPrix(cash)}</p>
                   </div>
                   <div>
-                    <p className="text-xl text-slate-400 mb-2">Holdings</p>
-                    <p className="text-xl text-white font-semibold">{holdings.length}</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Holdings</p>
+                    <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{holdings.length}</p>
                   </div>
                   <div>
-                    <p className="text-xl text-slate-400 mb-2">Pending Orders</p>
-                    <p className="text-xl text-white font-semibold">{pendingOrders.length}</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Pending Orders</p>
+                    <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{pendingOrders.length}</p>
                   </div>
                 </div>
               )}
@@ -189,64 +181,10 @@ export default function DashboardContent() {
               }}
             >
               Essayez le simulateur
-=======
-          style={{
-              borderRadius: '20px',
-              padding: '16px',
-              backgroundColor: '#141418ff',
-              textAlign: 'center',
-              flexDirection: 'column',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '32px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              width: '90%',
-              height: '500px',
-              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
-          }}
-      >
-          <Typography variant="h4" sx={{ mb: '30px', fontWeight: 'bold' }}>
-          {t("dashboard.playAndDominate")}
-        </Typography>
-
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          {t("dashboard.trySimulator")}
-        </Typography>
-
-        <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
-          {t("dashboard.noRisk")}
-        </Typography>
-
-          <Button
-                variant="outlined"
-                href="/secure/simulator"
-                sx={{
-                    mt: 5,
-                    mb: 1,
-                    padding: '16px 40px',
-                    borderRadius: '15px',
-                    borderColor: '#FFDD00',
-                    borderWidth: '1.5px',
-                    color: '#FFDD00',
-                    fontWeight: 'bold',
-                    transition: 'all 0.3s ease',
-                    '&:hover': { 
-                        backgroundColor: '#e6c200', 
-                        color: 'black',
-                        borderColor: '#e6c200',
-                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
-                    } 
-                }}
-            >
-                 {t("dashboard.trySimulatorButton")}
->>>>>>> main
             </Button>
           </>
         )}
       </div>
-
 
       <div
         style={{
@@ -254,7 +192,7 @@ export default function DashboardContent() {
           display: 'flex',
           gap: '24px',
           margin: '24px auto 0',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
         }}
       >
         {/* CÔTÉ GAUCHE */}
@@ -264,13 +202,13 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px'
+            minWidth: '300px',
           }}
         >
           {/* Market Status */}
           <div
             style={{
-              backgroundColor: '#141418ff',
+              backgroundColor: "var(--color-container-bg)",
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -281,12 +219,8 @@ export default function DashboardContent() {
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
-<<<<<<< HEAD
+            <Typography style={{ color: "var(--foreground)" }} variant="h5" gutterBottom sx={{ mt: 2 }}>
               Aperçu du marché
-=======
-                {t("dashboard.marketOverview")}
->>>>>>> main
             </Typography>
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <MarketOverviewGauges />
@@ -296,7 +230,7 @@ export default function DashboardContent() {
           {/* Top winning coins */}
           <div
             style={{
-              backgroundColor: '#141418ff',
+              backgroundColor: "var(--color-container-bg)",
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -304,21 +238,9 @@ export default function DashboardContent() {
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-<<<<<<< HEAD
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+            <Typography variant="h5" gutterBottom sx={{ color: "var(--foreground)", ml: 2, mt: 1 }}>
               Top gagnants du jour
             </Typography>
-=======
-<<<<<<< HEAD
-      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-         {t("dashboard.topGainers")}
-      </Typography>
-=======
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
-              Top des hausses du jour
-            </Typography>
->>>>>>> main
->>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
@@ -332,13 +254,13 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px'
+            minWidth: '300px',
           }}
         >
           {/* Daily News */}
           <div
             style={{
-              backgroundColor: '#141418ff',
+              backgroundColor: "var(--color-container-bg)",
               borderRadius: '16px',
               padding: '16px',
               color: '#FFFFFF',
@@ -346,12 +268,8 @@ export default function DashboardContent() {
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-            <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
-<<<<<<< HEAD
+            <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center', color: "var(--foreground)" }}>
               Nouvelles de la journée
-=======
-                {t("dashboard.dailyNews")}
->>>>>>> main
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <DailyNews /> {/* Dans components/DailyNews.tsx */}
@@ -361,29 +279,17 @@ export default function DashboardContent() {
           {/* Top losing coins */}
           <div
             style={{
-              backgroundColor: '#141418ff',
+              backgroundColor: "var(--color-container-bg)",
               borderRadius: '16px',
               padding: '16px',
-              color: '#FFFFFF',
+              color: "var(--foreground)",
               height: '285px',
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
-<<<<<<< HEAD
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
               Top perdants du jour
             </Typography>
-=======
-<<<<<<< HEAD
-      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-        {t("dashboard.topLosers")}
-      </Typography>
-=======
-            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-              Top des baisses du jour
-            </Typography>
->>>>>>> main
->>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
               <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>
@@ -397,45 +303,39 @@ export default function DashboardContent() {
           style={{
             width: '90%',
             margin: '24px auto',
-            backgroundColor: '#141418ff',
+            backgroundColor: "var(--color-container-bg)",
             borderRadius: '16px',
             padding: '24px',
-<<<<<<< HEAD
           }}
         >
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-=======
-            boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
-          }}>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
->>>>>>> main
             alignItems: 'center',
             marginBottom: '24px'
           }}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
-              {t("dashboard.watchlist")}
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'var(--foreground)' }}>
+              Liste de suivi
             </Typography>
             <Button
               variant="outlined"
               href="/secure/account/watchlist"
               sx={{
+                border: "2px solid",
                 borderRadius: '12px',
-                borderColor: '#3B82F6',
-                color: '#3B82F6',
+                borderColor: 'var(--color-blue)',
+                color: 'var(--color-blue)',
                 padding: '8px 20px',
                 textTransform: 'none',
                 fontSize: '0.95rem',
+                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                  borderColor: '#3B82F6',
+                  borderColor: 'var(--color-blue)',
                 }
               }}
             >
-              {t("dashboard.viewMore")}
+              Voir plus
             </Button>
           </div>
           <WatchlistCarousel />
