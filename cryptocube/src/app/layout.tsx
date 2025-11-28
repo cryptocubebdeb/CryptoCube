@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "../app/components/SessionProvider";
 import Footer from "./secure/components/Footer";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

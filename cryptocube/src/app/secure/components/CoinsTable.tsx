@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useTranslation } from "react-i18next";
 import { CoinData } from '@/app/lib/definitions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -22,6 +23,8 @@ export default function CoinsTable({
   renderStar,
   showSparkline = true,
 }: CoinsTableProps) {
+
+  const { t } = useTranslation();
   const isClickable = typeof onRowClick === 'function';
 
   // Fonction pour formater les pourcentages avec couleurs
@@ -48,20 +51,34 @@ export default function CoinsTable({
         <thead>
           <tr className="border-b border-gray-400">
             <th className="text-left py-4 px-4 font-medium text-gray-500 w-16">#</th>
-            <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">Nom</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Prix</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">1h</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">24h</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">7j</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">Capitalisation</th>
-            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">Derniers 7 jours</th>
+            <th className="text-left py-4 px-4 font-medium text-gray-500 w-64">
+              {t("coinsTable.name")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">
+              {t("coinsTable.price")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">
+              {t("coinsTable.oneHour")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">
+              {t("coinsTable.twentyFourHours")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-24">
+              {t("coinsTable.sevenDays")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-40">
+              {t("coinsTable.marketCap")}
+            </th>
+            <th className="text-right py-4 px-4 font-medium text-gray-500 w-32">
+              {t("coinsTable.last7days")}
+            </th>
           </tr>
         </thead>
         <tbody>
           {coins.length === 0 ? (
             <tr>
               <td colSpan={8} className="py-20 text-center text-gray-500">
-                Aucune donnée disponible
+                {t("coinsTable.noData")}
               </td>
             </tr>
           ) : (

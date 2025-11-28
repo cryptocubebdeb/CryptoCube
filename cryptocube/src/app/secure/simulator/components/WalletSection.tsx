@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 type Holding = {
   id: number;
@@ -11,6 +12,7 @@ type Holding = {
 };
 
 export default function WalletSection() {
+  const { t } = useTranslation();
   const [cash, setCash] = useState(0);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,22 +42,22 @@ export default function WalletSection() {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-yellow-400">Wallet</h2>
+        <h2 className="text-xl font-bold text-yellow-400">{t('wallet.title')}</h2>
 
         <p className="text-sm text-slate-400">
-          Cash:{" "}
+          {t('wallet.cashLabel')}{" "}
           <span className="text-white">${cash.toFixed(2)}</span>
         </p>
       </div>
 
       {/* Loading */}
       {loading && (
-        <p className="text-slate-400 text-sm">Loading portfolio…</p>
+        <p className="text-slate-400 text-sm">{t('wallet.loading')}</p>
       )}
 
       {/* Empty */}
       {!loading && holdings.length === 0 && (
-        <p className="text-slate-500 text-sm">No holdings yet.</p>
+        <p className="text-slate-500 text-sm">{t('wallet.noHoldings')}</p>
       )}
 
       {/* Holdings List */}
@@ -69,7 +71,7 @@ export default function WalletSection() {
               <div>
                 <p className="font-semibold text-white">{h.coinSymbol}</p>
                 <p className="text-xs text-slate-400">
-                  Avg entry: ${Number(h.averageEntryPriceUsd).toFixed(4)}
+                  {t('wallet.avgEntry', { price: Number(h.averageEntryPriceUsd).toFixed(4) })}
                 </p>
               </div>
 

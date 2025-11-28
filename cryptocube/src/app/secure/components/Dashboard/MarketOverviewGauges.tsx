@@ -1,9 +1,12 @@
 "use client"
+
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import RiskGauge from '../GaugeComponent/RiskGauge';
+import { useTranslation } from "react-i18next";
 
 export default function MarketOverviewGauges(): React.JSX.Element {
+    const { t } = useTranslation();
     const [fearGreedValue, setFearGreedValue] = useState<number>(50);
     const [fearGreedLabel, setFearGreedLabel] = useState<string>('Loading...');
     const [marketHealth, setMarketHealth] = useState<number>(50);
@@ -43,7 +46,7 @@ export default function MarketOverviewGauges(): React.JSX.Element {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
                 <Typography variant="body2" sx={{ color: 'white' }}>
-                    Chargement des données du marché...
+                    {t("gauges.loading")}
                 </Typography>
             </Box>
         );
@@ -67,8 +70,8 @@ export default function MarketOverviewGauges(): React.JSX.Element {
         }}>
             {/* Fear & Greed Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography variant="body1" sx={{ fontSize: '18px' , color: 'white', mb: -1.5, textAlign: 'center' }}>
-                    Sentiment du marché
+                <Typography variant="body1" sx={{ fontSize: '18px', color: 'white', mb: -1.5, textAlign: 'center' }}>
+                    {t("gauges.sentiment")}
                 </Typography>
                 <RiskGauge value={Math.round(fearGreedValue)} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>
@@ -79,7 +82,7 @@ export default function MarketOverviewGauges(): React.JSX.Element {
             {/* Global Market Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography variant="body1" sx={{ fontSize: '18px', color: 'white', mb: -1.5, textAlign: 'center' }}>
-                    Marché global
+                    {t("gauges.globalMarket")}
                 </Typography>
                 <RiskGauge value={Math.round(marketHealth)} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>

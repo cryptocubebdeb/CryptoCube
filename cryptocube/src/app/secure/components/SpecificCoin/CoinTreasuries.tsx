@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { T } from "../../components/Translate";
 
 // --- Type definition for each company holding the coin ---
 type TreasuryCompany = {
@@ -40,11 +41,11 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
 
     // --- Handle loading or empty state ---
     if (isLoading)
-        return <div className="text-white/60 mt-4">Chargement des données de trésorerie...</div>;
+        return <div className="text-white/60 mt-4"><T k="treasuries.loading" /></div>;
     if (!companies.length)
         return (
             <div className="text-white/60 mt-4">
-                Aucune donnée publique de trésorerie disponible pour cette cryptomonnaie.
+                <T k="treasuries.empty" />
             </div>
         );
 
@@ -52,7 +53,7 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
     return (
         <div className="border border-white/10 rounded-md p-6 text-white/85 shadow-md">
             <h2 className="text-2xl mb-5 font-semibold">
-                Trésoreries publiques détenant {coinId.toUpperCase()}
+                <T k="treasuries.title" /> {coinId.toUpperCase()}
             </h2>
 
             {/* Table container */}
@@ -60,10 +61,10 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
                 <table className="w-full text-left border-collapse text-sm">
                     <thead className="border-b border-white/20 text-white/70 uppercase">
                         <tr>
-                            <th className="py-2 px-3">Entreprise</th>
-                            <th className="py-2 px-3">Pays</th>
-                            <th className="py-2 px-3 text-right">Avoirs</th>
-                            <th className="py-2 px-3 text-right">Valeur (USD)</th>
+                            <th className="py-2 px-3"><T k="treasuries.company" /></th>
+                            <th className="py-2 px-3"><T k="treasuries.country" /></th>
+                            <th className="py-2 px-3 text-right"><T k="treasuries.holdings" /></th>
+                            <th className="py-2 px-3 text-right"><T k="treasuries.valueUsd" /></th>
                         </tr>
                     </thead>
 

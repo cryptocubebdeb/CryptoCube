@@ -6,6 +6,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/secure/components/navbar";
+import { useTranslation } from "react-i18next";
 
 // MUI
 import Button from "@mui/material/Button";
@@ -48,6 +49,7 @@ type ErrorState = {
 
 export default function Page() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState<FormState>({
     nom: "",
@@ -109,21 +111,21 @@ export default function Page() {
     const newErrors: ErrorState = {
       nom: validateName(form.nom)
         ? ""
-        : "Le nom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
+        : t("signup.nameInvalid"),
       prenom: validateName(form.prenom)
         ? ""
-        : "Le prénom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
-      email: validateEmail(form.email) ? "" : "Format d'email incorrect.",
+        : t("signup.firstNameInvalid"),
+      email: validateEmail(form.email) ? "" : t("signup.emailInvalid"),
       username: validateUsername(form.username)
         ? ""
-        : "Le nom d'utilisateur doit contenir au moins 3 caractères alphanumériques.",
+        : t("signup.usernameInvalid"),
       password: validatePasswordStrength(form.password)
         ? ""
-        : "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+        : t("signup.passwordWeak"),
       confirmPassword:
         form.password === form.confirmPassword
           ? ""
-          : "Les mots de passe ne correspondent pas.",
+          : t("signup.passwordMismatch"),
     };
 
     setErrors(newErrors);
@@ -160,7 +162,7 @@ export default function Page() {
       }
 
       if (!response.ok) {
-        let msg = `Erreur d'inscription (status ${response.status})`;
+        let msg = t("signup.serverError", { status: response.status });
         if (
           data &&
           typeof data === "object" &&
@@ -183,16 +185,14 @@ export default function Page() {
       });
 
       if (res?.error) {
-        setServerError(
-          "Compte créé, mais la connexion automatique a échoué. Veuillez vous connecter manuellement."
-        );
+        setServerError(t("signup.autoLoginFailed"));
         router.push("/auth/signin");
       } else {
         router.push("/secure/about"); // change to /secure/dashboard when ready
       }
     } catch (error) {
       console.error("Erreur réseau:", error);
-      setServerError("Erreur de connexion au serveur.");
+      setServerError(t("signup.networkError"));
     } finally {
       setSubmitting(false);
     }
@@ -221,7 +221,7 @@ export default function Page() {
       {/* Header */}
       <Navbar />
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl mb-9 mt-12">Inscription</h1>
+        <h1 className="text-3xl mb-9 mt-12">{t("signup.title")}</h1>
 
         {serverError && (
           <p className="mb-4 max-w-lg text-center text-sm text-red-500 px-4">
@@ -243,7 +243,7 @@ export default function Page() {
         >
           <Stack spacing={2}>
             <TextField
-              label="Nom"
+              label={t("signup.lastNameLabel")}
               name="nom"
               value={form.nom}
               onChange={handleChange}
@@ -263,7 +263,7 @@ export default function Page() {
             />
 
             <TextField
-              label="Prénom"
+              label={t("signup.firstNameLabel")}
               name="prenom"
               value={form.prenom}
               onChange={handleChange}
@@ -283,7 +283,7 @@ export default function Page() {
             />
 
             <TextField
-              label="Email"
+              label={t("signup.emailLabel")}
               type="email"
               name="email"
               value={form.email}
@@ -304,7 +304,7 @@ export default function Page() {
             />
 
             <TextField
-              label="Nom d'utilisateur"
+              label={t("signup.usernameLabel")}
               name="username"
               value={form.username}
               onChange={handleChange}
@@ -324,7 +324,7 @@ export default function Page() {
             />
 
             <TextField
-              label="Mot de passe"
+              label={t("signup.passwordLabel")}
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
@@ -357,7 +357,7 @@ export default function Page() {
             />
 
             <TextField
-              label="Confirmer le mot de passe"
+              label={t("signup.confirmPasswordLabel")}
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={form.confirmPassword}
@@ -405,12 +405,12 @@ export default function Page() {
                   "&:hover": { bgcolor: "#d1d5db" },
                 }}
               >
-                {submitting ? "Inscription..." : "S'inscrire"}
+                {submitting ? t("signup.submitting") : t("signup.createAccount")}
               </Button>
             </Box>
 
             <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>
-              ou inscrire avec
+              {t("signup.orWith")}
             </Divider>
 
             <div className="flex justify-center gap-6">
@@ -418,7 +418,7 @@ export default function Page() {
                 type="button"
                 onClick={handleMicrosoftSignUp}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700 transition-colors"
-                aria-label="S'inscrire avec Microsoft"
+                aria-label={t("signup.oauthMicrosoft")}
               >
                 <FaMicrosoft className="w-7 h-7 text-white" />
               </button>
@@ -427,7 +427,7 @@ export default function Page() {
                 type="button"
                 onClick={handleGoogleSignUp}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
-                aria-label="S'inscrire avec Google"
+                aria-label={t("signup.oauthGoogle")}
               >
                 <FaGoogle className="w-7 h-7 text-white" />
               </button>
@@ -436,16 +436,16 @@ export default function Page() {
                 type="button"
                 onClick={handleGitHubSignUp}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900 hover:bg-black transition-colors"
-                aria-label="S'inscrire avec GitHub"
+                aria-label={t("signup.oauthGitHub")}
               >
                 <FaGithub className="w-7 h-7 text-white" />
               </button>
             </div>
 
             <p className="text-center text-sm mt-2 text-gray-300">
-              Déjà un compte?{" "}
+              {t("signup.alreadyHaveAccount")} {" "}
               <Link href="/auth/signin" className="underline">
-                Se connecter
+                {t("signup.signIn")}
               </Link>
             </p>
           </Stack>

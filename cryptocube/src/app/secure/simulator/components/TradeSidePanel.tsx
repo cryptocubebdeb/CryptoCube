@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Image from "next/image";
 
 type Holding = {
@@ -12,6 +13,7 @@ type Holding = {
 };
 
 export default function TradeSidePanel() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<"BUY" | "SELL">("BUY");
   const [orderKind, setOrderKind] = useState<"MARKET" | "LIMIT">("MARKET");
 
@@ -126,26 +128,26 @@ export default function TradeSidePanel() {
     setMsg("");
 
     if (!coinId || !symbol) {
-      setMsg("No coin selected.");
+      setMsg(t('trade.noCoinSelected'));
       setSubmitting(false);
       return;
     }
 
     if (!value || Number(value) <= 0) {
-      setMsg("Enter a valid amount.");
+      setMsg(t('trade.enterValidAmount'));
       setSubmitting(false);
       return;
     }
 
     const amountCoins = cryptoAmount;
     if (amountCoins <= 0) {
-      setMsg("Amount is too small.");
+      setMsg(t('trade.amountTooSmall'));
       setSubmitting(false);
       return;
     }
 
     if (orderKind === "LIMIT" && (!limitPrice || limitPriceNum <= 0)) {
-      setMsg("Enter a valid limit price.");
+      setMsg(t('trade.enterValidLimitPrice'));
       setSubmitting(false);
       return;
     }
@@ -153,7 +155,7 @@ export default function TradeSidePanel() {
     if (mode === "BUY") {
       const needed = amountCoins * effectivePrice;
       if (needed > cash) {
-        setMsg("Not enough cash.");
+        setMsg(t('trade.notEnoughCash'));
         setSubmitting(false);
         return;
       }
@@ -163,12 +165,12 @@ export default function TradeSidePanel() {
       const holding = holdings.find((h) => h.coinId === coinId);
       const owned = Number(holding?.amountOwned || 0);
       if (!holding || owned <= 0) {
-        setMsg("You do not own this coin.");
+        setMsg(t('trade.dontOwnCoin'));
         setSubmitting(false);
         return;
       }
       if (amountCoins > owned) {
-        setMsg("Not enough coins.");
+        setMsg(t('trade.notEnoughCoins'));
         setSubmitting(false);
         return;
       }
@@ -193,51 +195,51 @@ export default function TradeSidePanel() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMsg(data.error || "Order failed.");
+        setMsg(data.error || t('trade.orderFailed'));
       } else {
-        setMsg(`${orderKind} ${mode} order placed.`);
+        setMsg(t('trade.orderPlaced', { orderKind: t(`activity.${orderKind.toLowerCase()}`), mode: t(`activity.${mode.toLowerCase()}`) }));
         setValue("");
         if (orderKind === "MARKET") setLimitPrice("");
       }
     } catch (err) {
-      setMsg("Network error while placing order.");
+      setMsg(t('trade.networkError'));
     } finally {
       setSubmitting(false);
     }
   }
 
   if (loading) {
-    return <div className="text-white/60 text-sm">Loading trading panel…</div>;
+    return <div className="text-white/60 text-sm">{t('trade.loadingPanel')}</div>;
   }
 
   return (
     <div className="flex flex-col h-full text-white space-y-6">
       <h2 className="text-xl font-bold text-center text-yellow-400">
-        Trade
+        {t('trade.title')}
       </h2>
 
       {/* BUY / SELL */}
       <div className="flex bg-white/5 rounded-md overflow-hidden">
-        {["BUY", "SELL"].map((t) => (
+        {['BUY', 'SELL'].map((side) => (
           <button
-            key={t}
+            key={side}
             onClick={() => {
-              setMode(t as "BUY" | "SELL");
+              setMode(side as "BUY" | "SELL");
               setMsg("");
             }}
-            className={`flex-1 py-2 text-sm font-semibold ${mode === t
+            className={`flex-1 py-2 text-sm font-semibold ${mode === side
                 ? "bg-yellow-400 text-black"
                 : "text-white/60 hover:bg-white/10"
               }`}
           >
-            {t}
+            {side === 'BUY' ? t('activity.buy') : t('activity.sell')}
           </button>
         ))}
       </div>
 
       {/* MARKET / LIMIT */}
       <div className="flex bg-white/5 rounded-md overflow-hidden">
-        {["MARKET", "LIMIT"].map((k) => (
+        {['MARKET', 'LIMIT'].map((k) => (
           <button
             key={k}
             onClick={() => setOrderKind(k as "MARKET" | "LIMIT")}
@@ -246,14 +248,14 @@ export default function TradeSidePanel() {
                 : "text-white/60 hover:bg-white/10"
               }`}
           >
-            {k}
+            {k === 'MARKET' ? t('activity.market') : t('activity.limit')}
           </button>
         ))}
       </div>
 
       {orderKind === "LIMIT" && (
         <div>
-          <p className="text-xs text-slate-400 mb-1">Limit price (USD)</p>
+          <p className="text-xs text-slate-400 mb-1">{t('trade.limitPrice')}</p>
           <input
             type="text"
             inputMode="decimal"
@@ -266,7 +268,7 @@ export default function TradeSidePanel() {
 
       {/* Select coin */}
       <div>
-        <p className="text-xs text-slate-400 mb-1">Select Coin</p>
+        <p className="text-xs text-slate-400 mb-1">{t('trade.selectCoin')}</p>
         <div className="relative">
           <select
             className="appearance-none w-full bg-[#0e1117] border border-white/10 rounded-xl px-10 py-3 text-sm"
@@ -303,7 +305,7 @@ export default function TradeSidePanel() {
       {/* Amount input */}
       <div className="mt-1 flex flex-col items-center">
         <span className="text-[10px] tracking-[0.25em] text-slate-500 uppercase">
-          {inputMode === "FIAT" ? "USD" : symbol}
+          {inputMode === "FIAT" ? t('trade.usdLabel') : symbol}
         </span>
         <input
           type="text"
@@ -325,14 +327,14 @@ export default function TradeSidePanel() {
                 onClick={() => setValue(usd.toString())}
                 className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
               >
-                USD{usd}
+                {t('trade.usdShort')}{usd}
               </button>
             ))}
             <button
               onClick={handleMax}
               className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
             >
-              MAX
+              {t('trade.max')}
             </button>
           </>
         ) : (
@@ -340,7 +342,7 @@ export default function TradeSidePanel() {
             onClick={handleMax}
             className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
           >
-            MAX
+            {t('trade.max')}
           </button>
         )}
       </div>
@@ -354,7 +356,7 @@ export default function TradeSidePanel() {
               : "bg-white/10 text-white/60"
             }`}
         >
-          USD
+          {t('trade.usdLabel')}
         </button>
 
         <button
@@ -371,8 +373,8 @@ export default function TradeSidePanel() {
       {/* Conversion preview */}
       <p className="text-xs text-center text-slate-400">
         {inputMode === "FIAT"
-          ? `≈ ${cryptoAmount.toFixed(6)} ${symbol}`
-          : `≈ $${fiatAmount.toFixed(2)} USD`}
+          ? `${t('trade.approx')} ${cryptoAmount.toFixed(6)} ${symbol}`
+          : `${t('trade.approx')} $${fiatAmount.toFixed(2)} ${t('trade.usdLabel')}`}
       </p>
 
       {/* Submit */}
@@ -381,9 +383,9 @@ export default function TradeSidePanel() {
         disabled={submitting}
         className="w-full py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300 disabled:opacity-60"
       >
-        {submitting
-          ? "Processing…"
-          : `${mode} ${symbol} (${orderKind.toLowerCase()})`}
+          {submitting
+            ? t('trade.processing')
+            : `${t(`activity.${mode.toLowerCase()}`).toUpperCase()} ${symbol} (${t(`activity.${orderKind.toLowerCase()}`)})`}
       </button>
 
       {msg && (

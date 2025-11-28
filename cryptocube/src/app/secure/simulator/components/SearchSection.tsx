@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Link from "next/link";
 import { Search } from "lucide-react";
 
@@ -30,6 +31,7 @@ export default function SearchSection() {
 
   // Reference to the container div for detecting outside clicks
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useTranslation();
 
   /**
    * Fetch search results from CoinGecko API
@@ -103,10 +105,8 @@ export default function SearchSection() {
       style={{ paddingBottom: open ? "1.5rem" : "1.5rem" }}
     >
       {/* Section header */}
-      <h2 className="text-xl font-bold text-yellow-400 mb-3">Search</h2>
-      <p className="text-sm text-slate-400 mb-4">
-        Search for coins to trade in the simulator.
-      </p>
+      <h2 className="text-xl font-bold text-yellow-400 mb-3">{t('search.title')}</h2>
+      <p className="text-sm text-slate-400 mb-4">{t('search.subtitle')}</p>
 
       {/* Search input bar */}
       <div className="flex items-center bg-slate-800 rounded-full px-4 py-2 transition-shadow duration-200">
@@ -114,7 +114,7 @@ export default function SearchSection() {
         <input
           value={query}
           onChange={(e) => handleChange(e.target.value)}
-          placeholder="Search cryptocurrency..."
+          placeholder={t('search.placeholder')}
           className="ml-3 w-full bg-transparent text-white placeholder-white/50 outline-none"
         />
       </div>
@@ -126,7 +126,7 @@ export default function SearchSection() {
       >
         <div className="bg-slate-800 border border-[#23252c] rounded-lg h-full overflow-y-auto">
           {loading ? (
-            <div className="px-4 py-3 text-sm text-white/70">Searching…</div>
+            <div className="px-4 py-3 text-sm text-white/70">{t('search.searching')}</div>
           ) : results.length > 0 ? (
             results.map((coin) => (
               <Link
@@ -147,7 +147,7 @@ export default function SearchSection() {
               </Link>
             ))
           ) : query.length > 0 ? (
-            <div className="px-4 py-3 text-sm text-white/60">No matches found.</div>
+            <div className="px-4 py-3 text-sm text-white/60">{t('search.noMatches')}</div>
           ) : null}
         </div>
       </div>
