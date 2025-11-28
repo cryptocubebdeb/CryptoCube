@@ -20,6 +20,10 @@
   }
 }
 
+.footer-bg {
+    background-color: #06080e;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -198,4 +202,23 @@ html {
     padding: 0.5rem 1rem;
     width: 18rem;
     margin-top: 0.5rem;
+}
+
+/* Scroll Bar pour Landing page */
+.rounded-scrollbar::-webkit-scrollbar {
+    width: 16px;
+    border-radius: 9999px;
+    background: transparent;
+}
+
+.rounded-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #facc15;
+    border-radius: 9999px;
+    border: 4px solid transparent;
+    background-clip: padding-box;
+}
+
+.rounded-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 9999px;
 }

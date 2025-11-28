@@ -10,7 +10,7 @@ export default function Page() {
       <Navbar />
       <div
         style={{
-          backgroundImage: "url('images/landingpagebg.png')",
+          backgroundImage: "url('images/landingbg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -68,16 +68,24 @@ export default function Page() {
           Boostez vos compétences en testant votre stratégie dans un <span className="text-yellow-400">simulateur de portefeuille.</span>
         </h2>
 
-        <Image
-          src="/images/portfolio.png"
-          alt="Portfolio Simulator Example"
-          width={900}
-          height={600}
-          className="rounded-4xl border-yellow-500 border-solid border-3"
+        <div 
           style={{
-            boxShadow: "25px 30px 0 rgba(74, 59, 0, 0.7)"
-          }}
-        />
+              boxShadow: "25px 30px 0 rgba(74, 59, 0, 0.7)",
+            }}
+          className="rounded-scrollbar w-[1200px] h-[1000px] overflow-y-auto rounded-4xl border-yellow-500 border-solid border-3 mx-auto"
+          >
+            <Image
+              src="/images/portfoliosim.png"
+              alt="Portfolio Simulator Example"
+              width={1200}
+              height={2000}
+              className="min-w-full"
+              style={{
+                display: "block"
+              }}
+            />
+        </div>
+        
 
         <div className="flex flex-row w-full justify-center items-center mt-50">
           <h2 className="text-5xl italic text-center leading-relaxed font-semibold mr-10">
@@ -92,7 +100,7 @@ export default function Page() {
             style={{
               boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
             }}
-            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
+            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
           >
             <h2 className="text-7xl text-center font-semibold">
               2500+ <br/> <span className="text-4xl">investisseurs <br/> satisfaits</span>
@@ -103,7 +111,7 @@ export default function Page() {
             style={{
               boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
             }}
-            className="bg-zinc-900 self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
+            className="bg-zinc-900 self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
           >
             <h2 className="text-7xl text-center font-semibold">
               $12M+ <br/> <span className="text-4xl">dans des portefeuilles sécurisés</span>
@@ -114,7 +122,7 @@ export default function Page() {
             style={{
               boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
             }}
-            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2"
+            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
           >
             <h2 className="text-7xl text-center font-semibold">
               50,000+<br/> <span className="text-4xl">transactions <br/> analysées</span>
