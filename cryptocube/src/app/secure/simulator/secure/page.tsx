@@ -9,7 +9,7 @@ export default function SimulatorPage() {
   return (
     <div className="space-y-24 pb-32">
       {/* Dashboard / Overview */}
-      <section id="home" className="scroll-mt-32">
+      <section id="home" className="scroll-mt-10">
         <HomeSection />
       </section>
 

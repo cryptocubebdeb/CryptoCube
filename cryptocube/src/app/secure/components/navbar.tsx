@@ -19,6 +19,8 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const userId = (session?.user as { id?: string })?.id;
 
+<<<<<<< HEAD
+=======
   const { t } = useTranslation();
 
   const links = [
@@ -32,10 +34,43 @@ export default function Navbar() {
   
   // Détermine si l'utilisateur est réellement authentifié 
 
+>>>>>>> main
   const isAuthenticated =
     status === "authenticated" &&
     !!(session?.user && ((session.user as any).id || (session.user as any).email));
 
+  // Si a un compte simulateur
+  const [hasSimAccount, setHasSimAccount] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch("/api/simulator/portfolio")
+        .then(res => res.json())
+        .then(data => {
+          setHasSimAccount(data && typeof data.cash !== "undefined");
+        })
+        .catch(() => setHasSimAccount(false));
+    } else {
+      setHasSimAccount(null);
+    }
+  }, [isAuthenticated]);
+
+  const links = [
+    { href: "/secure/dashboard", text: "Accueil" },
+    { href: "/secure/coins", text: "Coins" },
+    { href: "/secure/categories", text: "Catégories" },
+      {
+        href: !isAuthenticated
+          ? "/secure/simulator/accueil"
+          : hasSimAccount === false
+            ? "/secure/simulator/accueil"
+            : "/secure/simulator/secure",
+        text: "Simulateur"
+      },
+    { href: "/secure/about", text: "À propos" },
+  ];
+
+  
   // lien icône utilisateur (utilisé pour l'icône cliquable)
   const userLink = {
     href: isAuthenticated ? "/secure/account/details" : "/auth/signin",
@@ -150,7 +185,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
         <Link href="/secure/dashboard" className="font-bold text-2xl">
-          CryptoCube
+          Crypto<span className="text-yellow-400">Cube</span>
         </Link>
 
         <ul className="flex flex-row items-center gap-6 ">
@@ -161,10 +196,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={[
-                    "navbar-text uppercase text-base transition-colors",
-                    active ? "text-yellow-400" : "text-white/80 hover:text-white",
-                  ].join(" ")}
+                  className={["navbar-text uppercase text-base transition-colors", active ? "text-yellow-400" : "text-white/80 hover:text-white"].join(" ")}
                 >
                   {t(link.text)}
                 </Link>
@@ -196,12 +228,7 @@ export default function Navbar() {
           {/* conteneur qui englobe l'input et le dropdown - ref pour détecter clic en-dehors */}
           <li className="relative" ref={searchContainerRef}>
             <div
-              className={
-                "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
-                (searchOpen
-                  ? "px-3 py-1 w-64 opacity-100"
-                  : "px-0 py-0 w-0 opacity-0 pointer-events-none")
-              }
+              className={"flex items-center bg-slate-800 rounded-full transition-all duration-200 " + (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")}
             >
               <input
                 type="text"
@@ -213,22 +240,22 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
+<<<<<<< HEAD
+                placeholder="Rechercher une crypto..."
+                className={"appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " + (searchOpen ? "w-full pl-2" : "w-0 pl-0")}
+=======
                 placeholder={t("navbar.searchPlaceholder")}
                 className={
                   "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
                   (searchOpen ? "w-full pl-2" : "w-0 pl-0")
                 }
+>>>>>>> main
               />
             </div>
 
             {/* Résultats dropdown*/}
             <div
-              className={
-                "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
-                (searchOpen
-                  ? "opacity-100 scale-100 pointer-events-auto translate-y-0"
-                  : "opacity-0 scale-95 pointer-events-none -translate-y-2")
-              }
+              className={"absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " + (searchOpen ? "opacity-100 scale-100 pointer-events-auto translate-y-0" : "opacity-0 scale-95 pointer-events-none -translate-y-2")}
               id="search-results"
               role="listbox"
               aria-label={t("navbar.searchResults")}
@@ -283,6 +310,10 @@ export default function Navbar() {
 
               <div
               role="menu"
+<<<<<<< HEAD
+              aria-label="User menu"
+              className={"absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " + (userMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none")}
+=======
               aria-label={t("navbar.userMenu")}
               className={
                 "absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
@@ -290,6 +321,7 @@ export default function Navbar() {
                   ? "opacity-100 scale-100 pointer-events-auto"
                   : "opacity-0 scale-95 pointer-events-none")
               }
+>>>>>>> main
             >
               {!isAuthenticated ? (
                 <Link

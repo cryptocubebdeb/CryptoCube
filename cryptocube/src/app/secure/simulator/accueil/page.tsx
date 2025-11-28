@@ -1,0 +1,132 @@
+"use client"
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Button from "@mui/material/Button";
+import { useSession } from "next-auth/react";
+
+
+export default function SimulateurAccueil() 
+{
+    const { data: session, status } = useSession();
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const isAuthenticated =
+    status === "authenticated" &&
+    !!(session?.user && ((session.user as any).id || (session.user as any).email));
+
+    async function handleCreatePortfolio() {
+        setLoading(true);
+        try {
+            const res = await fetch("/api/simulator/createPortfolio", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (res.ok) {
+                router.push("/secure/simulator/secure");
+            } else {
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la création du portfolio :", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return ( 
+    <>
+    <div className="h-screen flex flex-col justify-center items-center space-y-6">
+        <h1 className="text-5xl font-bold mb-10 text-center">Bienvenue dans le simulateur Crypto<span className="text-yellow-400">Cube</span></h1>
+
+        <p className="text-2xl mb-13 text-center max-w-3xl">
+            Ici, vous pouvez tester vos stratégies de trading sans risque. Découvrez les fonctionnalités, suivez vos performances, et apprenez à dominer le marché crypto.
+        </p>
+
+        { !isAuthenticated ? (
+            <>
+            <p className="text-xl text-start max-w-3xl mb-5">
+                Pour essayer le simulateur de portfolio, veuillez vous connecter ou créer un compte.
+            </p>
+
+            <Button
+                variant="outlined"
+                onClick={() => router.push("/auth/signin")}
+                disabled={loading}
+                sx={{
+                    mt: 5,
+                    mb: 1,
+                    padding: '16px 40px',
+                    borderRadius: '15px',
+                    borderColor: '#FFDD00',
+                    borderWidth: '1.5px',
+                    color: '#FFDD00',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { 
+                        backgroundColor: '#e6c200', 
+                        color: 'black',
+                        borderColor: '#e6c200',
+                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                    } 
+                }}
+            >
+                S&apos;inscrire / Se connecter
+            </Button>
+            </>
+        ) : (
+            <div className="flex flex-col justify-center items-center">
+                <p className="text-3xl text-start max-w-3xl mt-4 mb-5 text-yellow-400 font-semibold">
+                    Plus de détails
+                </p>
+
+                <p className="text-xl text-start max-w-3xl mb-5">
+                    Notre simulateur utilise des données réelles afin de reproduire parfaitement le trading du monde réel.
+                </p>
+
+                <p className="text-xl text-start max-w-3xl mb-10">
+                    La précision avec laquelle nous imitons le marché est presque parfaite et vos compétences le deviendront aussi.
+                </p>
+
+                <p className="text-xl text-start mb-5">
+                    Pour commencer le simulateur, nous vous offrons <span className="font-bold">USD$100,000.00</span> à trader librement.
+                </p>
+
+                <p className="text-xl text-start mb-5">
+                    <span className="text-yellow-400">Avertissement</span>: Toutes les transactions sont effectuées en <span className="underline">dollars américains (USD)</span>.
+                </p>
+
+                <Button
+                    variant="outlined"
+                    onClick={handleCreatePortfolio}
+                    disabled={loading}
+                    sx={{
+                        mt: 5,
+                        mb: 1,
+                        padding: '16px 40px',
+                        borderRadius: '15px',
+                        borderColor: '#FFDD00',
+                        borderWidth: '1.5px',
+                        color: '#FFDD00',
+                        fontWeight: 'bold',
+                        transition: 'all 0.3s ease',
+                        '&:hover': { 
+                            backgroundColor: '#e6c200', 
+                            color: 'black',
+                            borderColor: '#e6c200',
+                            boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                        } 
+                    }}
+                >
+                    {loading ? "En création..." : "Créer un portfolio"}
+                </Button>
+            </div>
+        )}
+    </div>
+    </>
+    )
+}

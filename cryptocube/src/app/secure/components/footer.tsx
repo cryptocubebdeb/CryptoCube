@@ -29,7 +29,11 @@ export default function Footer() {
               <ul className="space-y-2 text-sm text-white/80">
                 <li><Link href="/secure/about" className="hover:text-white">À propos</Link></li>
                 <li><Link href="/auth/login" className="hover:text-white">Se connecter</Link></li>
+<<<<<<< HEAD
+                <li><Link href="/auth/signup" className="hover:text-white">S'inscrire</Link></li>
+=======
                 <li><Link href="/auth/signup" className="hover:text-white">S&apos;inscrire</Link></li>
+>>>>>>> main
               </ul>
             </div>
           </div>
