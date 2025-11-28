@@ -17,9 +17,6 @@ export default function DashboardContent() {
 
   return (
     <>
-      {/* Search Bar */}
-      {/* <SearchBar /> */}
-
       <div
           style={{
               borderRadius: '20px',
@@ -34,7 +31,8 @@ export default function DashboardContent() {
               marginLeft: 'auto',
               marginRight: 'auto',
               width: '90%',
-              height: '500px'
+              height: '500px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
           }}
       >
           <Typography variant="h4" sx={{ mb: '30px', fontWeight: 'bold' }}>
@@ -80,7 +78,7 @@ export default function DashboardContent() {
           display: 'flex',
           gap: '24px',
           margin: '24px auto 0',
-          flexWrap: 'wrap',
+          flexWrap: 'wrap'
         }}
       >
         {/* CÔTÉ GAUCHE */}
@@ -90,7 +88,7 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px',
+            minWidth: '300px'
           }}
         >
           {/* Market Status */}
@@ -104,6 +102,7 @@ export default function DashboardContent() {
               display: 'flex',
               flexDirection: 'column',
               textAlign: 'center',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
@@ -123,11 +122,18 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '400px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
+<<<<<<< HEAD
       <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
          {t("dashboard.topGainers")}
       </Typography>
+=======
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+              Top des hausses du jour
+            </Typography>
+>>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto' }}>
                 <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
@@ -141,7 +147,7 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px',
+            minWidth: '300px'
           }}
         >
           {/* Daily News */}
@@ -152,6 +158,7 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '435px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
@@ -170,11 +177,18 @@ export default function DashboardContent() {
               padding: '16px',
               color: '#FFFFFF',
               height: '285px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
+<<<<<<< HEAD
       <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
         {t("dashboard.topLosers")}
       </Typography>
+=======
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+              Top des baisses du jour
+            </Typography>
+>>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
                 <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>
@@ -191,6 +205,7 @@ export default function DashboardContent() {
             backgroundColor: '#141418ff',
             borderRadius: '16px',
             padding: '24px',
+            boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
           }}>
           <div style={{ 
             display: 'flex', 

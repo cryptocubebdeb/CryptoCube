@@ -114,15 +114,13 @@ export default async function Page({
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
             <div className="flex flex-1 justify-center w-full pt-10">
                 {/* Main container */}
-                <div className="w-full max-w-[1600px] xl:px-8 flex items-start gap-10">
+                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start mt-15">
 
                     {/* Right column - details */}
-                    <div className="basis-[360px] shrink-0 text-white text-xl rounded-[2px] shadow-md border-r border-white/20 pr-6">
-
-
+                    <div className="flex-[0.27] text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20">
 
                         {/* Crypto Name and Logo */}
-                        <div className="flex items-center gap-4 ">
+                        <div className="flex items-center gap-4 p-4 pt-0">
                             {logo && (
                                 <Image
                                     src={logo}
