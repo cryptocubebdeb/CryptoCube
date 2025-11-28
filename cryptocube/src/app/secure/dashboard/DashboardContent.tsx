@@ -1,4 +1,6 @@
 "use client"
+
+import { useTranslation } from "react-i18next";
 import { useSession } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -14,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { getFormatPrix } from '../../lib/getFormatData';
 
 export default function DashboardContent() {
+<<<<<<< HEAD
   const [loading, setLoading] = useState(true);
 
   // Store user's current cash balance
@@ -68,6 +71,9 @@ export default function DashboardContent() {
 
 
   // Verification de portfolio utilisateur
+=======
+  const { t } = useTranslation();
+>>>>>>> main
   const { data: session } = useSession();
   const [hasPortfolio, setHasPortfolio] = useState(false);
 
@@ -98,6 +104,7 @@ export default function DashboardContent() {
   return (
     <>
       <div
+<<<<<<< HEAD
         style={{
           borderRadius: '20px',
           padding: '16px',
@@ -182,6 +189,59 @@ export default function DashboardContent() {
               }}
             >
               Essayez le simulateur
+=======
+          style={{
+              borderRadius: '20px',
+              padding: '16px',
+              backgroundColor: '#141418ff',
+              textAlign: 'center',
+              flexDirection: 'column',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '32px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              width: '90%',
+              height: '500px',
+              boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
+          }}
+      >
+          <Typography variant="h4" sx={{ mb: '30px', fontWeight: 'bold' }}>
+          {t("dashboard.playAndDominate")}
+        </Typography>
+
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          {t("dashboard.trySimulator")}
+        </Typography>
+
+        <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
+          {t("dashboard.noRisk")}
+        </Typography>
+
+          <Button
+                variant="outlined"
+                href="/secure/simulator"
+                sx={{
+                    mt: 5,
+                    mb: 1,
+                    padding: '16px 40px',
+                    borderRadius: '15px',
+                    borderColor: '#FFDD00',
+                    borderWidth: '1.5px',
+                    color: '#FFDD00',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { 
+                        backgroundColor: '#e6c200', 
+                        color: 'black',
+                        borderColor: '#e6c200',
+                        boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
+                    } 
+                }}
+            >
+                 {t("dashboard.trySimulatorButton")}
+>>>>>>> main
             </Button>
           </>
         )}
@@ -194,7 +254,7 @@ export default function DashboardContent() {
           display: 'flex',
           gap: '24px',
           margin: '24px auto 0',
-          flexWrap: 'wrap',
+          flexWrap: 'wrap'
         }}
       >
         {/* CÔTÉ GAUCHE */}
@@ -204,7 +264,7 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px',
+            minWidth: '300px'
           }}
         >
           {/* Market Status */}
@@ -222,7 +282,11 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2 }}>
+<<<<<<< HEAD
               Aperçu du marché
+=======
+                {t("dashboard.marketOverview")}
+>>>>>>> main
             </Typography>
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <MarketOverviewGauges />
@@ -240,9 +304,21 @@ export default function DashboardContent() {
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
+<<<<<<< HEAD
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
               Top gagnants du jour
             </Typography>
+=======
+<<<<<<< HEAD
+      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+         {t("dashboard.topGainers")}
+      </Typography>
+=======
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1 }}>
+              Top des hausses du jour
+            </Typography>
+>>>>>>> main
+>>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
             </Box>
@@ -256,7 +332,7 @@ export default function DashboardContent() {
             flexDirection: 'column',
             gap: '24px',
             flex: 1,
-            minWidth: '300px',
+            minWidth: '300px'
           }}
         >
           {/* Daily News */}
@@ -271,7 +347,11 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center' }}>
+<<<<<<< HEAD
               Nouvelles de la journée
+=======
+                {t("dashboard.dailyNews")}
+>>>>>>> main
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <DailyNews /> {/* Dans components/DailyNews.tsx */}
@@ -289,9 +369,21 @@ export default function DashboardContent() {
               boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
             }}
           >
+<<<<<<< HEAD
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
               Top perdants du jour
             </Typography>
+=======
+<<<<<<< HEAD
+      <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+        {t("dashboard.topLosers")}
+      </Typography>
+=======
+            <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
+              Top des baisses du jour
+            </Typography>
+>>>>>>> main
+>>>>>>> main
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
               <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
             </Box>
@@ -308,16 +400,24 @@ export default function DashboardContent() {
             backgroundColor: '#141418ff',
             borderRadius: '16px',
             padding: '24px',
+<<<<<<< HEAD
           }}
         >
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
+=======
+            boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
+          }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+>>>>>>> main
             alignItems: 'center',
             marginBottom: '24px'
           }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
-              Liste de suivi
+              {t("dashboard.watchlist")}
             </Typography>
             <Button
               variant="outlined"
@@ -335,7 +435,7 @@ export default function DashboardContent() {
                 }
               }}
             >
-              Voir plus
+              {t("dashboard.viewMore")}
             </Button>
           </div>
           <WatchlistCarousel />

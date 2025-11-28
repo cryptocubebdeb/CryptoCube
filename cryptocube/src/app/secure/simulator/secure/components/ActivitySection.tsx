@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 // Define the structure of a trade
 type Trade = {
@@ -19,6 +20,7 @@ type SideFilter = "ALL" | "BUY" | "SELL";
 type KindFilter = "ALL" | "MARKET" | "LIMIT";
 
 export default function ActivitySection() {
+  const { t } = useTranslation();
   // Store all executed trades
   const [executedTrades, setExecutedTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,13 +69,13 @@ export default function ActivitySection() {
     <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
       {/* Header and filter controls */}
       <div className="flex items-center justify-between mb-4 gap-4">
-        <h2 className="text-xl font-bold text-yellow-400">Trade History</h2>
+        <h2 className="text-xl font-bold text-yellow-400">{t('activity.title')}</h2>
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {/* Side filter */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">Side:</span>
+            <span className="text-slate-500">{t('activity.side')}</span>
             <div className="flex rounded-lg overflow-hidden border border-[#23252c]">
               {(["ALL", "BUY", "SELL"] as SideFilter[]).map((value) => (
                 <button
@@ -85,7 +87,7 @@ export default function ActivitySection() {
                       : "bg-[#15171f] text-slate-300 hover:bg-[#1b1e26]"
                   }`}
                 >
-                  {value === "ALL" ? "All" : value}
+                  {value === "ALL" ? t('activity.all') : value === 'BUY' ? t('activity.buy') : t('activity.sell')}
                 </button>
               ))}
             </div>
@@ -93,7 +95,7 @@ export default function ActivitySection() {
 
           {/* Kind filter */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">Type:</span>
+            <span className="text-slate-500">{t('activity.type')}</span>
             <div className="flex rounded-lg overflow-hidden border border-[#23252c]">
               {(["ALL", "MARKET", "LIMIT"] as KindFilter[]).map((value) => (
                 <button
@@ -105,7 +107,7 @@ export default function ActivitySection() {
                       : "bg-[#15171f] text-slate-300 hover:bg-[#1b1e26]"
                   }`}
                 >
-                  {value === "ALL" ? "All" : value.charAt(0) + value.slice(1).toLowerCase()}
+                  {value === "ALL" ? t('activity.all') : value === 'MARKET' ? t('activity.market') : t('activity.limit')}
                 </button>
               ))}
             </div>
@@ -113,7 +115,7 @@ export default function ActivitySection() {
 
           {/* Coin filter */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">Coin:</span>
+            <span className="text-slate-500">{t('activity.coin')}</span>
             <select
               value={coinFilter}
               onChange={(e) => setCoinFilter(e.target.value)}
@@ -121,7 +123,7 @@ export default function ActivitySection() {
             >
               {coinOptions.map((symbol) => (
                 <option key={symbol} value={symbol}>
-                  {symbol === "ALL" ? "All" : symbol}
+                  {symbol === "ALL" ? t('activity.all') : symbol}
                 </option>
               ))}
             </select>
@@ -130,14 +132,14 @@ export default function ActivitySection() {
       </div>
 
       {/* Loading state */}
-      {loading && <p className="text-slate-400 text-sm">Loading trade history…</p>}
+      {loading && <p className="text-slate-400 text-sm">{t('activity.loading')}</p>}
 
       {/* Empty state */}
       {!loading && filteredTrades.length === 0 && (
-        <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm">
           {executedTrades.length === 0
-            ? "No executed trades yet."
-            : "No trades match the current filters."}
+            ? t('activity.noExecutedTrades')
+            : t('activity.noMatchingTrades')}
         </p>
       )}
 
@@ -158,13 +160,13 @@ export default function ActivitySection() {
                 {/* Left side: trade details */}
                 <div>
                   <p className={`font-semibold ${isBuy ? "text-green-400" : "text-red-400"}`}>
-                    {isBuy ? "BUY" : "SELL"} {trade.coinSymbol}
+                    {isBuy ? t('activity.buy').toUpperCase() : t('activity.sell').toUpperCase()} {trade.coinSymbol}
                   </p>
 
                   <p className="text-xs text-slate-400">
                     {trade.orderKind === "MARKET"
-                      ? "Market order"
-                      : `Limit @ $${Number(trade.price ?? 0).toFixed(2)}`}
+                      ? t('activity.marketOrder')
+                      : t('activity.limitAt', { price: Number(trade.price ?? 0).toFixed(2) })}
                   </p>
 
                   <p className="text-xs text-slate-300 mt-1">
@@ -172,7 +174,7 @@ export default function ActivitySection() {
                   </p>
 
                   <p className="text-xs text-slate-500">
-                    Total: ${total.toFixed(2)}
+                    {t('activity.total', { total: total.toFixed(2) })}
                   </p>
                 </div>
 

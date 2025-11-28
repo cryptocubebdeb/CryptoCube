@@ -1,9 +1,16 @@
 "use client"
 
-import Sidebar from "../../components/Sidebar"
+import "../../../../i18n"; 
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
+import Sidebar from "../../components/Sidebar";
 import { useSession } from "next-auth/react"
+import LanguageSelector from "../../components/LanguageSelector"
 
 export default function Page() {
+  const { t } = useTranslation();
+  console.log("LANGUAGE USED:", i18n.language);
+
   const { data: session, status } = useSession()
   const userId = (session?.user as { id?: string })?.id
 
@@ -11,7 +18,7 @@ export default function Page() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center h-screen text-white">
-        <p>Chargement...</p>
+        <p>{t("settings.loading")}</p>
       </div>
     )
   }
@@ -20,7 +27,7 @@ export default function Page() {
   if (!userId) {
     return (
       <div className="flex items-center justify-center h-screen text-white">
-        <p>Veuillez vous connecter pour accéder à vos paramètres</p>
+        <p>{t("settings.mustLogin")}</p>
       </div>
     )
   }
@@ -32,9 +39,14 @@ export default function Page() {
 
       {/* Main Content Area */}
       <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
-        <h2 className="title">Mes Paramètres</h2>
+        <h2 className="title">{t("settings.title")}</h2>
 
-        {/* Language + Light/Dark mode*/}
+        <div className="mt-10 ml-10">
+          <h3 className="text-2xl mt-20 mb-6">{t("settings.language")}</h3>
+      <LanguageSelector />
+        </div>
+
+        {/*Light/Dark mode*/}
       </main>
     </div>
   )

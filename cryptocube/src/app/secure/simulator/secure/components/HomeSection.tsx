@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+<<<<<<< HEAD:cryptocube/src/app/secure/simulator/secure/components/HomeSection.tsx
 import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
+=======
+import { useTranslation } from 'react-i18next';
+import PortfolioChart from "../../components/Portfolio/PortfolioChart";
+>>>>>>> main:cryptocube/src/app/secure/simulator/components/HomeSection.tsx
 
 export default function HomeSection() {
+  const { t } = useTranslation();
   // Store user's current cash balance
   const [cash, setCash] = useState(0);
 
@@ -62,30 +68,30 @@ export default function HomeSection() {
 
       {/* ================= Header Overview ================= */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-yellow-400">Overview</h2>
+        <h2 className="text-xl font-bold text-yellow-400">{t('simulator.overviewTitle')}</h2>
 
         {loading ? (
           // Display loading text while fetching data
-          <p className="text-slate-400 text-sm">Loading data…</p>
+          <p className="text-slate-400 text-sm">{t('simulator.loadingData')}</p>
         ) : (
           // Display summary of key portfolio information
           <div className="grid grid-cols-3 gap-4 text-sm">
 
             {/* Cash Balance */}
             <div>
-              <p className="text-slate-400">Cash</p>
+              <p className="text-slate-400">{t('simulator.cash')}</p>
               <p className="text-white font-semibold">${cash.toFixed(2)}</p>
             </div>
 
             {/* Number of Coin Holdings */}
             <div>
-              <p className="text-slate-400">Holdings</p>
+              <p className="text-slate-400">{t('simulator.holdings')}</p>
               <p className="text-white font-semibold">{holdings.length}</p>
             </div>
 
             {/* Number of Pending Orders */}
             <div>
-              <p className="text-slate-400">Pending Orders</p>
+              <p className="text-slate-400">{t('simulator.pendingOrders')}</p>
               <p className="text-white font-semibold">{pendingOrders.length}</p>
             </div>
 

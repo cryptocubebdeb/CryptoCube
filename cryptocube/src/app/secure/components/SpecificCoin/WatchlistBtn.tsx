@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from "../../../lib/watchlistActions";
 
 type WatchlistButtonProps = {
@@ -7,6 +8,7 @@ type WatchlistButtonProps = {
 };
 
 export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
+  const { t } = useTranslation();
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,7 +50,7 @@ export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
         disabled
         className="px-4 py-2 border border-white/20 rounded-md text-white/60 cursor-not-allowed"
       >
-        ...
+        {t('coinsPage.loading')}
       </button>
     );
 
@@ -61,7 +63,7 @@ export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
           : "border-white/30 text-white hover:bg-white/10"
       }`}
     >
-      {isInWatchlist ? "Retirer de la liste de suivi" : "Ajouter à la liste de suivi"}
+      {isInWatchlist ? t('coinsPage.removeFromWatchlist') : t('coinsPage.addToWatchlist')}
     </button>
   );
 }

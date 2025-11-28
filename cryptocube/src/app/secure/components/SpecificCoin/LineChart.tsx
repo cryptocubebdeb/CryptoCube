@@ -1,9 +1,9 @@
 /*
-Ce code est adapté de l'exemple D3 :
-    "Line Chart with Tooltip" — https://observablehq.com/@d3/line-with-tooltip
+This code is adapted from the D3 example:
+  "Line Chart with Tooltip" — https://observablehq.com/@d3/line-with-tooltip
 
-Pour plus d'informations et tutoriels associés :
-    - React Graph Gallery Line Chart: https://www.react-graph-gallery.com/line-chart
+  For more information and related tutorials:
+  - React Graph Gallery Line Chart: https://www.react-graph-gallery.com/line-chart
 */
 "use client";
 import { use, useEffect, useMemo, useRef } from "react";

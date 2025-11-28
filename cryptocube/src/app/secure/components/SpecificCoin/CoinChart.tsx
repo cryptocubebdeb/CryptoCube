@@ -1,6 +1,7 @@
 // /app/secure/components/CoinChart.tsx
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { getCoinChart } from "../../../lib/getCoinChart";
 import LineChart from "./LineChart";
 import WatchlistButton from "./WatchlistBtn";
@@ -14,6 +15,7 @@ type params = {
 };
 
 export default function CoinChart({ coinId, currency = "usd" }: params) {
+  const { t } = useTranslation();
   const [days, setDays] = useState(30); // valeur par défaut : 30 jours
   const [data, setData] = useState<Point[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,11 +41,11 @@ export default function CoinChart({ coinId, currency = "usd" }: params) {
   }, [coinId, days, currency]);
 
   const ranges = [
-    { label: "24H", value: 1 },
-    { label: "7J", value: 7 },
-    { label: "30J", value: 30 },
-    { label: "90J", value: 90 },
-    { label: "1A", value: 365 },
+    { labelKey: 'coinsPage.range24h', value: 1 },
+    { labelKey: 'coinsPage.range7d', value: 7 },
+    { labelKey: 'coinsPage.range30d', value: 30 },
+    { labelKey: 'coinsPage.range90d', value: 90 },
+    { labelKey: 'coinsPage.range1y', value: 365 },
     //{ label: "5Y", value: 1825 },
     //FIGURE OUT HOW TO ADD A MAX RANGE { label: "MAX", value: "max" },
   ]
@@ -67,7 +69,7 @@ export default function CoinChart({ coinId, currency = "usd" }: params) {
                 : "bg-gray-800 text-gray-200 hover:bg-gray-700"
                 }`}
             >
-              {range.label}
+              {t(range.labelKey)}
             </button>
           ))}
         </div>
@@ -75,7 +77,7 @@ export default function CoinChart({ coinId, currency = "usd" }: params) {
 
       {/* Chart */}
       {loading ? (
-        <p className="text-white/60">Chargement du graphique...</p>
+        <p className="text-white/60">{t('coinsPage.chartLoading')}</p>
       ) : (
         <LineChart width={window.innerWidth * 0.9} height={window.innerHeight} data={data} />
       )}

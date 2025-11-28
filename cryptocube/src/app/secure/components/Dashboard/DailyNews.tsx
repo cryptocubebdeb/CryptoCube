@@ -65,7 +65,7 @@ export default function DailyNews(): React.JSX.Element {
     if (loading) {
         return (
              <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
-                Loading news...
+                Chargement des actualités...
             </Typography>
         );
     }
@@ -73,7 +73,7 @@ export default function DailyNews(): React.JSX.Element {
     if (!news.length) {
         return (
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'error.main' }}>
-                Failed to load news.
+                Impossible de charger les actualités.
             </Typography>
         );
     }

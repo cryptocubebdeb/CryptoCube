@@ -13,14 +13,23 @@ import { CoinData, CategoryData } from '@/app/lib/definitions';
 import { getCoinsList } from '../../lib/getCoinsList';
 import { getCategories } from '../../lib/getCategories';
 import { getFormatMarketCap, getFormatPercentage } from '@/app/lib/getFormatData';
-import { buildSparklinePoints, aggregateSparklines} from '@/app/lib/sparkline';
+import { buildSparklinePoints, aggregateSparklines } from '@/app/lib/sparkline';
 import { computeTotalMarketCapChangePercent } from '@/app/lib/marketCap';
 import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/lib/watchlistActions';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { useTranslation } from "react-i18next";
 
 
 export default function Page() {
+    const { t } = useTranslation();
+
+    const tabs = [
+        { key: "tout", label: t("coinsPage.tabs.all") },
+        { key: "pluséchangées", label: t("coinsPage.tabs.mostTraded") },
+        { key: "gagnants", label: t("coinsPage.tabs.winners") },
+    ];
+
     const { data: session } = useSession();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(20); // 800 coins = 40 par page * 20 pages
@@ -279,7 +288,7 @@ export default function Page() {
                                     paddingLeft: '1.5rem',
                                 }}
                             >
-                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Capitalisation</h1>
+                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>  {t("coinsPage.marketCap")}</h1>
                                 <div
                                     style={{
                                         marginTop: '0.5rem',
@@ -307,7 +316,7 @@ export default function Page() {
                                     paddingLeft: '1.5rem',
                                 }}
                             >
-                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>Volume 24h</h1>
+                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}> {t("coinsPage.volume24h")}</h1>
                                 <h2
                                     style={{
                                         marginTop: '0.5rem',
@@ -321,7 +330,7 @@ export default function Page() {
                         <SearchBar
                             searchTerm={searchTerm}
                             onSearchChange={setSearchTerm}
-                            placeholder="Explorer les cryptos..."
+                            placeholder={t("coinsPage.explorePlaceholder")}
                         />
                     </div>
                 </div>
@@ -331,17 +340,17 @@ export default function Page() {
                         <div className="text-center mx-auto space-y-8">
                             {/* Titre principal */}
                             <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
-                                Naviguez dans le monde de la cryptomonnaie en toute simplicité.
+                                {t("coinsPage.heroTitle")}
                             </h1>
                             {/* Sous-titre */}
                             <p className="text-xl md:text-2xl font-light opacity-75">
-                                Simple. Rapide. Transparent.
+                                {t("coinsPage.heroSubtitle")}
                             </p>
                             {/* Barre de recherche */}
                             <SearchBar
                                 searchTerm={searchTerm}
                                 onSearchChange={setSearchTerm}
-                                placeholder="Explorer les cryptos..."
+                                placeholder={t("coinsPage.explorePlaceholder")}
                             />
                         </div>
                     </div>
@@ -350,90 +359,90 @@ export default function Page() {
 
             {/* Aperçu top : Top gagnants & Top par volume */}
             <div className="max-w-[85rem] mx-auto px-6 mb-8">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {/* Colonne métriques gauche : Capitalisation + Volume 24h */}
-                                <div className="flex flex-col gap-4">
-                                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <div className="text-sm text-white/80">Capitalisation</div>
-                                                <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}</div>
-                                                <div style={{ fontSize: '1rem', marginTop: '0.25rem' }}>{formatPercentage(totalMarketCapChangePercent)}</div>
-                                            </div>
-                                            <div style={{ width: 170, height: 60 }}>
-                                                {/*chart capitalisation*/}
-                                                <svg width="130" height="90" viewBox="0 0 130 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    {marketSparkPoints ? (
-                                                        <polyline points={marketSparkPoints} stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                                    ) : (
-                                                        <polyline points="0,40 20,32 40,20 60,24 80,18 100,22 120,28" stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                                    )}
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <div className="text-sm text-white/80">Volume (24h)</div>
-                                                {/* on additionne le volume de tous les coins (total_volume) */}
-                                                <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
-                                            </div>
-                                            <div style={{ width: 240, height: '100px', display: 'flex', alignItems: 'flex-start' }}>
-                                                {/* Mini-barres */}
-                                                {topTraded.length === 0 ? (
-                                                    <div className="text-sm text-white/60">Pas de données</div>
-                                                ) : (
-                                                    <div className="space-y-1 w-full" style={{ maxHeight: '150px', overflow: 'hidden' }}>
-                                                        {(() => {
-
-                                                            // Trouver le volume max pour le pourcentage
-                                                            const maxVol = Math.max(...topTraded.map(c => c.total_volume || 0), 1);
-                                                
-                                                            return topTraded.map((c) => {
-                                                                const vol = c.total_volume || 0;
-                                                                //calcul du pourcentage
-                                                                const pct = Math.round((vol / maxVol) * 100);
-                                                                return (
-                                                                    <div key={c.id} className="flex items-center gap-2" style={{ lineHeight: 1 }}>
-                                                                        {/*  */}
-                                                                        <img src={c.image} alt={c.name} className="w-6 h-6 rounded-full" onError={(e)=>{(e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='}} />
-                                                                        <div className="flex-1">
-                                                                            <div className="flex items-center justify-between">
-                                                                                <div className="text-sm font-medium uppercase">{c.symbol}</div>
-                                                                                <div className="text-xs text-white/80">{getFormatMarketCap(vol)}</div>
-                                                                            </div>
-                                                                            <div className="w-full h-2 bg-white/10 rounded mt-1 overflow-hidden">
-                                                                            {/* la barre de volume  */}
-                                                                                <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', transition: 'width 360ms ease' }} />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            });
-                                                        })()}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-
-
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Colonne métriques gauche : Capitalisation + Volume 24h */}
+                    <div className="flex flex-col gap-4">
+                        <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <div className="text-sm text-white/80">{t("coinsPage.marketCap")}</div>
+                                    <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}</div>
+                                    <div style={{ fontSize: '1rem', marginTop: '0.25rem' }}>{formatPercentage(totalMarketCapChangePercent)}</div>
                                 </div>
+                                <div style={{ width: 170, height: 60 }}>
+                                    {/*chart capitalisation*/}
+                                    <svg width="130" height="90" viewBox="0 0 130 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        {marketSparkPoints ? (
+                                            <polyline points={marketSparkPoints} stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                        ) : (
+                                            <polyline points="0,40 20,32 40,20 60,24 80,18 100,22 120,28" stroke="#3b82f6" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                        )}
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <div className="text-sm text-white/80">{t("coinsPage.volume24h")}</div>
+                                    {/* on additionne le volume de tous les coins (total_volume) */}
+                                    <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
+                                </div>
+                                <div style={{ width: 240, height: '100px', display: 'flex', alignItems: 'flex-start' }}>
+                                    {/* Mini-barres */}
+                                    {topTraded.length === 0 ? (
+                                        <div className="text-sm text-white/60"> {t("coinsPage.noData")}</div>
+                                    ) : (
+                                        <div className="space-y-1 w-full" style={{ maxHeight: '150px', overflow: 'hidden' }}>
+                                            {(() => {
+
+                                                // Trouver le volume max pour le pourcentage
+                                                const maxVol = Math.max(...topTraded.map(c => c.total_volume || 0), 1);
+
+                                                return topTraded.map((c) => {
+                                                    const vol = c.total_volume || 0;
+                                                    //calcul du pourcentage
+                                                    const pct = Math.round((vol / maxVol) * 100);
+                                                    return (
+                                                        <div key={c.id} className="flex items-center gap-2" style={{ lineHeight: 1 }}>
+                                                            {/*  */}
+                                                            <img src={c.image} alt={c.name} className="w-6 h-6 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
+                                                            <div className="flex-1">
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="text-sm font-medium uppercase">{c.symbol}</div>
+                                                                    <div className="text-xs text-white/80">{getFormatMarketCap(vol)}</div>
+                                                                </div>
+                                                                <div className="w-full h-2 bg-white/10 rounded mt-1 overflow-hidden">
+                                                                    {/* la barre de volume  */}
+                                                                    <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', transition: 'width 360ms ease' }} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                });
+                                            })()}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
                     {/* Top Gagnants */}
                     <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF' }}>
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-lg font-semibold">Top 3 Gagnants (24h)</h3>
-                            
+                            <h3 className="text-lg font-semibold">{t("coinsPage.topGainers")}</h3>
+
                         </div>
                         <div className="space-y-2">
-                                {loading ? (
+                            {loading ? (
                                 // squelettes - placeholders bleus translucides
                                 <div className="space-y-2">
-                                    {[1,2,3].map(i => (
+                                    {[1, 2, 3].map(i => (
                                         <div key={i} className="flex items-center justify-between p-2 rounded animate-pulse" style={{ backgroundColor: 'rgba(59,130,246,0.04)' }}>
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
@@ -448,7 +457,7 @@ export default function Page() {
                                 </div>
                             ) : (
                                 topGainers.length === 0 ? (
-                                    <div className="text-sm text-white/60">Pas encore de données</div>
+                                    <div className="text-sm text-white/60">{t("coinsPage.noData")}</div>
                                 ) : (
                                     topGainers.map(coin => (
                                         <div
@@ -458,7 +467,7 @@ export default function Page() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e)=>{(e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='}} />
+                                                <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
                                                 <div>
                                                     <div className="font-medium">{coin.name}</div>
                                                     <div className="text-sm text-white/60 uppercase">{coin.symbol}</div>
@@ -477,13 +486,13 @@ export default function Page() {
                     {/* Top par volume */}
                     <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF' }}>
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-lg font-semibold">Top 3 par Volume (24h)</h3>
+                            <h3 className="text-lg font-semibold">{t("coinsPage.topVolume")}</h3>
 
                         </div>
                         <div className="space-y-2">
-                                        {loading ? (
+                            {loading ? (
                                 <div className="space-y-2">
-                                    {[1,2,3].map(i => (
+                                    {[1, 2, 3].map(i => (
                                         <div key={i} className="flex items-center justify-between p-2 rounded animate-pulse" style={{ backgroundColor: 'rgba(59,130,246,0.04)' }}>
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
@@ -498,7 +507,7 @@ export default function Page() {
                                 </div>
                             ) : (
                                 topTraded.length === 0 ? (
-                                    <div className="text-sm text-white/60">Pas encore de données</div>
+                                    <div className="text-sm text-white/60">{t("coinsPage.noData")}</div>
                                 ) : (
                                     topTraded.map(coin => (
                                         <div
@@ -508,7 +517,7 @@ export default function Page() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e)=>{(e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='}} />
+                                                <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
                                                 <div>
                                                     <div className="font-medium">{coin.name}</div>
                                                     <div className="text-sm text-white/60 uppercase">{coin.symbol}</div>
@@ -531,102 +540,114 @@ export default function Page() {
                 <div className="max-w-[85rem] mx-auto">
                     {/* Titre Aperçu */}
                     <h2 className="text-4xl font-bold mb-10">
-                        {activeTab === 'tout' && 'Liste des cryptomonnaies'}
-                        {/* {activeTab === 'tendance' && 'Cryptomonnaies en tendance'} */}
-                        {activeTab === 'pluséchangées' && 'Cryptomonnaies les plus échangées'}
-                        {activeTab === 'gagnants' && 'Top gagnants (24h)'}
+                        {activeTab === 'tout' && t("coinsPage.cryptoListAll")}
+                        {activeTab === 'pluséchangées' && t("coinsPage.cryptoListMostTraded")}
+                        {activeTab === 'gagnants' && t("coinsPage.cryptoListWinners")}
                     </h2>
 
                     {/* Onglets de navigation */}
-                    <div className="flex justify-between items-center mb-5 border-b border-gray-400">
-                        <div className="flex space-x-8">
-                            {['Tout', 'Plus Échangées', 'Gagnants'].map((tab) => {
-                                const tabKey = tab.toLowerCase().replace(' ', '');
-                                // Count avec tab filter et search filter
-                                const tabFilteredCoins = getFilteredCoinsByTab(coins, tabKey);
-                                const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
-                                    coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-                                );
-                                const tabCount = searchAndTabFiltered.length;
-                                return (
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tabKey)}
-                                        className={`pb-4 px-1 text-md transition-colors ${activeTab === tabKey
-                                                ? 'border-b-2 border-blue-500 text-blue-600'
-                                                : 'text-gray-500 hover:text-gray-300'
-                                            }`}
-                                    >
-                                        {tab}
-                                        <span className="ml-1 text-xs opacity-60">({tabCount})</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Button
-                                variant="outlined"
-                                onClick={() => setFiltersModalOpen(true)}
-                                startIcon={
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
-                                    </svg>
-                                }
-                                sx={{ mt: -1, mb: 1 }}
-                            >
-                                Filtres
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                onClick={handleRefresh}
-                                disabled={loading || refreshCooldown}
-                                startIcon={
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                    </svg>
-                                }
-                                sx={{
-                                    mt: -1,
-                                    mb: 1,
-                                    color: refreshCooldown ? 'gray' : undefined,
-                                    borderColor: refreshCooldown ? 'gray' : undefined,
-                                    background: refreshCooldown
-                                        ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
-                                        : undefined,
-                                    transition: 'background 0.3s',
-                                }}
-                            >
-                                Rafraîchir
-                            </Button>
-                        </div>
-                    </div>
+<div className="flex justify-between items-center mb-5 border-b border-gray-400">
+    
+    {/* LISTE DES TABS */}
+    <div className="flex space-x-8">
 
-                        
+        {tabs.map(({ key, label }) => {
+            // coins filtrés selon l'onglet
+            const tabFilteredCoins = getFilteredCoinsByTab(coins, key);
 
-                        {/* Tableau des cryptomonnaies */}
+            // recherche + filtrage onglet
+            const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
+                coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            const tabCount = searchAndTabFiltered.length;
+
+            return (
+                <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={`pb-4 px-1 text-md transition-colors ${
+                        activeTab === key
+                            ? 'border-b-2 border-blue-500 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-300'
+                    }`}
+                >
+                    {label}
+                    <span className="ml-1 text-xs opacity-60">({tabCount})</span>
+                </button>
+            );
+        })}
+
+    </div>
+
+    {/* BOUTONS FILTRES + REFRESH */}
+    <div className="flex items-center gap-3">
+        <Button
+            variant="outlined"
+            onClick={() => setFiltersModalOpen(true)}
+            startIcon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
+                </svg>
+            }
+            sx={{ mt: -1, mb: 1 }}
+        >
+            {t("coinsPage.filters")}
+        </Button>
+
+        <Button
+            variant="outlined"
+            onClick={handleRefresh}
+            disabled={loading || refreshCooldown}
+            startIcon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            }
+            sx={{
+                mt: -1,
+                mb: 1,
+                color: refreshCooldown ? 'gray' : undefined,
+                borderColor: refreshCooldown ? 'gray' : undefined,
+                background: refreshCooldown
+                    ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
+                    : undefined,
+                transition: 'background 0.3s',
+            }}
+        >
+            {t("coinsPage.refresh")}
+        </Button>
+    </div>
+
+</div>
+
+
+
+
+                    {/* Tableau des cryptomonnaies */}
                     {loading ? (
                         <div className="text-center py-20">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                            <p className="mt-4 text-gray-500">Chargement des données...</p>
+                            <p className="mt-4 text-gray-500">{t("coinsPage.loading")}</p>
                         </div>
                     ) : (
                         <>
-                                    <div className="min-h-auto">
+                            <div className="min-h-auto">
                                 {filteredCoins.length === 0 ? (
-                                    <div className="text-center py-20 text-gray-500">Aucun résultat trouvé</div>
+                                    <div className="text-center py-20 text-gray-500">{t("coinsPage.noResults")}</div>
                                 ) : (
                                     <CoinsTable
                                         coins={filteredCoins}
                                         rankOffset={(currentPage - 1) * 40}
                                         showSparkline={true}
-                                                onRowClick={(coinId) => { router.push(`/secure/specificCoin/${coinId}`); }}
+                                        onRowClick={(coinId) => { router.push(`/secure/specificCoin/${coinId}`); }}
                                         renderStar={(coinId: string) => (
                                             session?.user?.email ? (
                                                 <button
                                                     onClick={(e) => toggleWatch(e, coinId)}
                                                     className={`transition-colors p-1 rounded ${userWatchlist.has(coinId) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${watchlistLoading ? 'opacity-50' : ''}`}
-                                                    aria-label={userWatchlist.has(coinId) ? 'Retirer de la liste de suivi' : 'Ajouter à la liste de suivi'}
+                                                    aria-label={userWatchlist.has(coinId) ? t('coinsPage.removeFromWatchlist') : t('coinsPage.addToWatchlist')}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
                                                         <path

@@ -21,7 +21,11 @@
 }
 
 .footer-bg {
+<<<<<<< HEAD
     background-color: rgb(25, 32, 43);
+=======
+    background-color: #06080e;
+>>>>>>> main
 }
 
 body {
@@ -204,7 +208,10 @@ html {
     margin-top: 0.5rem;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 /* Scroll Bar pour Landing page */
 .rounded-scrollbar::-webkit-scrollbar {
     width: 16px;

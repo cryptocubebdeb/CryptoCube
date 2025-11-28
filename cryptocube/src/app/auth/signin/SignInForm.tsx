@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Geologica } from "next/font/google";
 import Navbar from "@/app/secure/components/navbar";
+import { useTranslation } from "react-i18next";
 
 // MUI
 import Button from "@mui/material/Button";
@@ -29,6 +30,7 @@ const geologica = Geologica({
 
 export function SignInForm({ urlError }: { urlError?: string }) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,15 +52,15 @@ export function SignInForm({ urlError }: { urlError?: string }) {
     let hasError = false;
 
     if (!email) {
-      setEmailError("Une adresse email est requise");
+      setEmailError(t("signin.requiredEmail"));
       hasError = true;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Adresse email invalide");
+      setEmailError(t("signin.invalidEmail"));
       hasError = true;
     }
 
     if (!password) {
-      setPasswordError("Un mot de passe est obligatoire");
+      setPasswordError(t("signin.requiredPassword"));
       hasError = true;
     }
 
@@ -71,7 +73,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
     });
 
     if (result?.error) {
-      setMessage("Email ou mot de passe incorrect");
+      setMessage(t("signin.invalidCredentials"));
       return;
     }
 
@@ -98,7 +100,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
 
   const oauthError =
     urlError === "OAuthAccountNotLinked"
-      ? "Ce compte est déjà associé à un autre mode de connexion. Connecte-toi d'abord avec ta méthode habituelle, puis lie les autres depuis ton compte."
+      ? t("signin.oauthAccountLinked")
       : "";
 
   return (
@@ -108,7 +110,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
       <Navbar />
 
       <div className="flex flex-col flex-1 justify-center items-center">
-        <h1 className="text-3xl mb-9 mt-12">Connexion</h1>
+        <h1 className="text-3xl mb-9 mt-12">{t("signin.title")}</h1>
 
         {oauthError && (
           <p className="mb-4 max-w-lg text-center text-sm text-red-500 px-4">
@@ -130,7 +132,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
         >
           <Stack spacing={2}>
             <TextField
-              label="Email"
+              label={t("signin.emailLabel")}
               type="email"
               name="email"
               value={email}
@@ -151,7 +153,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
             />
 
             <TextField
-              label="Mot de passe"
+              label={t("signin.passwordLabel")}
               type={showPassword ? "text" : "password"}
               name="password"
               value={password}
@@ -169,13 +171,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 },
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Tooltip
-                      title={
-                        showPassword
-                          ? "Masquer le mot de passe"
-                          : "Afficher le mot de passe"
-                      }
-                    >
+                    <Tooltip title={showPassword ? t("signin.hidePassword") : t("signin.showPassword")}> 
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
@@ -210,20 +206,18 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                   "&:hover": { bgcolor: "#d1d5db" },
                 }}
               >
-                Se connecter
+                {t("signin.submit")}
               </Button>
             </Box>
 
-            <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>
-              Ou se connecter avec
-            </Divider>
+            <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>{t("signin.orWith")}</Divider>
 
             <div className="flex justify-center gap-6">
               <button
                 type="button"
                 onClick={handleMicrosoftSignIn}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700"
-                aria-label="Se connecter avec Microsoft"
+                aria-label={t("signin.oauthMicrosoft")}
               >
                 <FaMicrosoft className="w-7 h-7 text-white" />
               </button>
@@ -232,7 +226,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 type="button"
                 onClick={handleGoogleSignIn}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100"
-                aria-label="Se connecter avec Google"
+                aria-label={t("signin.oauthGoogle")}
               >
                 <FaGoogle className="w-7 h-7" />
               </button>
@@ -241,16 +235,15 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 type="button"
                 onClick={handleGitHubSignIn}
                 className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900 hover:bg-black"
-                aria-label="Se connecter avec GitHub"
+                aria-label={t("signin.oauthGitHub")}
               >
                 <FaGithub className="w-7 h-7 text-white" />
               </button>
             </div>
-
             <p className="text-center text-sm mt-2 text-gray-300">
-              Pas de compte?{" "}
+              {t("signin.noAccount")} {" "}
               <Link href="/auth/signup" className="underline">
-                S&apos;inscrire
+                {t("signin.signup")}
               </Link>
             </p>
           </Stack>

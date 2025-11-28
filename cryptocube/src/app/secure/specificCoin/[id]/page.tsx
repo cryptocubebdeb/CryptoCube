@@ -11,6 +11,8 @@ import CoinTreasuries from "../../components/SpecificCoin/CoinTreasuries";
 import WatchlistButton from "../../components/SpecificCoin/WatchlistBtn";
 import BuySection from "../../components/SpecificCoin/BuySection";
 import LiveBinanceTrades from "../../components/SpecificCoin/LiveBinanceTrades";
+import { T } from "../../components/Translate";
+
 
 const geologica = Geologica({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -112,12 +114,19 @@ export default async function Page({
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
             <div className="flex flex-1 justify-center w-full pt-10">
                 {/* Main container */}
+<<<<<<< HEAD
                 <div className="w-full mt-15 max-w-[1600px] xl:px-8 flex items-start gap-10">
 
                     {/* Right column - details */}
                     <div className="basis-[360px] shrink-0 text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20 pr-6">
 
 
+=======
+                <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start mt-15">
+
+                    {/* Right column - details */}
+                    <div className="flex-[0.27] text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20">
+>>>>>>> main
 
                         {/* Crypto Name and Logo */}
                         <div className="flex items-center gap-4 p-4 pt-0">
@@ -163,22 +172,22 @@ export default async function Page({
 
                         {/*------------- Market Stats -------------*/}
                         <div className="mt-6">
-                            <h2 className="text-2xl text-white/90 mb-3">Statistiques du marché</h2>
+                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.marketStats" /></h2>
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Capitalisation</span>
+                                    <span className="text-white/70"><T k="specificCoin.marketCap" /></span>
                                     <span className="font-medium">${marketCap?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Valorisation entièrement diluée</span>
+                                    <span className="text-white/70"><T k="specificCoin.fdv" /></span>
                                     <span className="font-medium">${fdv?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Volume (24h)</span>
+                                    <span className="text-white/70"><T k="specificCoin.volume24h" /></span>
                                     <span className="font-medium">${totalVolume?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Rang</span>
+                                    <span className="text-white/70"><T k="specificCoin.rank" /></span>
                                     <span className="font-medium">#{rank}</span>
                                 </div>
                             </div>
@@ -186,18 +195,18 @@ export default async function Page({
 
                         {/*------------- Price Performance -------------*/}
                         <div className="mt-8">
-                            <h2 className="text-2xl text-white/90 mb-3">Performance des prix</h2>
+                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.pricePerformance" /></h2>
                             <div className="divide-y divide-white/10">
 
                                 {/* 24h Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Fourchette 24h</span>
+                                    <span className="text-white/70"><T k="specificCoin.range24h" /></span>
                                     <span className="font-medium text-right">
                                         ${low24h?.toLocaleString("en-CA")} - ${high24h?.toLocaleString("en-CA")}
                                         <div className="text-base text-white/50">
-                                            Depuis le bas : <span className={`${fromLow24h >= 0 ? "text-green-500" : "text-red-500"}`}>
+                                            <T k="specificCoin.fromLow" />: <span className={`${fromLow24h >= 0 ? "text-green-500" : "text-red-500"}`}>
                                                 {fromLow24h?.toFixed(2)}%
-                                            </span> · Depuis le haut :
+                                            </span> · <T k="specificCoin.fromHigh" />:
                                             <span className={`${fromHigh24h >= 0 ? "text-green-500" : "text-red-500"} ml-1`}>
                                                 {fromHigh24h?.toFixed(2)}%
                                             </span>
@@ -207,7 +216,7 @@ export default async function Page({
 
                                 {/* 7-Day Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70 ">Variation sur 7 jours</span>
+                                    <span className="text-white/70 "><T k="specificCoin.variation7d" /></span>
                                     <span
                                         className={`font-medium text-right ${priceDifferenceIn7d >= 0 ? "text-green-500" : "text-red-500"}`}
                                     >
@@ -225,7 +234,7 @@ export default async function Page({
 
                                 {/* All-Time High */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Plus haut historique</span>
+                                    <span className="text-white/70"><T k="specificCoin.ath" /></span>
                                     <span className="font-medium text-right">
                                         ${ath?.toLocaleString("en-CA")}
                                         <span className={`ml-2 ${athChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
@@ -237,7 +246,7 @@ export default async function Page({
 
                                 {/* All-Time Low */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Plus bas historique</span>
+                                    <span className="text-white/70"><T k="specificCoin.atl" /></span>
                                     <span className="font-medium text-right">
                                         ${atl?.toLocaleString("en-CA")}
                                         <span className={`ml-2 ${atlChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
@@ -251,18 +260,22 @@ export default async function Page({
 
                         {/* ------------- Supply Metrics ------------- */}
                         <div className="mt-8">
+<<<<<<< HEAD
                             <h2 className="text-2xl text-white/90 mb-3">Métriques d&apos;offre</h2>
+=======
+                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.supplyMetrics" /></h2>
+>>>>>>> main
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Offre en circulation</span>
+                                    <span className="text-white/70"><T k="specificCoin.circulatingSupply" /></span>
                                     <span className="font-medium">{circulatingSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Offre totale</span>
+                                    <span className="text-white/70"><T k="specificCoin.totalSupply" /></span>
                                     <span className="font-medium">{totalSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70">Offre maximale</span>
+                                    <span className="text-white/70"><T k="specificCoin.maxSupply" /></span>
                                     <span className="font-medium">{maxSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                             </div>
@@ -270,14 +283,14 @@ export default async function Page({
 
                         {/*------------- Gauges Section -------------*/}
                         <div className="mt-10 border border-white/10 rounded-md p-6">
-                            <h2 className="text-2xl text-white/90 mb-6 text-center">Aperçu du marché</h2>
+                            <h2 className="text-2xl text-white/90 mb-6 text-center"><T k="specificCoin.marketOverview" /></h2>
 
                             {/* Volatility Index */}
                             <div className="flex flex-col items-center mb-8">
-                                <h3 className="text-lg text-white/80 mb-3">Indice de volatilité — {name}</h3>
+                                <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.volatilityIndex" /> — {name}</h3>
                                 <RiskGauge value={Math.round(riskScore)} />
                                 <p className="text-white/60 text-sm mt-3">
-                                    Basé sur la variation sur 7 jours : {Math.round(PercentageChangeIn7d)}%
+                                    <T k="specificCoin.basedOn7d" /> {Math.round(PercentageChangeIn7d)}%
                                 </p>
                             </div>
 
@@ -285,14 +298,14 @@ export default async function Page({
                             <div className="flex justify-center gap-10 flex-wrap">
                                 {/* Fear & Greed */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3">Sentiment du marché</h3>
+                                    <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.sentiment" /></h3>
                                     <RiskGauge value={Math.round(fearGreedValue)} />
                                     <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
                                 </div>
 
                                 {/* Global Market */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3">Marché global</h3>
+                                    <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.globalMarket" /></h3>
                                     <RiskGauge value={Math.round(marketHealth)} />
                                     <p className="text-sm text-white/60 mt-2">
                                         {marketHealth >= 55 ? "En croissance" : marketHealth <= 45 ? "En repli" : "Stable"}
@@ -318,15 +331,15 @@ export default async function Page({
                         {/* Extra coin fundamentals */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
                             <div>
-                                <span className="block text-white/50">Date de lancement</span>
+                                <span className="block text-white/50"><T k="specificCoin.launchDate" /></span>
                                 <span>{coinData?.genesis_date || "Inconnu"}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50">Algorithme de hachage</span>
+                                <span className="block text-white/50"><T k="specificCoin.hashAlgorithm" /></span>
                                 <span>{coinData?.hashing_algorithm || "Inconnu"}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50">Catégorie</span>
+                                <span className="block text-white/50"><T k="specificCoin.category" /></span>
                                 <span>{coinData?.categories?.[0] || "Inconnu"}</span>
                             </div>
                         </div>
@@ -337,7 +350,7 @@ export default async function Page({
                         {/* ------------- Description ------------- */}
                         <div className="mt-8">
                             <div className="flex items-baseline justify-between mb-3">
-                                <h2 className="text-2xl text-white/90">Description</h2>
+                                <h2 className="text-2xl text-white/90"><T k="specificCoin.description" /></h2>
 
                                 {/* ------------- Website ------------- */}
                                 <div className="flex flex-wrap gap-3 mt-6 text-sm">
@@ -353,7 +366,7 @@ export default async function Page({
                                     )}
                                     {coinData?.links?.homepage?.[0] && (
                                         <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
-                                            Site
+                                            Website
                                         </a>
                                     )}
                                 </div>
@@ -361,9 +374,9 @@ export default async function Page({
 
                             <details className="group bg-[#12141A] border border-white/10 rounded-md">
                                 <summary className="cursor-pointer list-none px-4 py-3 text-white/75 hover:text-white transition text-sm sm:text-base select-none">
-                                    <span className="mr-2 font-medium">À propos de {name}</span>
-                                    <span className="text-white/50 group-open:hidden">· Voir plus</span>
-                                    <span className="text-white/50 hidden group-open:inline">· Voir moins</span>
+                                    <span className="mr-2 font-medium"><T k="specificCoin.about" /> {name}</span>
+                                    <span className="text-white/50 group-open:hidden">· <T k="specificCoin.seeMore" /></span>
+                                    <span className="text-white/50 hidden group-open:inline">· <T k="specificCoin.seeLess" /></span>
                                 </summary>
 
                                 <div className="px-4 pb-5">
@@ -377,7 +390,7 @@ export default async function Page({
                                         dangerouslySetInnerHTML={{ __html: coinDescription }}
                                     />
                                     <p className="text-white/50 text-sm italic mt-6">
-                                        Mis à jour {new Date(coinData.last_updated).toLocaleString()} · Source : CoinGecko
+                                        <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" /> : CoinGecko
                                     </p>
                                 </div>
                             </details>
@@ -386,7 +399,7 @@ export default async function Page({
 
                         {/* ------------- Global Prices ------------- */}
                         <div className="mt-2 rounded-md p-3">
-                            <h2 className="text-2xl text-white/90 mb-5">Prix globaux</h2>
+                            <h2 className="text-2xl text-white/90 mb-5"><T k="specificCoin.globalPrices" /></h2>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-6 text-sm text-white/80">
                                 {[
@@ -418,7 +431,7 @@ export default async function Page({
                             </div>
 
                             <p className="text-white/50 text-xs mt-5 text-center">
-                                Prix mis à jour en temps réel depuis CoinGecko
+                                prices updated from CoinGecko
                             </p>
                         </div>
 

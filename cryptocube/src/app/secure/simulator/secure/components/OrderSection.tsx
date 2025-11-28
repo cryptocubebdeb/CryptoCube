@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 // Define the structure of a pending order
 type PendingOrder = {
@@ -15,6 +16,7 @@ type PendingOrder = {
 };
 
 export default function OrdersSection() {
+  const { t } = useTranslation();
   // State to store the list of pending orders
   const [orders, setOrders] = useState<PendingOrder[]>([]);
 
@@ -65,34 +67,34 @@ export default function OrdersSection() {
       const data = await response.json();
 
       if (!response.ok) {
-        setMsg(data.error || "Cancellation failed.");
+        setMsg(data.error || t('simulator.cancelFailed'));
         return;
       }
 
       // Notify the user and refresh the order list
-      setMsg("Order cancelled.");
+      setMsg(t('simulator.orderCancelled'));
       loadPendingOrders();
     } catch (err) {
       console.error("Cancel error:", err);
-      setMsg("Failed to cancel order.");
+      setMsg(t('simulator.cancelError'));
     }
   }
 
   // Show loading message while fetching data
   if (loading) {
     return (
-      <div className="text-white/60 text-sm">Loading pending orders…</div>
+      <div className="text-white/60 text-sm">{t('simulator.loadingPendingOrders')}</div>
     );
   }
 
   return (
     <div className="space-y-4">
       {/* Section title */}
-      <h2 className="text-xl font-bold text-yellow-400">Pending Orders</h2>
+      <h2 className="text-xl font-bold text-yellow-400">{t('simulator.pendingOrders')}</h2>
 
       {/* Display message if there are no pending orders */}
       {orders.length === 0 && (
-        <p className="text-white/60 text-sm">No pending orders.</p>
+        <p className="text-white/60 text-sm">{t('simulator.noPendingOrders')}</p>
       )}
 
       {/* List of pending orders */}
@@ -106,25 +108,23 @@ export default function OrdersSection() {
               {/* Left side: order details */}
               <div>
                 <p className="text-sm font-semibold">
-                  {order.orderType} {order.coinSymbol}
+                  {order.orderType === 'BUY' ? t('activity.buy').toUpperCase() : t('activity.sell').toUpperCase()} {order.coinSymbol}
 
                   {order.orderKind === "LIMIT" && (
-                    <span className="text-xs text-yellow-300 ml-2">
-                      (Limit @ {Number(order.price).toFixed(2)} CAD)
-                    </span>
+                    <span className="text-xs text-yellow-300 ml-2">({t('activity.limitAt', { price: Number(order.price).toFixed(2) + ' CAD' })})</span>
                   )}
 
                   {order.orderKind === "MARKET" && (
-                    <span className="text-xs text-yellow-300 ml-2">(Market)</span>
+                    <span className="text-xs text-yellow-300 ml-2">({t('activity.market')})</span>
                   )}
                 </p>
 
                 <p className="text-xs text-slate-400 mt-1">
-                  Amount: {Number(order.amount).toFixed(6)}
+                  {t('simulator.amount')}: {Number(order.amount).toFixed(6)}
                 </p>
 
                 <p className="text-[10px] text-slate-500">
-                  Placed: {new Date(order.createdAt).toLocaleString()}
+                  {t('simulator.placed')}: {new Date(order.createdAt).toLocaleString()}
                 </p>
               </div>
 
@@ -134,7 +134,7 @@ export default function OrdersSection() {
                 className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 
                 text-black text-xs rounded-md font-semibold"
               >
-                Cancel
+                {t('simulator.cancel')}
               </button>
             </div>
           </div>
