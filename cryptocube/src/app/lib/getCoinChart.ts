@@ -3,7 +3,7 @@ const URL_API = "https://api.coingecko.com/api/v3";
 export async function getCoinChart(
   id: string,
   days: number = 30,
-  currency: string = "cad"
+  currency: string = "usd"
 ) {
    if (!id) {
     console.warn("[getCoinChart] No coinId provided");

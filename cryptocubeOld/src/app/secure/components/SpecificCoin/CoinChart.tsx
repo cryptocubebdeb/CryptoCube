@@ -13,7 +13,7 @@ type params = {
   currency?: string;   // default "cad"
 };
 
-export default function CoinChart({ coinId, currency = "cad" }: params) {
+export default function CoinChart({ coinId, currency = "usd" }: params) {
   const [days, setDays] = useState(30); //default 30 days
   const [data, setData] = useState<Point[]>([]);
   const [loading, setLoading] = useState(true);

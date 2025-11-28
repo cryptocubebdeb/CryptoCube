@@ -1,18 +1,28 @@
 // prisma/seed.js
-const {
-  PrismaClient,
-  TradeType,
-  OrderKind,
-  OrderStatus,
-} = require("@prisma/client");
-const bcrypt = require("bcryptjs");
+import { PrismaClient, TradeType, OrderKind, OrderStatus } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+/**
+ * Map of tickers to CoinGecko IDs.
+ * This prevents mistakes and keeps everything consistent.
+ */
+const COINS = {
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  solana: "solana",
+  dogecoin: "dogecoin",
+  cardano: "cardano",
+  avalanche: "avalanche-2",
+  polkadot: "polkadot",
+  chainlink: "chainlink"
+};
 
 async function main() {
   const hashedPassword = await bcrypt.hash("Password123!", 10);
 
-  // --- USERS ---
+  // USERS
   const [alice, john, jane] = await Promise.all([
     prisma.user.upsert({
       where: { email: "alice@outlook.com" },
@@ -22,8 +32,8 @@ async function main() {
         passwordHash: hashedPassword,
         lastName: "Leblanc",
         firstName: "Alice",
-        username: "aliceleblanc05",
-      },
+        username: "aliceleblanc05"
+      }
     }),
     prisma.user.upsert({
       where: { email: "johndoe@outlook.com" },
@@ -33,8 +43,8 @@ async function main() {
         passwordHash: hashedPassword,
         lastName: "Doe",
         firstName: "John",
-        username: "johndoe03",
-      },
+        username: "johndoe03"
+      }
     }),
     prisma.user.upsert({
       where: { email: "janedoe@outlook.com" },
@@ -44,210 +54,249 @@ async function main() {
         passwordHash: hashedPassword,
         lastName: "Doe",
         firstName: "Jane",
-        username: "janedoe06",
-      },
-    }),
+        username: "janedoe06"
+      }
+    })
   ]);
 
   console.log("[SEED] Users created");
 
-  // --- WATCHLIST ITEMS ---
+  // WATCHLISTS
   await prisma.watchlistItem.createMany({
     data: [
-      // Alice
-      { userId: alice.id, coinId: "bitcoin" },
-      { userId: alice.id, coinId: "ethereum" },
-      { userId: alice.id, coinId: "solana" },
+      { userId: alice.id, coinId: COINS.bitcoin },
+      { userId: alice.id, coinId: COINS.ethereum },
+      { userId: alice.id, coinId: COINS.solana },
 
-      // John
-      { userId: john.id, coinId: "bitcoin" },
-      { userId: john.id, coinId: "dogecoin" },
-      { userId: john.id, coinId: "cardano" },
+      { userId: john.id, coinId: COINS.bitcoin },
+      { userId: john.id, coinId: COINS.dogecoin },
+      { userId: john.id, coinId: COINS.cardano },
 
-      // Jane
-      { userId: jane.id, coinId: "avalanche-2" },
-      { userId: jane.id, coinId: "polkadot" },
-      { userId: jane.id, coinId: "chainlink" },
+      { userId: jane.id, coinId: COINS.avalanche },
+      { userId: jane.id, coinId: COINS.polkadot },
+      { userId: jane.id, coinId: COINS.chainlink }
     ],
-    skipDuplicates: true,
+    skipDuplicates: true
   });
 
   console.log("[SEED] Watchlists created");
 
-  // --- SIMULATOR ACCOUNTS ---
+  // SIMULATOR ACCOUNTS
   const [aliceSim, johnSim, janeSim] = await Promise.all([
     prisma.simulatorAccount.upsert({
       where: { userId: alice.id },
       update: {},
       create: {
         userId: alice.id,
-        initialCashBalance: 75000.0,
-        currentCashBalance: 60200.0,
-        realizedProfitUsd: 1480.5,
-      },
+        initialCashBalance: 75000,
+        currentCashBalance: 75000
+      }
     }),
     prisma.simulatorAccount.upsert({
       where: { userId: john.id },
       update: {},
       create: {
         userId: john.id,
-        initialCashBalance: 50000.0,
-        currentCashBalance: 48200.0,
-        realizedProfitUsd: -320.3,
-      },
+        initialCashBalance: 50000,
+        currentCashBalance: 50000
+      }
     }),
     prisma.simulatorAccount.upsert({
       where: { userId: jane.id },
       update: {},
       create: {
         userId: jane.id,
-        initialCashBalance: 100000.0,
-        currentCashBalance: 91500.0,
-        realizedProfitUsd: 250.0,
-      },
-    }),
+        initialCashBalance: 100000,
+        currentCashBalance: 100000
+      }
+    })
   ]);
 
   console.log("[SEED] Simulator accounts created");
 
-  // --- PORTFOLIOS ---
+  // =============================
+  // PORTFOLIO ENTRIES
+  // =============================
   await prisma.portfolio.createMany({
     data: [
-      // Alice
+      // Alice owns some BTC + ETH + SOL
       {
         simulatorAccountId: aliceSim.id,
+        coinId: COINS.bitcoin,
         coinSymbol: "BTC",
-        amountOwned: 0.8,
-        averageEntryPriceUsd: 39000.0,
+        amountOwned: 0.02,
+        averageEntryPriceUsd: 95000
       },
       {
         simulatorAccountId: aliceSim.id,
+        coinId: COINS.ethereum,
         coinSymbol: "ETH",
-        amountOwned: 5.2,
-        averageEntryPriceUsd: 2200.0,
-      },
-
-      // John
-      {
-        simulatorAccountId: johnSim.id,
-        coinSymbol: "DOGE",
-        amountOwned: 2500,
-        averageEntryPriceUsd: 0.07,
+        amountOwned: 0.4,
+        averageEntryPriceUsd: 3000
       },
       {
-        simulatorAccountId: johnSim.id,
-        coinSymbol: "ADA",
-        amountOwned: 800,
-        averageEntryPriceUsd: 0.45,
-      },
-
-      // Jane
-      {
-        simulatorAccountId: janeSim.id,
+        simulatorAccountId: aliceSim.id,
+        coinId: COINS.solana,
         coinSymbol: "SOL",
-        amountOwned: 30,
-        averageEntryPriceUsd: 110.0,
+        amountOwned: 3,
+        averageEntryPriceUsd: 160
+      },
+
+      // John portfolio
+      {
+        simulatorAccountId: johnSim.id,
+        coinId: COINS.bitcoin,
+        coinSymbol: "BTC",
+        amountOwned: 0.005,
+        averageEntryPriceUsd: 91000
+      },
+      {
+        simulatorAccountId: johnSim.id,
+        coinId: COINS.dogecoin,
+        coinSymbol: "DOGE",
+        amountOwned: 500,
+        averageEntryPriceUsd: 0.12
+      },
+
+      // Jane portfolio
+      {
+        simulatorAccountId: janeSim.id,
+        coinId: COINS.polkadot,
+        coinSymbol: "DOT",
+        amountOwned: 50,
+        averageEntryPriceUsd: 7.5
       },
       {
         simulatorAccountId: janeSim.id,
-        coinSymbol: "DOT",
-        amountOwned: 120,
-        averageEntryPriceUsd: 6.5,
-      },
+        coinId: COINS.chainlink,
+        coinSymbol: "LINK",
+        amountOwned: 20,
+        averageEntryPriceUsd: 14
+      }
     ],
-    skipDuplicates: true,
+    skipDuplicates: true
   });
 
-  console.log("[SEED] Portfolios created");
+  console.log("[SEED] Portfolio created");
 
-  // --- ORDERS ---
-  const [aliceOrder, johnOrder, janeOrder] = await Promise.all([
-    prisma.order.create({
-      data: {
-        simulatorAccountId: aliceSim.id,
-        coinSymbol: "BTC",
-        orderType: TradeType.BUY,
-        orderKind: OrderKind.LIMIT,
-        amount: 0.2,
-        price: 38000.0,
-        status: OrderStatus.PENDING,
-      },
-    }),
-    prisma.order.create({
-      data: {
-        simulatorAccountId: johnSim.id,
-        coinSymbol: "DOGE",
-        orderType: TradeType.SELL,
-        orderKind: OrderKind.MARKET,
-        amount: 500,
-        price: null,
-        status: OrderStatus.EXECUTED,
-      },
-    }),
-    prisma.order.create({
-      data: {
-        simulatorAccountId: janeSim.id,
-        coinSymbol: "DOT",
-        orderType: TradeType.BUY,
-        orderKind: OrderKind.LIMIT,
-        amount: 60,
-        price: 5.5,
-        status: OrderStatus.PENDING,
-      },
-    }),
-  ]);
+  // ==============
+  // REALISTIC ORDERS
+  // ==============
 
-  console.log("[SEED] Orders created");
-
-  // --- TRADE HISTORY ---
-  await prisma.tradeHistory.createMany({
+  // BTC
+  await prisma.order.createMany({
     data: [
       {
         simulatorAccountId: aliceSim.id,
-        orderId: aliceOrder.id,
-        tradeType: TradeType.BUY,
         coinSymbol: "BTC",
-        amountTraded: 0.1,
-        tradePrice: 39500.0,
-        tradeTotal: 3950.0,
-      },
-      {
-        simulatorAccountId: aliceSim.id,
-        tradeType: TradeType.SELL,
-        coinSymbol: "ETH",
-        amountTraded: 1.0,
-        tradePrice: 2450.0,
-        tradeTotal: 2450.0,
+        coinId: COINS.bitcoin,
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
+        amount: 0.01,
+        price: 96000,
+        status: OrderStatus.PENDING
       },
       {
         simulatorAccountId: johnSim.id,
-        orderId: johnOrder.id,
-        tradeType: TradeType.SELL,
-        coinSymbol: "DOGE",
-        amountTraded: 500.0,
-        tradePrice: 0.075,
-        tradeTotal: 37.5,
+        coinSymbol: "BTC",
+        coinId: COINS.bitcoin,
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
+        amount: 0.005,
+        price: 90000
       },
       {
         simulatorAccountId: janeSim.id,
-        tradeType: TradeType.BUY,
-        coinSymbol: "SOL",
-        amountTraded: 10.0,
-        tradePrice: 120.0,
-        tradeTotal: 1200.0,
-      },
-      {
-        simulatorAccountId: janeSim.id,
-        tradeType: TradeType.SELL,
-        coinSymbol: "DOT",
-        amountTraded: 20.0,
-        tradePrice: 6.8,
-        tradeTotal: 136.0,
-      },
-    ],
+        coinSymbol: "BTC",
+        coinId: COINS.bitcoin,
+        orderType: TradeType.SELL,
+        orderKind: OrderKind.LIMIT,
+        amount: 0.02,
+        price: 94000,
+        status: OrderStatus.PENDING
+      }
+    ]
   });
 
-  console.log("[SEED] Trade history created");
+  // ETH
+  await prisma.order.createMany({
+    data: [
+      {
+        simulatorAccountId: aliceSim.id,
+        coinSymbol: "ETH",
+        coinId: COINS.ethereum,
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
+        amount: 0.5,
+        price: 3300,
+        status: OrderStatus.PENDING
+      },
+      {
+        simulatorAccountId: janeSim.id,
+        coinSymbol: "ETH",
+        coinId: COINS.ethereum,
+        orderType: TradeType.SELL,
+        orderKind: OrderKind.LIMIT,
+        amount: 1.2,
+        price: 3100,
+        status: OrderStatus.PENDING
+      }
+    ]
+  });
+
+  // DOGE
+  await prisma.order.createMany({
+    data: [
+      {
+        simulatorAccountId: johnSim.id,
+        coinSymbol: "DOGE",
+        coinId: COINS.dogecoin,
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
+        amount: 1500,
+        price: 0.17,
+        status: OrderStatus.PENDING
+      },
+      {
+        simulatorAccountId: aliceSim.id,
+        coinSymbol: "DOGE",
+        coinId: COINS.dogecoin,
+        orderType: TradeType.SELL,
+        orderKind: OrderKind.LIMIT,
+        amount: 2000,
+        price: 0.155,
+        status: OrderStatus.PENDING
+      }
+    ]
+  });
+
+  // DOT
+  await prisma.order.createMany({
+    data: [
+      {
+        simulatorAccountId: janeSim.id,
+        coinSymbol: "DOT",
+        coinId: COINS.polkadot,
+        orderType: TradeType.BUY,
+        orderKind: OrderKind.LIMIT,
+        amount: 30,
+        price: 7.2,
+        status: OrderStatus.PENDING
+      },
+      {
+        simulatorAccountId: johnSim.id,
+        coinSymbol: "DOT",
+        coinId: COINS.polkadot,
+        orderType: TradeType.SELL,
+        orderKind: OrderKind.LIMIT,
+        amount: 40,
+        price: 6.9,
+        status: OrderStatus.PENDING
+      }
+    ]
+  });
+
+  console.log("[SEED] Orders created");
 }
 
 main()
