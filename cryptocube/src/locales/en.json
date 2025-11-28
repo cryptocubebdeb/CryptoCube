@@ -29,6 +29,62 @@
     "mustLogin": "Please log in to access your settings",
     "language": "Language"
   },
+  "sidebar": {
+    "title": "My Account",
+    "details": "Details",
+    "watchlist": "Watchlist",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "footer": {
+    "productTitle": "Product",
+    "coins": "Coins",
+    "categories": "Categories",
+    "simulator": "Simulator",
+    "helpTitle": "Help",
+    "about": "About",
+    "login": "Sign in",
+    "signup": "Sign up",
+    "copyright": "© {{year}} CryptoCube. All rights reserved."
+  },
+  "navbar": {
+    "home": "Home",
+    "coins": "Coins",
+    "categories": "Categories",
+    "simulator": "Simulator",
+    "about": "About",
+    "openSearch": "Open search",
+    "searchPlaceholder": "Search coins...",
+    "searchResults": "Search results",
+    "searching": "Searching…",
+    "noMatches": "No matches found.",
+    "userMenu": "User menu",
+    "signIn": "Sign in",
+    "details": "Details",
+    "watchlist": "Watchlist",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+    "signin": {
+      "title": "Sign in",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Sign in",
+      "orWith": "Or sign in with",
+      "oauthMicrosoft": "Sign in with Microsoft",
+      "oauthGoogle": "Sign in with Google",
+      "oauthGitHub": "Sign in with GitHub",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign up",
+      "requiredEmail": "An email address is required",
+      "invalidEmail": "Invalid email address",
+      "requiredPassword": "A password is required",
+      "invalidCredentials": "Incorrect email or password",
+      "oauthAccountLinked": "This account is already linked to another sign-in method. Please sign in with the original method first and link others from your account."
+    },
   "dashboard": {
   "playAndDominate": "Play your coins. Dominate the market.",
   "trySimulator": "Try our free crypto trading simulator now.",
@@ -70,13 +126,98 @@
     "mostTraded": "Most Traded",
     "winners": "Winners"
   },
-
   "filters": "Filters",
   "refresh": "Refresh",
 
   "cryptoListAll": "Cryptocurrency List",
   "cryptoListMostTraded": "Most Traded Cryptos",
   "cryptoListWinners": "Top Winners (24h)"
+  ,
+  "addToWatchlist": "Add to watchlist",
+  "removeFromWatchlist": "Remove from watchlist",
+  "chartLoading": "Loading chart...",
+  "range24h": "24H",
+  "range7d": "7D",
+  "range30d": "30D",
+  "range90d": "90D",
+  "range1y": "1Y"
+},
+"activity": {
+  "title": "Trade History",
+  "side": "Side:",
+  "type": "Type:",
+  "coin": "Coin:",
+  "all": "All",
+  "buy": "Buy",
+  "sell": "Sell",
+  "loading": "Loading trade history…",
+  "noExecutedTrades": "No executed trades yet.",
+  "noMatchingTrades": "No trades match the current filters.",
+  "market": "Market",
+  "limit": "Limit",
+  "marketOrder": "Market order",
+  "limitAt": "Limit @ ${{price}}",
+  "total": "Total: ${{total}}",
+  "executedAt": "Executed at"
+},
+"simulator": {
+  "overviewTitle": "Overview",
+  "loadingData": "Loading data…",
+  "cash": "Cash",
+  "holdings": "Holdings",
+  "pendingOrders": "Pending Orders",
+  "loadingPendingOrders": "Loading pending orders…",
+  "noPendingOrders": "No pending orders.",
+  "cancel": "Cancel",
+  "cancelFailed": "Cancellation failed.",
+  "orderCancelled": "Order cancelled.",
+  "cancelError": "Failed to cancel order.",
+  "amount": "Amount",
+  "placed": "Placed"
+},
+"percent": {
+  "title": "Performance",
+  "placeholder": "Your performance metrics will appear here once your simulator activity grows.",
+  "metricProfitLoss": "Profit / Loss (%)",
+  "metricTotalReturn": "Total return",
+  "metricEquityCurve": "Equity curve",
+  "metricWinRate": "Win rate",
+  "metricAvgGainLoss": "Avg gain / avg loss"
+},
+"search": {
+  "title": "Search",
+  "subtitle": "Search for coins to trade in the simulator.",
+  "placeholder": "Search cryptocurrency...",
+  "searching": "Searching…",
+  "noMatches": "No matches found."
+},
+"trade": {
+  "title": "Trade",
+  "noCoinSelected": "No coin selected.",
+  "enterValidAmount": "Enter a valid amount.",
+  "amountTooSmall": "Amount is too small.",
+  "enterValidLimitPrice": "Enter a valid limit price.",
+  "notEnoughCash": "Not enough cash.",
+  "dontOwnCoin": "You do not own this coin.",
+  "notEnoughCoins": "Not enough coins.",
+  "orderFailed": "Order failed.",
+  "orderPlaced": "{{orderKind}} {{mode}} order placed.",
+  "networkError": "Network error while placing order.",
+  "loadingPanel": "Loading trading panel…",
+  "limitPrice": "Limit price (USD)",
+  "selectCoin": "Select Coin",
+  "usdLabel": "USD",
+  "usdShort": "USD",
+  "max": "MAX",
+  "approx": "≈",
+  "processing": "Processing…"
+},
+"wallet": {
+  "title": "Wallet",
+  "cashLabel": "Cash:",
+  "loading": "Loading portfolio…",
+  "noHoldings": "No holdings yet.",
+  "avgEntry": "Avg entry: ${{price}}"
 },
 "coinsTable": {
   "name": "Name",
@@ -111,9 +252,154 @@
     "volume24h": "24h Volume",
     "marketCap": "Market Cap"
   }
-}
+},
+"about": {
+  "title": "About CryptoCube",
 
+  "description1": "CryptoCube is a dedicated source for crypto data, analysis, and community. Our mission is to accelerate the crypto revolution by organizing intelligence and making it accessible to everyone.",
+  "description2": "Our tools are designed to help enthusiasts, researchers, and students understand the market and test strategies safely using clear data and simulators.",
 
+  "exploreCoins": "Explore Coins",
+  "openSimulator": "Open Simulator",
 
+  "features": {
+    "realTimeData": {
+      "title": "Real-Time Data",
+      "text": "Access updated prices and volumes to make informed decisions."
+    },
+    "simulator": {
+      "title": "Simulator",
+      "text": "Test strategies risk-free using virtual portfolios."
+    },
+    "advancedFiltering": {
+      "title": "Advanced Filtering",
+      "text": "Quickly find coins matching your criteria."
+    },
+    "news": {
+      "title": "News",
+      "text": "Aggregate sources and follow market trends."
+    }
+  },
 
+  "why": {
+    "title": "Why CryptoCube?",
+
+    "clarity": {
+      "title": "Clarity",
+      "text": "Simple interface, accessible data and explanations where needed."
+    },
+    "security": {
+      "title": "Security",
+      "text": "No real money required — learn and test safely."
+    },
+    "scalable": {
+      "title": "Scalable",
+      "text": "Tools designed to evolve with your needs."
+    }
+  },
+
+  "contact": {
+    "title": "Contact",
+    "text": "For any request, write to us:"
+  }
+},
+"specificCoin": {
+  "marketStats": "Market Statistics",
+  "marketCap": "Market Cap",
+  "fdv": "Fully Diluted Valuation",
+  "volume24h": "24h Volume",
+  "rank": "Rank",
+
+  "pricePerformance": "Price Performance",
+  "range24h": "24h Range",
+  "fromLow": "From low",
+  "fromHigh": "From high",
+  "variation7d": "7-day variation",
+  "ath": "All-Time High",
+  "atl": "All-Time Low",
+
+  "supplyMetrics": "Supply Metrics",
+  "circulatingSupply": "Circulating supply",
+  "totalSupply": "Total supply",
+  "maxSupply": "Max supply",
+
+  "marketOverview": "Market Overview",
+  "volatilityIndex": "Volatility Index",
+  "basedOn7d": "Based on 7-day change:",
+  "sentiment": "Market Sentiment",
+  "globalMarket": "Global Market",
+  "growing": "Growing",
+  "declining": "Declining",
+  "stable": "Stable",
+
+  "launchDate": "Launch date",
+  "hashAlgorithm": "Hashing Algorithm",
+  "category": "Category",
+
+  "description": "Description",
+  "about": "About",
+  "seeMore": "See more",
+  "seeLess": "See less",
+  "updated": "Updated",
+
+  "globalPrices": "Global Prices",
+  "realTimeFrom": "Real-time prices from CoinGecko"
+},
+"markets": {
+    "loading": "Loading market data...",
+    "empty": "No market data available for this cryptocurrency.",
+    "title": "Markets for",
+    "exchange": "Exchange",
+    "pair": "Pair",
+    "priceUsd": "Price (USD)",
+    "spread": "Spread",
+    "volume24h": "Volume (24h) (USD)",
+    "volumeShare": "Volume Share (%)",
+    "lastUpdate": "Last Update",
+    "score": "Score"
+  },
+  "treasuries": {
+    "loading": "Loading treasury data...",
+    "empty": "No public treasury data available for this cryptocurrency.",
+    "title": "Public treasuries holding",
+    "company": "Company",
+    "country": "Country",
+    "holdings": "Holdings",
+    "valueUsd": "Value (USD)"
+  },
+  "signup": {
+    "title": "Sign up",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithMicrosoft": "Continue with Microsoft",
+    "continueWithGitHub": "Continue with GitHub",
+    "orWithEmail": "Or sign up with email",
+    "namePlaceholder": "Name (optional)",
+    "lastNameLabel": "Last name",
+    "firstNameLabel": "First name",
+    "emailPlaceholder": "Email",
+    "emailLabel": "Email",
+    "usernameLabel": "Username",
+    "orWith": "Or sign up with",
+    "passwordPlaceholder": "Password (min 8 chars)",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "creating": "Creating account...",
+    "createAccount": "Create account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "goToSignIn": "Go to",
+    "andLogIn": "and log in with this email instead.",
+    "oauthMicrosoft": "Sign up with Microsoft",
+    "oauthGoogle": "Sign up with Google",
+    "oauthGitHub": "Sign up with GitHub",
+    "nameInvalid": "Name must contain only letters and be at least 2 characters.",
+    "firstNameInvalid": "First name must contain only letters and be at least 2 characters.",
+    "emailInvalid": "Invalid email format.",
+    "usernameInvalid": "Username must be at least 3 alphanumeric characters.",
+    "passwordWeak": "Password must be at least 8 characters, include an uppercase, lowercase, number and special character.",
+    "passwordMismatch": "Passwords do not match.",
+    "serverError": "Signup failed (status {{status}})",
+    "autoLoginFailed": "Account created, but automatic login failed. Please sign in manually.",
+    "networkError": "Server connection error."
+  }
 }

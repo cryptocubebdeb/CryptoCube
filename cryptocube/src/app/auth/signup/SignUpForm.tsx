@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 function GoogleIcon() {
     return (
@@ -31,6 +32,7 @@ function GitHubIcon() {
 }
 
 export function SignUpForm() {
+    const { t } = useTranslation();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -103,14 +105,14 @@ export function SignUpForm() {
     return (
         <main className="min-h-screen flex flex-col items-center justify-center">
             <div className="flex flex-col items-center gap-3 mb-4">
-                <h1 className="text-2xl font-bold text-center">Sign up</h1>
+                <h1 className="text-2xl font-bold text-center">{t("signup.title")}</h1>
 
                 <button
                     className="flex items-center rounded-md border px-4 py-2 text-sm hover:bg-gray-100"
                     onClick={() => signIn("google", { callbackUrl: "/secure/about" })}
                 >
                     <GoogleIcon />
-                    <span>Continue with Google</span>
+                    <span>{t("signup.continueWithGoogle")}</span>
                 </button>
 
                 <button
@@ -118,7 +120,7 @@ export function SignUpForm() {
                     onClick={() => signIn("azure-ad", { callbackUrl: "/secure/about" })}
                 >
                     <MicrosoftIcon />
-                    <span>Continue with Microsoft</span>
+                    <span>{t("signup.continueWithMicrosoft")}</span>
                 </button>
 
                 <button
@@ -126,7 +128,7 @@ export function SignUpForm() {
                     onClick={() => signIn("github", { callbackUrl: "/secure/about" })}
                 >
                     <GitHubIcon />
-                    <span>Continue with GitHub</span>
+                    <span>{t("signup.continueWithGitHub")}</span>
                 </button>
             </div>
 
@@ -135,13 +137,13 @@ export function SignUpForm() {
                 className="flex flex-col gap-3 w-72 border rounded-md p-4"
             >
                 <h2 className="font-semibold text-lg text-center">
-                    Or sign up with email
+                    {t("signup.orWithEmail")}
                 </h2>
 
                 <input
                     className="border rounded px-2 py-1 text-sm"
                     type="text"
-                    placeholder="Name (optional)"
+                    placeholder={t("signup.namePlaceholder")}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
@@ -149,7 +151,7 @@ export function SignUpForm() {
                 <input
                     className="border rounded px-2 py-1 text-sm"
                     type="email"
-                    placeholder="Email"
+                    placeholder={t("signup.emailPlaceholder")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -158,7 +160,7 @@ export function SignUpForm() {
                 <input
                     className="border rounded px-2 py-1 text-sm"
                     type="password"
-                    placeholder="Password (min 8 chars)"
+                    placeholder={t("signup.passwordPlaceholder")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -169,11 +171,11 @@ export function SignUpForm() {
                         <p>{error}</p>
                         {showSignInHint && (
                             <p className="mt-1 text-xs text-red-500">
-                                Go to{" "}
+                                {t("signup.goToSignIn")} {" "}
                                 <a href="/auth/signin" className="underline">
-                                    the sign-in page
+                                    {t("signup.signIn")}
                                 </a>{" "}
-                                and log in with this email instead.
+                                {t("signup.andLogIn")}
                             </p>
                         )}
                     </div>
@@ -184,13 +186,13 @@ export function SignUpForm() {
                     disabled={loading}
                     className="mt-1 rounded-md border px-4 py-2 text-sm hover:bg-gray-100 disabled:opacity-60"
                 >
-                    {loading ? "Creating account..." : "Create account"}
+                    {loading ? t("signup.creating") : t("signup.createAccount")}
                 </button>
 
                 <p className="mt-2 text-xs text-center text-gray-600">
-                    Already have an account?{" "}
+                    {t("signup.alreadyHaveAccount")} {" "}
                     <a href="/auth/signin" className="underline">
-                        Sign in
+                        {t("signup.signIn")}
                     </a>
                 </p>
             </form>

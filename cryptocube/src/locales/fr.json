@@ -29,6 +29,62 @@
     "mustLogin": "Veuillez vous connecter pour accéder à vos paramètres",
     "language": "Langue"
   },
+  "sidebar": {
+    "title": "Mon Compte",
+    "details": "Détails",
+    "watchlist": "Liste de suivi",
+    "notifications": "Notifications",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion"
+  },
+  "footer": {
+    "productTitle": "Produit",
+    "coins": "Coins",
+    "categories": "Catégories",
+    "simulator": "Simulateur",
+    "helpTitle": "Aide",
+    "about": "À propos",
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "copyright": "© {{year}} CryptoCube. Tous droits réservés."
+  },
+  "navbar": {
+    "home": "Accueil",
+    "coins": "Coins",
+    "categories": "Catégories",
+    "simulator": "Simulateur",
+    "about": "À propos",
+    "openSearch": "Ouvrir la recherche",
+    "searchPlaceholder": "Rechercher une crypto...",
+    "searchResults": "Résultats de recherche",
+    "searching": "Recherche...",
+    "noMatches": "Aucune correspondance",
+    "userMenu": "Menu utilisateur",
+    "signIn": "Se connecter",
+    "details": "Détails",
+    "watchlist": "Liste de suivi",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion"
+  },
+    "signin": {
+      "title": "Connexion",
+      "emailLabel": "Email",
+      "passwordLabel": "Mot de passe",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "submit": "Se connecter",
+      "orWith": "Ou se connecter avec",
+      "oauthMicrosoft": "Se connecter avec Microsoft",
+      "oauthGoogle": "Se connecter avec Google",
+      "oauthGitHub": "Se connecter avec GitHub",
+      "noAccount": "Pas de compte?",
+      "signup": "S'inscrire",
+      "requiredEmail": "Une adresse email est requise",
+      "invalidEmail": "Adresse email invalide",
+      "requiredPassword": "Un mot de passe est obligatoire",
+      "invalidCredentials": "Email ou mot de passe incorrect",
+      "oauthAccountLinked": "Ce compte est déjà associé à un autre mode de connexion. Connecte-toi d'abord avec ta méthode habituelle, puis lie les autres depuis ton compte."
+    },
   "dashboard": {
   "playAndDominate": "Jouez vos pièces. Dominez le marché.",
   "trySimulator": "Essayez dès maintenant notre simulateur gratuit de trading crypto.",
@@ -70,13 +126,99 @@
     "mostTraded": "Plus échangées",
     "winners": "Gagnants"
   },
-
   "filters": "Filtres",
   "refresh": "Rafraîchir",
 
   "cryptoListAll": "Liste des cryptomonnaies",
   "cryptoListMostTraded": "Cryptomonnaies les plus échangées",
   "cryptoListWinners": "Top gagnants (24h)"
+  ,
+  "addToWatchlist": "Ajouter à la liste de suivi",
+  "removeFromWatchlist": "Retirer de la liste de suivi"
+  ,
+  "chartLoading": "Chargement du graphique...",
+  "range24h": "24H",
+  "range7d": "7J",
+  "range30d": "30J",
+  "range90d": "90J",
+  "range1y": "1A"
+},
+"activity": {
+  "title": "Historique des ordres",
+  "side": "Côté:",
+  "type": "Type:",
+  "coin": "Cryptomonnaie:",
+  "all": "Tous",
+  "buy": "Achat",
+  "sell": "Vente",
+  "loading": "Chargement de l'historique des ordres…",
+  "noExecutedTrades": "Aucun ordre exécuté pour le moment.",
+  "noMatchingTrades": "Aucun trade ne correspond aux filtres.",
+  "market": "Marché",
+  "limit": "Limite",
+  "marketOrder": "Ordre marché",
+  "limitAt": "Limite @ ${{price}}",
+  "total": "Total : ${{total}}",
+  "executedAt": "Exécuté le"
+},
+"simulator": {
+  "overviewTitle": "Aperçu",
+  "loadingData": "Chargement des données…",
+  "cash": "Solde",
+  "holdings": "Avoirs",
+  "pendingOrders": "Ordres en attente",
+  "loadingPendingOrders": "Chargement des ordres en attente…",
+  "noPendingOrders": "Aucun ordre en attente.",
+  "cancel": "Annuler",
+  "cancelFailed": "Échec de l'annulation.",
+  "orderCancelled": "Ordre annulé.",
+  "cancelError": "Échec de l'annulation de l'ordre.",
+  "amount": "Montant",
+  "placed": "Placé"
+},
+"percent": {
+  "title": "Performance",
+  "placeholder": "Vos métriques de performance apparaîtront ici lorsque votre activité dans le simulateur augmentera.",
+  "metricProfitLoss": "Profit / Perte (%)",
+  "metricTotalReturn": "Retour total",
+  "metricEquityCurve": "Courbe d'équité",
+  "metricWinRate": "Taux de réussite",
+  "metricAvgGainLoss": "Gain moyen / perte moyenne"
+},
+"search": {
+  "title": "Recherche",
+  "subtitle": "Recherchez des cryptos à trader dans le simulateur.",
+  "placeholder": "Rechercher une cryptomonnaie...",
+  "searching": "Recherche…",
+  "noMatches": "Aucun résultat trouvé."
+},
+"trade": {
+  "title": "Trader",
+  "noCoinSelected": "Aucune crypto sélectionnée.",
+  "enterValidAmount": "Entrez un montant valide.",
+  "amountTooSmall": "Le montant est trop petit.",
+  "enterValidLimitPrice": "Entrez un prix limite valide.",
+  "notEnoughCash": "Fonds insuffisants.",
+  "dontOwnCoin": "Vous ne possédez pas cette crypto.",
+  "notEnoughCoins": "Pas assez de cryptos.",
+  "orderFailed": "Échec de l'ordre.",
+  "orderPlaced": "{{orderKind}} {{mode}} ordre placé.",
+  "networkError": "Erreur réseau lors de la passation de l'ordre.",
+  "loadingPanel": "Chargement du panneau de trading…",
+  "limitPrice": "Prix limite (USD)",
+  "selectCoin": "Sélectionner une crypto",
+  "usdLabel": "USD",
+  "usdShort": "USD",
+  "max": "MAX",
+  "approx": "≈",
+  "processing": "Traitement…"
+},
+"wallet": {
+  "title": "Portefeuille",
+  "cashLabel": "Solde:",
+  "loading": "Chargement du portefeuille…",
+  "noHoldings": "Aucun avoir pour le moment.",
+  "avgEntry": "Prix moyen d'entrée : ${{price}}"
 },
 "coinsTable": {
   "name": "Nom",
@@ -111,11 +253,157 @@
     "volume24h": "Volume 24h",
     "marketCap": "Capitalisation"
   }
+},
+"about": {
+  "title": "À propos de CryptoCube",
+
+  "description1": "CryptoCube est une source dédiée aux données, aux analyses et à la communauté crypto. Notre mission est d'accélérer la révolution crypto en organisant l'intelligence liée aux cryptomonnaies et en la rendant facilement accessible à tous.",
+  "description2": "Nos contenus et outils sont pensés pour aider les passionnés, les chercheurs et les étudiants à mieux comprendre le marché et à tester des stratégies sans risque grâce à des simulateurs et des données claires.",
+
+  "exploreCoins": "Explorer les coins",
+  "openSimulator": "Ouvrir le simulateur",
+
+  "features": {
+    "realTimeData": {
+      "title": "Données Temps Réel",
+      "text": "Accès aux prix et volumes actualisés pour prendre des décisions éclairées."
+    },
+    "simulator": {
+      "title": "Simulateur",
+      "text": "Testez des stratégies sans risque avec des portefeuilles fictifs."
+    },
+    "advancedFiltering": {
+      "title": "Filtrage Avancé",
+      "text": "Trouvez rapidement les coins qui correspondent à vos critères."
+    },
+    "news": {
+      "title": "Actualités",
+      "text": "Regroupez les sources et suivez les tendances du marché."
+    }
+  },
+
+  "why": {
+    "title": "Pourquoi CryptoCube ?",
+
+    "clarity": {
+      "title": "Clarté",
+      "text": "Interface simple, données accessibles et explications au bon endroit."
+    },
+    "security": {
+      "title": "Sécurité",
+      "text": "Aucun argent réel : apprenez et testez sans risque."
+    },
+    "scalable": {
+      "title": "Évolutif",
+      "text": "Des outils capables de grandir selon vos besoins."
+    }
+  },
+
+  "contact": {
+    "title": "Contact",
+    "text": "Pour toute demande, écrivez-nous :"
+  }
+},
+"specificCoin": {
+  "marketStats": "Statistiques du marché",
+  "marketCap": "Capitalisation",
+  "fdv": "Valorisation entièrement diluée",
+  "volume24h": "Volume (24h)",
+  "rank": "Rang",
+
+  "pricePerformance": "Performance des prix",
+  "range24h": "Fourchette 24h",
+  "fromLow": "Depuis le bas",
+  "fromHigh": "Depuis le haut",
+  "variation7d": "Variation sur 7 jours",
+  "ath": "Plus haut historique",
+  "atl": "Plus bas historique",
+
+  "supplyMetrics": "Métriques d’offre",
+  "circulatingSupply": "Offre en circulation",
+  "totalSupply": "Offre totale",
+  "maxSupply": "Offre maximale",
+
+  "marketOverview": "Aperçu du marché",
+  "volatilityIndex": "Indice de volatilité",
+  "basedOn7d": "Basé sur la variation sur 7 jours :",
+  "sentiment": "Sentiment du marché",
+  "globalMarket": "Marché global",
+  "growing": "En croissance",
+  "declining": "En repli",
+  "stable": "Stable",
+
+  "launchDate": "Date de lancement",
+  "hashAlgorithm": "Algorithme de hachage",
+  "category": "Catégorie",
+
+  "description": "Description",
+  "about": "À propos de",
+  "seeMore": "Voir plus",
+  "seeLess": "Voir moins",
+  "updated": "Mis à jour",
+
+  "globalPrices": "Prix globaux",
+  "realTimeFrom": "Prix mis à jour en temps réel depuis CoinGecko"
+},
+"markets": {
+  "loading": "Chargement des données du marché...",
+  "empty": "Aucune donnée de marché disponible pour cette cryptomonnaie.",
+  "title": "Marchés pour",
+  "exchange": "Bourse",
+  "pair": "Paire",
+  "priceUsd": "Prix (USD)",
+  "spread": "Écart",
+  "volume24h": "Volume (24h) (USD)",
+  "volumeShare": "Part du volume (%)",
+  "lastUpdate": "Dernière mise à jour",
+  "score": "Score"
+},
+"treasuries": {
+    "loading": "Chargement des données de trésorerie...",
+    "empty": "Aucune donnée publique de trésorerie disponible pour cette cryptomonnaie.",
+    "title": "Trésoreries publiques détenant",
+    "company": "Entreprise",
+    "country": "Pays",
+    "holdings": "Avoirs",
+    "valueUsd": "Valeur (USD)"
+  },
+  "signup": {
+    "title": "Inscription",
+    "continueWithGoogle": "Continuer avec Google",
+    "continueWithMicrosoft": "Continuer avec Microsoft",
+    "continueWithGitHub": "Continuer avec GitHub",
+    "orWithEmail": "Ou s'inscrire avec email",
+    "namePlaceholder": "Nom (optionnel)",
+    "lastNameLabel": "Nom",
+    "firstNameLabel": "Prénom",
+    "emailPlaceholder": "Email",
+    "emailLabel": "Email",
+    "usernameLabel": "Nom d'utilisateur",
+    "orWith": "Ou s'inscrire avec",
+    "passwordPlaceholder": "Mot de passe (min 8 caractères)",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "creating": "Création du compte...",
+    "createAccount": "S'inscrire",
+    "alreadyHaveAccount": "Déjà un compte?",
+    "signIn": "Se connecter",
+    "goToSignIn": "Aller à",
+    "andLogIn": "et connectez-vous avec cet email à la place.",
+    "oauthMicrosoft": "S'inscrire avec Microsoft",
+    "oauthGoogle": "S'inscrire avec Google",
+    "oauthGitHub": "S'inscrire avec GitHub",
+    "nameInvalid": "Le nom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
+    "firstNameInvalid": "Le prénom doit contenir uniquement des lettres et avoir au moins 2 caractères.",
+    "emailInvalid": "Format d'email incorrect.",
+    "usernameInvalid": "Le nom d'utilisateur doit contenir au moins 3 caractères alphanumériques.",
+    "passwordWeak": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "serverError": "Erreur d'inscription (status {{status}})",
+    "autoLoginFailed": "Compte créé, mais la connexion automatique a échoué. Veuillez vous connecter manuellement.",
+    "networkError": "Erreur de connexion au serveur."
+  }
 }
-
-
-
-
   
   
-}
+

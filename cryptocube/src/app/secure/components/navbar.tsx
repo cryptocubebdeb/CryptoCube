@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Search, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SearchResult {
   id: string;
@@ -18,12 +19,14 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const userId = (session?.user as { id?: string })?.id;
 
+  const { t } = useTranslation();
+
   const links = [
-    { href: "/secure/dashboard", text: "Accueil" },
-    { href: "/secure/coins", text: "Coins" },
-    { href: "/secure/categories", text: "Catégories" },
-    { href: "/secure/simulator/", text: "Simulateur" },
-    { href: "/secure/about", text: "À propos" },
+    { href: "/secure/dashboard", text: "navbar.home" },
+    { href: "/secure/coins", text: "navbar.coins" },
+    { href: "/secure/categories", text: "navbar.categories" },
+    { href: "/secure/simulator/", text: "navbar.simulator" },
+    { href: "/secure/about", text: "navbar.about" },
   ];
 
   
@@ -163,7 +166,7 @@ export default function Navbar() {
                     active ? "text-yellow-400" : "text-white/80 hover:text-white",
                   ].join(" ")}
                 >
-                  {link.text}
+                  {t(link.text)}
                 </Link>
               </li>
             );
@@ -173,8 +176,8 @@ export default function Navbar() {
           {!searchOpen && (
             <li>
               <button
-                type="button"
-                aria-label="Open search"
+                  type="button"
+                  aria-label={t("navbar.openSearch")}
                 onClick={() => {
                   const willOpen = !searchOpen;
                   setSearchOpen(willOpen);
@@ -210,7 +213,7 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
-                placeholder="Rechercher une crypto..."
+                placeholder={t("navbar.searchPlaceholder")}
                 className={
                   "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
                   (searchOpen ? "w-full pl-2" : "w-0 pl-0")
@@ -228,10 +231,10 @@ export default function Navbar() {
               }
               id="search-results"
               role="listbox"
-              aria-label="Search results"
+              aria-label={t("navbar.searchResults")}
             >
               {searchLoading ? (
-                <div className="px-3 py-2 text-sm text-white/70">Recherche...</div>
+                <div className="px-3 py-2 text-sm text-white/70">{t("navbar.searching")}</div>
               ) : results.length > 0 ? (
                 results.map((r) => (
                   <Link
@@ -255,7 +258,7 @@ export default function Navbar() {
               ) : (
                 //Si Aucun résultat trouvé
                 query.length > 0 ? (
-                  <div className="px-3 py-2 text-sm text-white/60">Aucune correspondance</div>
+                  <div className="px-3 py-2 text-sm text-white/60">{t("navbar.noMatches")}</div>
                 ) : null
               )}
             </div>
@@ -278,9 +281,9 @@ export default function Navbar() {
               {userLink.icon}
             </Link>
 
-            <div
+              <div
               role="menu"
-              aria-label="User menu"
+              aria-label={t("navbar.userMenu")}
               className={
                 "absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
                 (userMenuOpen
@@ -295,7 +298,7 @@ export default function Navbar() {
                   onClick={() => setUserMenuOpen(false)}
                   className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
                 >
-                  Connectez-vous
+                  {t("navbar.signIn")}
                 </Link>
               ) : (
                 <>
@@ -305,7 +308,7 @@ export default function Navbar() {
                     onClick={() => setUserMenuOpen(false)}
                     className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
                   >
-                    Détails
+                    {t("navbar.details")}
                   </Link>
                   <Link
                     href="/secure/account/watchlist"
@@ -313,15 +316,15 @@ export default function Navbar() {
                     onClick={() => setUserMenuOpen(false)}
                     className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
                   >
-                    Watchlist
+                    {t("navbar.watchlist")}
                   </Link>
                   <Link
-                    href="/secure/account/notifications"
+                    href="/secure/account/settings"
                     role="menuitem"
                     onClick={() => setUserMenuOpen(false)}
                     className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
                   >
-                    Notifications
+                    {t("navbar.settings")}
                   </Link>
                   <button
                     onClick={() => {
@@ -331,7 +334,7 @@ export default function Navbar() {
                     role="menuitem"
                     className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700"
                   >
-                    Déconnexion
+                    {t("navbar.signOut")}
                   </button>
                 </>
               )}

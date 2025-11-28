@@ -330,7 +330,7 @@ export default function Page() {
                         <SearchBar
                             searchTerm={searchTerm}
                             onSearchChange={setSearchTerm}
-                            placeholder="Explorer les cryptos..."
+                            placeholder={t("coinsPage.explorePlaceholder")}
                         />
                     </div>
                 </div>
@@ -350,7 +350,7 @@ export default function Page() {
                             <SearchBar
                                 searchTerm={searchTerm}
                                 onSearchChange={setSearchTerm}
-                                placeholder="Explorer les cryptos..."
+                                placeholder={t("coinsPage.explorePlaceholder")}
                             />
                         </div>
                     </div>
@@ -540,10 +540,9 @@ export default function Page() {
                 <div className="max-w-[85rem] mx-auto">
                     {/* Titre Aperçu */}
                     <h2 className="text-4xl font-bold mb-10">
-                        {activeTab === 'tout' && 'Liste des cryptomonnaies'}
-                        {/* {activeTab === 'tendance' && 'Cryptomonnaies en tendance'} */}
-                        {activeTab === 'pluséchangées' && 'Cryptomonnaies les plus échangées'}
-                        {activeTab === 'gagnants' && 'Top gagnants (24h)'}
+                        {activeTab === 'tout' && t("coinsPage.cryptoListAll")}
+                        {activeTab === 'pluséchangées' && t("coinsPage.cryptoListMostTraded")}
+                        {activeTab === 'gagnants' && t("coinsPage.cryptoListWinners")}
                     </h2>
 
                     {/* Onglets de navigation */}
@@ -648,7 +647,7 @@ export default function Page() {
                                                 <button
                                                     onClick={(e) => toggleWatch(e, coinId)}
                                                     className={`transition-colors p-1 rounded ${userWatchlist.has(coinId) ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-400'} ${watchlistLoading ? 'opacity-50' : ''}`}
-                                                    aria-label={userWatchlist.has(coinId) ? 'Retirer de la liste de suivi' : 'Ajouter à la liste de suivi'}
+                                                    aria-label={userWatchlist.has(coinId) ? t('coinsPage.removeFromWatchlist') : t('coinsPage.addToWatchlist')}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4" strokeWidth={1.5}>
                                                         <path
