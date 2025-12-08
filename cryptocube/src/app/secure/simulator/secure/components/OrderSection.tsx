@@ -111,7 +111,7 @@ export default function OrdersSection() {
                   {order.orderType === 'BUY' ? t('activity.buy').toUpperCase() : t('activity.sell').toUpperCase()} {order.coinSymbol}
 
                   {order.orderKind === "LIMIT" && (
-                    <span className="text-xs text-yellow-300 ml-2">({t('activity.limitAt', { price: Number(order.price).toFixed(2) + ' CAD' })})</span>
+                    <span className="text-xs text-yellow-300 ml-2">({t('activity.limitAt', { price: Number(order.price).toFixed(2) })})</span>
                   )}
 
                   {order.orderKind === "MARKET" && (

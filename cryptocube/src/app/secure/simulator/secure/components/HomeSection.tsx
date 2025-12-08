@@ -98,7 +98,7 @@ export default function HomeSection() {
       {/* ================= Portfolio Chart ================= */}
       {/* Displays a visual chart of user's portfolio holdings */}
       <h2 className="text-2xl font-semibold mb-6 text-center">
-          Portfolio Value Over Time
+          {t('simulator.portfolioValueTitle')}
       </h2>
       <PortfolioChart />
     </div>

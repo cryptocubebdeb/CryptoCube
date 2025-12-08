@@ -278,7 +278,7 @@ export default function WalletSection() {
                   <div>
                     <p className="text-white font-semibold">{c.name}</p>
                     <p className="text-slate-400 text-xs">
-                      {(c.value / total * 100).toFixed(1)}% of portfolio
+                      {(c.value / total * 100).toFixed(1)}% {t('wallet.ofPortfolio')}
                     </p>
                   </div>
                 </div>

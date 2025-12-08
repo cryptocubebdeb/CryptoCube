@@ -42,18 +42,18 @@ export default function Navbar() {
   }, [isAuthenticated]);
 
   const links = [
-    { href: "/secure/dashboard", text: "Accueil" },
-    { href: "/secure/coins", text: "Coins" },
-    { href: "/secure/categories", text: "Catégories" },
+    { href: "/secure/dashboard", text: "navbar.home" },
+    { href: "/secure/coins", text: "navbar.coins" },
+    { href: "/secure/categories", text: "navbar.categories" },
     {
       href: !isAuthenticated
         ? "/secure/simulator/accueil"
         : hasSimAccount === false
           ? "/secure/simulator/accueil"
           : "/secure/simulator/secure",
-      text: "Simulateur"
+      text: "navbar.simulator"
     },
-    { href: "/secure/about", text: "À propos" },
+    { href: "/secure/about", text: "navbar.about" },
   ];
 
   const userLink = {

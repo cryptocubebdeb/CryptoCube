@@ -1,6 +1,6 @@
 {
   "landing": {
-    "title": "CryptoCube",
+    "title": "Crypto",
     "subtitle1": "Ne te contente pas de suivre la crypto",
     "subtitle2": "Décode-la.",
     "description": "CryptoCube t'aide à repérer les risques, à analyser les tendances et à prendre des décisions plus éclairées sur le marché.",
@@ -86,13 +86,18 @@
       "oauthAccountLinked": "Ce compte est déjà associé à un autre mode de connexion. Connecte-toi d'abord avec ta méthode habituelle, puis lie les autres depuis ton compte."
     },
   "dashboard": {
+  "loading": "Chargement...",
   "playAndDominate": "Jouez vos pièces. Dominez le marché.",
   "trySimulator": "Essayez dès maintenant notre simulateur gratuit de trading crypto.",
   "noRisk": "Sans portefeuille. Sans risque.",
+  "portfolioOverview": "Aperçu du Portfolio",
+  "cash": "Solde",
+  "holdings": "Avoirs",
+  "pendingOrders": "Ordres en attente",
   "marketOverview": "Aperçu du marché",
-  "topGainers": "Top des hausses du jour",
+  "topGainers": "Top gagnants du jour",
   "dailyNews": "Nouvelles de la journée",
-  "topLosers": "Top des baisses du jour",
+  "topLosers": "Top perdants du jour",
   "watchlist": "Liste de suivi",
   "viewMore": "Voir plus",
   "heroTitle": "Naviguez dans le monde de la cryptomonnaie en toute simplicité.",
@@ -174,13 +179,30 @@
   "orderCancelled": "Ordre annulé.",
   "cancelError": "Échec de l'annulation de l'ordre.",
   "amount": "Montant",
-  "placed": "Placé"
+  "placed": "Placé",
+  "portfolioValueTitle": "Valeur du portefeuille dans le temps"
+},
+"simulatorWelcome": {
+  "title": "Bienvenue dans le simulateur CryptoCube",
+  "description": "Ici, vous pouvez tester vos stratégies de trading sans risque. Découvrez les fonctionnalités, suivez vos performances, et apprenez à dominer le marché crypto.",
+  "mustLogin": "Pour essayer le simulateur de portfolio, veuillez vous connecter ou créer un compte.",
+  "signInButton": "S'inscrire / Se connecter",
+  "moreDetails": "Plus de détails",
+  "realData": "Notre simulateur utilise des données réelles afin de reproduire parfaitement le trading du monde réel.",
+  "precision": "La précision avec laquelle nous imitons le marché est presque parfaite et vos compétences le deviendront aussi.",
+  "startingCash": "Pour commencer le simulateur, nous vous offrons {{amount}} à trader librement.",
+  "warning": "Avertissement",
+  "warningText": "Toutes les transactions sont effectuées en dollars américains (USD).",
+  "creating": "En création...",
+  "createPortfolio": "Créer un portfolio"
 },
 "percent": {
   "title": "Performance",
+  "loading": "Chargement de la performance...",
   "placeholder": "Vos métriques de performance apparaîtront ici lorsque votre activité dans le simulateur augmentera.",
-  "metricProfitLoss": "Profit / Perte (%)",
-  "metricTotalReturn": "Retour total",
+  "metricProfitLoss": "P/L non réalisé",
+  "metricTotalReturn": "Retour total (réalisé + non réalisé)",
+  "metricTotalValue": "Valeur du portefeuille",
   "metricEquityCurve": "Courbe d'équité",
   "metricWinRate": "Taux de réussite",
   "metricAvgGainLoss": "Gain moyen / perte moyenne"
@@ -218,7 +240,8 @@
   "cashLabel": "Solde:",
   "loading": "Chargement du portefeuille…",
   "noHoldings": "Aucun avoir pour le moment.",
-  "avgEntry": "Prix moyen d'entrée : ${{price}}"
+  "avgEntry": "Prix moyen d'entrée : ${{price}}",
+  "ofPortfolio": "du portefeuille"
 },
 "coinsTable": {
   "name": "Nom",

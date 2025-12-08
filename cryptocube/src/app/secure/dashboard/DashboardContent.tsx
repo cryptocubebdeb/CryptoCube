@@ -11,8 +11,10 @@ import WatchlistCarousel from '../components/Dashboard/WatchlistCarousel';
 import PortfolioChart from "../components/Portfolio/PortfolioChart";
 import { useEffect, useState } from 'react';
 import { getFormatPrix } from '../../lib/getFormatData';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardContent() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
   // Store user's current cash balance
@@ -89,7 +91,7 @@ export default function DashboardContent() {
   if (loading) {
     return (
       <div style={{ color: "var(--foreground)" }} className="flex items-center justify-center h-screen">
-        Chargement...
+        {t('dashboard.loading')}
       </div>
     );
   }
@@ -121,21 +123,21 @@ export default function DashboardContent() {
         {hasPortfolio ? (
           <>
             <div className="flex flex-col gap-2 mt-7 mb-5">
-              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt" }}>Portfolio Overview</h2>
+              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt" }}>{t('dashboard.portfolioOverview')}</h2>
               {loading ? (
                 <p className="text-slate-400 text-sm">Loading data…</p>
               ) : (
                 <div className="grid grid-cols-3 gap-50 mb-5 text-sm">
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Cash</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.cash')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{getFormatPrix(cash)}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Holdings</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.holdings')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{holdings.length}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">Pending Orders</p>
+                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.pendingOrders')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{pendingOrders.length}</p>
                   </div>
                 </div>
@@ -151,13 +153,13 @@ export default function DashboardContent() {
             <Typography variant="h4"
               sx={{ mb: '30px', fontWeight: 'bold' }}
             >
-              Jouez vos pièces. Dominez le marché.
+              {t('dashboard.playAndDominate')}
             </Typography>
             <Typography variant="h6" sx={{ mt: 2 }}>
-              Essayez dès maintenant notre simulateur gratuit de trading crypto.
+              {t('dashboard.trySimulator')}
             </Typography>
             <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
-              Sans portefeuille. Sans risque.
+              {t('dashboard.noRisk')}
             </Typography>
             <Button
               variant="outlined"
@@ -180,7 +182,7 @@ export default function DashboardContent() {
                 }
               }}
             >
-              Essayez le simulateur
+              {t('dashboard.trySimulatorButton')}
             </Button>
           </>
         )}
@@ -220,7 +222,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography style={{ color: "var(--foreground)" }} variant="h5" gutterBottom sx={{ mt: 2 }}>
-              Aperçu du marché
+              {t('dashboard.marketOverview')}
             </Typography>
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <MarketOverviewGauges />
@@ -239,7 +241,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ color: "var(--foreground)", ml: 2, mt: 1 }}>
-              Top gagnants du jour
+              {t('dashboard.topGainers')}
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <TopWinningCoins /> {/* Dans components/TopWinningCoins.tsx */}
@@ -269,7 +271,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ mt: 2.5, textAlign: 'center', color: "var(--foreground)" }}>
-              Nouvelles de la journée
+              {t('dashboard.dailyNews')}
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               <DailyNews /> {/* Dans components/DailyNews.tsx */}
@@ -288,7 +290,7 @@ export default function DashboardContent() {
             }}
           >
             <Typography variant="h5" gutterBottom sx={{ ml: 2, mt: 1.5 }}>
-              Top perdants du jour
+              {t('dashboard.topLosers')}
             </Typography>
             <Box sx={{ flex: 1, overflow: 'auto', mr: 1.5 }}>
               <TopLoserCoins /> {/* Dans components/TopLoserCoins.tsx */}
@@ -315,7 +317,7 @@ export default function DashboardContent() {
             marginBottom: '24px'
           }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'var(--foreground)' }}>
-              Liste de suivi
+              {t('dashboard.watchlist')}
             </Typography>
             <Button
               variant="outlined"
@@ -335,7 +337,7 @@ export default function DashboardContent() {
                 }
               }}
             >
-              Voir plus
+              {t('dashboard.viewMore')}
             </Button>
           </div>
           <WatchlistCarousel />

@@ -1,6 +1,6 @@
 {
   "landing": {
-    "title": "CryptoCube",
+    "title": "Crypto",
     "subtitle1": "Don't just follow crypto",
     "subtitle2": "Decode it.",
     "description": "CryptoCube helps you spot risks, analyze trends and make better decisions on the market.",
@@ -86,9 +86,14 @@
       "oauthAccountLinked": "This account is already linked to another sign-in method. Please sign in with the original method first and link others from your account."
     },
   "dashboard": {
+  "loading": "Loading...",
   "playAndDominate": "Play your coins. Dominate the market.",
   "trySimulator": "Try our free crypto trading simulator now.",
   "noRisk": "No wallet. No risk.",
+  "portfolioOverview": "Portfolio Overview",
+  "cash": "Cash",
+  "holdings": "Holdings",
+  "pendingOrders": "Pending Orders",
   "marketOverview": "Market Overview",
   "topGainers": "Top Gainers of the Day",
   "dailyNews": "Daily News",
@@ -173,13 +178,30 @@
   "orderCancelled": "Order cancelled.",
   "cancelError": "Failed to cancel order.",
   "amount": "Amount",
-  "placed": "Placed"
+  "placed": "Placed",
+  "portfolioValueTitle": "Portfolio Value Over Time"
+},
+"simulatorWelcome": {
+  "title": "Welcome to the CryptoCube Simulator",
+  "description": "Here, you can test your trading strategies without risk. Discover the features, track your performance, and learn to dominate the crypto market.",
+  "mustLogin": "To try the portfolio simulator, please sign in or create an account.",
+  "signInButton": "Sign up / Sign in",
+  "moreDetails": "More details",
+  "realData": "Our simulator uses real data to perfectly replicate real-world trading.",
+  "precision": "The precision with which we mimic the market is almost perfect and your skills will become so too.",
+  "startingCash": "To start the simulator, we offer you {{amount}} to trade freely.",
+  "warning": "Warning",
+  "warningText": "All transactions are made in United States dollars (USD).",
+  "creating": "Creating...",
+  "createPortfolio": "Create a portfolio"
 },
 "percent": {
   "title": "Performance",
+  "loading": "Loading performance...",
   "placeholder": "Your performance metrics will appear here once your simulator activity grows.",
-  "metricProfitLoss": "Profit / Loss (%)",
-  "metricTotalReturn": "Total return",
+  "metricProfitLoss": "Unrealized P/L",
+  "metricTotalReturn": "Total return (realized + unrealized)",
+  "metricTotalValue": "Portfolio value",
   "metricEquityCurve": "Equity curve",
   "metricWinRate": "Win rate",
   "metricAvgGainLoss": "Avg gain / avg loss"
@@ -217,7 +239,8 @@
   "cashLabel": "Cash:",
   "loading": "Loading portfolio…",
   "noHoldings": "No holdings yet.",
-  "avgEntry": "Avg entry: ${{price}}"
+  "avgEntry": "Avg entry: ${{price}}",
+  "ofPortfolio": "of portfolio"
 },
 "coinsTable": {
   "name": "Name",

@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@mui/material/Button";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 
 export default function SimulateurAccueil() 
 {
+    const { t } = useTranslation();
     const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -41,16 +43,22 @@ export default function SimulateurAccueil()
     return ( 
     <>
     <div className="h-screen flex flex-col justify-center items-center space-y-6">
-        <h1 className="text-5xl font-bold mb-10 text-center">Bienvenue dans le simulateur Crypto<span className="text-yellow-400">Cube</span></h1>
+        <h1 className="text-5xl font-bold mb-10 text-center">
+            {t('simulatorWelcome.title').includes('CryptoCube') 
+                ? t('simulatorWelcome.title').split('CryptoCube')[0] 
+                : t('simulatorWelcome.title').split('Crypto')[0]}
+            Crypto<span className="text-yellow-400">Cube</span>
+            {t('simulatorWelcome.title').includes('Simulator') ? ' Simulator' : ' Simulateur'}
+        </h1>
 
         <p className="text-2xl mb-13 text-center max-w-3xl">
-            Ici, vous pouvez tester vos stratégies de trading sans risque. Découvrez les fonctionnalités, suivez vos performances, et apprenez à dominer le marché crypto.
+            {t('simulatorWelcome.description')}
         </p>
 
         { !isAuthenticated ? (
             <>
             <p className="text-xl text-start max-w-3xl mb-5">
-                Pour essayer le simulateur de portfolio, veuillez vous connecter ou créer un compte.
+                {t('simulatorWelcome.mustLogin')}
             </p>
 
             <Button
@@ -75,29 +83,29 @@ export default function SimulateurAccueil()
                     } 
                 }}
             >
-                S&apos;inscrire / Se connecter
+                {t('simulatorWelcome.signInButton')}
             </Button>
             </>
         ) : (
             <div className="flex flex-col justify-center items-center">
                 <p className="text-3xl text-start max-w-3xl mt-4 mb-5 text-yellow-400 font-semibold">
-                    Plus de détails
+                    {t('simulatorWelcome.moreDetails')}
                 </p>
 
                 <p className="text-xl text-start max-w-3xl mb-5">
-                    Notre simulateur utilise des données réelles afin de reproduire parfaitement le trading du monde réel.
+                    {t('simulatorWelcome.realData')}
                 </p>
 
                 <p className="text-xl text-start max-w-3xl mb-10">
-                    La précision avec laquelle nous imitons le marché est presque parfaite et vos compétences le deviendront aussi.
+                    {t('simulatorWelcome.precision')}
                 </p>
 
                 <p className="text-xl text-start mb-5">
-                    Pour commencer le simulateur, nous vous offrons <span className="font-bold">USD$100,000.00</span> à trader librement.
+                    {t('simulatorWelcome.startingCash', { amount: 'USD$100,000.00' })}
                 </p>
 
                 <p className="text-xl text-start mb-5">
-                    <span className="text-yellow-400">Avertissement</span>: Toutes les transactions sont effectuées en <span className="underline">dollars américains (USD)</span>.
+                    <span className="text-yellow-400">{t('simulatorWelcome.warning')}</span>: {t('simulatorWelcome.warningText')}
                 </p>
 
                 <Button
@@ -122,7 +130,7 @@ export default function SimulateurAccueil()
                         } 
                     }}
                 >
-                    {loading ? "En création..." : "Créer un portfolio"}
+                    {loading ? t('simulatorWelcome.creating') : t('simulatorWelcome.createPortfolio')}
                 </Button>
             </div>
         )}
