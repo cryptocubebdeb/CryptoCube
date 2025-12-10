@@ -225,7 +225,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
                 aria-label={t("signin.oauthGoogle")}
               >
                 <FaGoogle className="w-7 h-7" />
@@ -234,7 +234,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
               <button
                 type="button"
                 onClick={handleGitHubSignIn}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900 hover:bg-black"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-900 hover:bg-emerald-950"
                 aria-label={t("signin.oauthGitHub")}
               >
                 <FaGithub className="w-7 h-7 text-white" />

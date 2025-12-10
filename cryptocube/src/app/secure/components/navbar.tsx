@@ -169,9 +169,14 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
+<<<<<<< Updated upstream
 
         <Link href="/secure/dashboard" className="font-bold text-2xl">
           Crypto<span className="text-yellow-400">Cube</span>
+=======
+        <Link href="/secure/dashboard" style={{ color: "var(--foreground)" }} className="font-bold text-2xl">
+          Crypto<span className="text-yellow-500">Cube</span>
+>>>>>>> Stashed changes
         </Link>
 
         <ul className="flex flex-row items-center gap-6">
@@ -182,10 +187,18 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
+<<<<<<< Updated upstream
                   className={
                     "navbar-text uppercase text-base transition-colors " +
                     (active ? "text-yellow-400" : "text-white/80 hover:text-white")
                   }
+=======
+                  style={{
+                    color: active ? "var(--foreground-alt)" : "var(--foreground)",
+                    opacity: active ? "1" : "0.8",
+                  }}
+                  className={["navbar-text uppercase text-base transition-colors"].join(" ")}
+>>>>>>> Stashed changes
                 >
                   {t(link.text)}
                 </Link>
@@ -205,7 +218,11 @@ export default function Navbar() {
                     window.setTimeout(() => inputRef.current?.focus(), 0);
                   }
                 }}
-                className="navbar-text text-white/80 hover:text-white p-1"
+                className="navbar-text p-1"
+                style = {{
+                  color: "var(--foreground)",
+                  opacity: "0.8",
+                }}
               >
                 <Search size={20} />
               </button>
@@ -215,10 +232,17 @@ export default function Navbar() {
           <li className="relative" ref={searchContainerRef}>
 
             <div
+<<<<<<< Updated upstream
               className={
                 "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
                 (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")
               }
+=======
+              style={{
+                backgroundColor: "var(--background-search)"
+              }}
+              className={"flex items-center rounded-full transition-all duration-200 " + (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")}
+>>>>>>> Stashed changes
             >
               <input
                 type="text"
@@ -230,32 +254,64 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
+<<<<<<< Updated upstream
                 placeholder={t("navbar.searchPlaceholder")}
                 className={
                   "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
                   (searchOpen ? "w-full pl-2" : "w-0 pl-0")
                 }
+=======
+                placeholder="Rechercher une crypto..."
+                style={{
+                  color: "var(--foreground-search)"
+                }}
+                className={"appearance-none bg-transparent placeholder-white/60 outline-none transition-all duration-200 " + (searchOpen ? "w-full pl-2" : "w-0 pl-0")}
+>>>>>>> Stashed changes
               />
             </div>
 
             <div
+<<<<<<< Updated upstream
               className={
                 "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
                 (searchOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none")
               }
+=======
+              style={{
+                backgroundColor: "var(--background-search)"
+              }}
+              className={"absolute left-0 mt-2 w-64 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " + (searchOpen ? "opacity-100 scale-100 pointer-events-auto translate-y-0" : "opacity-0 scale-95 pointer-events-none -translate-y-2")}
+>>>>>>> Stashed changes
               id="search-results"
               role="listbox"
             >
               {searchLoading ? (
+<<<<<<< Updated upstream
                 <div className="px-3 py-2 text-sm text-white/70">{t("navbar.searching")}</div>
+=======
+                <div 
+                  style={{
+                    color: "var(--foreground-search)",
+                    opacity: "0.7"
+                  }}
+                  className="px-3 py-2 text-sm">Recherche...
+                </div>
+>>>>>>> Stashed changes
               ) : results.length > 0 ? (
                 results.map((r) => (
                   <Link
                     key={r.id}
                     href={`/secure/specificCoin/${r.id}`}
-                    className="w-full text-left flex items-center gap-3 px-3 py-2 hover:bg-slate-700 text-white"
+                    className="w-full text-left flex items-center gap-3 px-3 py-2 text-white"
                     role="option"
                     aria-selected={false}
+                    style={{}}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                   >
                     {r.thumb ? (
                       <img src={r.thumb} alt={r.name} className="w-6 h-6 rounded" />
@@ -268,9 +324,26 @@ export default function Navbar() {
                     </div>
                   </Link>
                 ))
+<<<<<<< Updated upstream
               ) : query.length > 0 ? (
                 <div className="px-3 py-2 text-sm text-white/60">{t("navbar.noMatches")}</div>
               ) : null}
+=======
+              ) : (
+                //Si Aucun résultat trouvé
+                query.length > 0 ? (
+                  <div 
+                    style={{
+                      color: "var(--foreground-search)",
+                      opacity: "0.8"
+                    }}
+                    className="px-3 py-2 text-sm"
+                  >
+                      Aucune correspondance
+                  </div>
+                ) : null
+              )}
+>>>>>>> Stashed changes
             </div>
 
           </li>
@@ -284,7 +357,12 @@ export default function Navbar() {
           >
             <Link
               href={userLink.href}
-              className="navbar-text text-white/80 hover:text-white flex items-center"
+              style={{
+                color: "var(--foreground)",
+                opacity: "0.8",
+                
+              }}
+              className="navbar-text flex items-center"
               aria-haspopup="menu"
               aria-expanded={userMenuOpen}
             >
@@ -306,7 +384,14 @@ export default function Navbar() {
                   href="/auth/signin"
                   role="menuitem"
                   onClick={() => setUserMenuOpen(false)}
-                  className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                  className="block px-4 py-2 text-sm text-white/90 hover:text-white"
+                  style={{}}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor = "";
+                  }}
                 >
                   {t("navbar.signIn")}
                 </Link>
@@ -316,7 +401,14 @@ export default function Navbar() {
                     href="/secure/account/details"
                     role="menuitem"
                     onClick={() => setUserMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white"
+                    style={{}}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                   >
                     {t("navbar.details")}
                   </Link>
@@ -324,7 +416,14 @@ export default function Navbar() {
                     href="/secure/account/watchlist"
                     role="menuitem"
                     onClick={() => setUserMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white"
+                    style={{}}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                   >
                     {t("navbar.watchlist")}
                   </Link>
@@ -332,7 +431,14 @@ export default function Navbar() {
                     href="/secure/account/settings"
                     role="menuitem"
                     onClick={() => setUserMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-slate-700"
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white"
+                    style={{}}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                   >
                     {t("navbar.settings")}
                   </Link>
@@ -343,7 +449,16 @@ export default function Navbar() {
                       signOut({ callbackUrl: "/auth/signin" });
                     }}
                     role="menuitem"
-                    className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-700"
+                    style={{
+                      color: "var(--color-red)"
+                    }}
+                    className="w-full text-left block px-4 py-2 text-sm"
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = "var(--background-search-hover)";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = "";
+                    }}
                   >
                     {t("navbar.signOut")}
                   </button>

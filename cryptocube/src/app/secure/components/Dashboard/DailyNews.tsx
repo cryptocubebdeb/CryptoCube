@@ -64,7 +64,7 @@ export default function DailyNews(): React.JSX.Element {
 
     if (loading) {
         return (
-             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
+             <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: "var(--foreground)" }}>
                 Chargement des actualités...
             </Typography>
         );
@@ -121,7 +121,7 @@ export default function DailyNews(): React.JSX.Element {
                         mb: 1.5, 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        color: 'white',
+                        color: "var(--foreground)",
                         cursor: 'pointer',
                         transition: 'transform 0.2s ease, filter 0.2s ease, textDecoration 0.2s ease',
                         transformOrigin: 'center',
@@ -132,7 +132,7 @@ export default function DailyNews(): React.JSX.Element {
                         }
                     }}>
 
-                    <Typography variant="body1" sx={{ fontSize: '1.1rem', marginLeft: 8, textAlign: 'start', lineHeight: '1.5', fontWeight: '500', color: 'white' }}>
+                    <Typography variant="body1" sx={{ fontSize: '1.1rem', marginLeft: 8, textAlign: 'start', lineHeight: '1.5', fontWeight: '500', color: "var(--foreground)" }}>
                         {currentNews.title.length > 60 ?
                             `${currentNews.title.slice(0, 60)}...` :
                             currentNews.title
@@ -142,13 +142,13 @@ export default function DailyNews(): React.JSX.Element {
 
                 {/* Article Outlet */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 8 }}>
-                    <Typography variant='body2' sx={{ color: 'gray' }}>
+                    <Typography variant='body2' sx={{ color: "var(--foreground-grey)" }}>
                         {currentNews.news_site || currentNews.author || 'CoinGecko News'}
                     </Typography>
-                    <Typography variant='body2' sx={{ color: 'gray' }}>
+                    <Typography variant='body2' sx={{ color: "var(--foreground-grey)" }}>
                         •
                     </Typography>
-                    <Typography variant='body2' sx={{ color: 'gray' }}>
+                    <Typography variant='body2' sx={{ color: "var(--foreground-grey)" }}>
                         {new Date(currentNews.created_at).toLocaleDateString()}
                     </Typography>
                 </Box>
@@ -171,10 +171,10 @@ export default function DailyNews(): React.JSX.Element {
                     onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + news.length) % news.length)}
                     sx={{ 
                         fontSize: 20, 
-                        color: 'rgba(255, 255, 255, 0.7)', 
+                        color: "var(--foreground-grey)", 
                         cursor: 'pointer', 
                         pointerEvents: 'auto', // Enable clicks on the arrows
-                        '&:hover': { color: 'white', fontSize: 24 },
+                        '&:hover': { color: "var(--foreground)", fontSize: 24 },
                         transition: 'all 0.2s ease'
                     }}
                 />
@@ -182,10 +182,10 @@ export default function DailyNews(): React.JSX.Element {
                     onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % news.length)}
                     sx={{ 
                         fontSize: 20, 
-                        color: 'rgba(255, 255, 255, 0.7)', 
+                        color: "var(--foreground-grey)", 
                         cursor: 'pointer', 
                         pointerEvents: 'auto', // Enable clicks on the arrows
-                        '&:hover': { color: 'white', fontSize: 24 },
+                        '&:hover': { color: "var(--foreground)", fontSize: 24 },
                         transition: 'all 0.2s ease'
                     }}
                 />

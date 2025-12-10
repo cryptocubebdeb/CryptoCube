@@ -70,22 +70,22 @@ export default function MarketOverviewGauges(): React.JSX.Element {
         }}>
             {/* Fear & Greed Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography variant="body1" sx={{ fontSize: '18px', color: 'white', mb: -1.5, textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ fontSize: '18px', color: "var(--foreground)", mb: -1.5, textAlign: 'center' }}>
                     {t("gauges.sentiment")}
                 </Typography>
-                <RiskGauge value={Math.round(fearGreedValue)} />
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>
+                <RiskGauge style={{ color: "var(--foreground)" }} value={Math.round(fearGreedValue)} />
+                <Typography variant="body2" sx={{ color: "var(--foreground-grey)", mt: -1, textAlign: 'center' }}>
                     {fearGreedLabel}
                 </Typography>
             </Box>
 
             {/* Global Market Gauge */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography variant="body1" sx={{ fontSize: '18px', color: 'white', mb: -1.5, textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ fontSize: '18px', color: "var(--foreground)", mb: -1.5, textAlign: 'center' }}>
                     {t("gauges.globalMarket")}
                 </Typography>
                 <RiskGauge value={Math.round(marketHealth)} />
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: -1, textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: "var(--foreground-grey)", mt: -1, textAlign: 'center' }}>
                     {getMarketStatus(marketHealth)}
                 </Typography>
             </Box>

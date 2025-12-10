@@ -156,31 +156,10 @@ export default function Page() {
         if (refreshCooldown || loading) return;
         fetchCoins();
         setRefreshCooldown(true);
-        const start = performance.now();
-
-        const animate = () => {
-            const now = performance.now();
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / cooldownDuration, 1);
-            setCooldownProgress(progress);
-            if (progress < 1) {
-                animationRef.current = requestAnimationFrame(animate);
-            } else {
-                setRefreshCooldown(false);
-                setCooldownProgress(0);
-            }
-        };
-        animationRef.current = requestAnimationFrame(animate);
+        setTimeout(() => {
+            setRefreshCooldown(false);
+        }, cooldownDuration);
     };
-
-    // Nettoyage du requestAnimationFrame
-    useEffect(() => {
-        return () => {
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-            }
-        };
-    }, []);
 
     // Pagination - 40 coins par page
     const getCurrentPageCoins = () => {
@@ -256,7 +235,8 @@ export default function Page() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             gap: '1.5rem',
-                            marginTop: '2rem'
+                            marginTop: '2rem',
+                            color: 'var(--foreground)'
                         }}
                     >
                         {/* Titre principal */}
@@ -279,16 +259,17 @@ export default function Page() {
                             {/* Capitalisation */}
                             <div
                                 style={{
-                                    backgroundColor: '#232330ff',
+                                    backgroundColor: 'var(--color-container-bg)',
                                     color: 'white',
                                     height: '110px',
                                     width: '290px',
                                     borderRadius: '10px',
                                     padding: '1rem',
                                     paddingLeft: '1.5rem',
+                                    boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
                                 }}
                             >
-                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}>  {t("coinsPage.marketCap")}</h1>
+                                <h1 style={{ fontSize: '1.2rem', color: 'var(--foreground-grey)' }}>  {t("coinsPage.marketCap")}</h1>
                                 <div
                                     style={{
                                         marginTop: '0.5rem',
@@ -300,27 +281,28 @@ export default function Page() {
                                     }}
                                 >
                                     <h2>{getFormatMarketCap(categoryDetails.market_cap)}</h2>
-                                    <h2 style={{ fontSize: '0.9rem' }}>{formatPercentage(categoryDetails.market_cap_change_24h)}</h2>
+                                    <h2 style={{ color: 'var(--foreground)', fontSize: '0.9rem' }}>{formatPercentage(categoryDetails.market_cap_change_24h)}</h2>
                                 </div>
                             </div>
 
                             {/* Volume 24h */}
                             <div
                                 style={{
-                                    backgroundColor: '#232330ff',
+                                    backgroundColor: 'var(--color-container-bg)',
                                     color: 'white',
                                     height: '110px',
                                     width: '290px',
                                     borderRadius: '10px',
                                     padding: '1rem',
-                                    paddingLeft: '1.5rem',
+                                    paddingLeft: '1.5rem', boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
                                 }}
                             >
-                                <h1 style={{ fontSize: '1.2rem', color: '#c7c7deff' }}> {t("coinsPage.volume24h")}</h1>
+                                <h1 style={{ fontSize: '1.2rem', color: 'var(--foreground-grey)' }}> {t("coinsPage.volume24h")}</h1>
                                 <h2
                                     style={{
                                         marginTop: '0.5rem',
-                                        fontSize: '1.4rem'
+                                        fontSize: '1.4rem',
+                                        color: 'var(--foreground)',
                                     }}
                                 >{getFormatMarketCap(categoryDetails.volume_24h)}</h2>
                             </div>
@@ -336,8 +318,8 @@ export default function Page() {
                 </div>
             ) : (
                 (
-                    <div className="min-h-[60vh] flex flex-col justify-center items-center px-4">
-                        <div className="text-center mx-auto space-y-8">
+                    <div className="min-h-[55vh] flex flex-col justify-center items-center px-4">
+                        <div className="text-center mx-auto space-y-4">
                             {/* Titre principal */}
                             <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
                                 {t("coinsPage.heroTitle")}
@@ -362,7 +344,7 @@ export default function Page() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Colonne métriques gauche : Capitalisation + Volume 24h */}
                     <div className="flex flex-col gap-4">
-                        <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
+                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
                             <div className="flex items-start justify-between">
                                 <div>
                                     <div className="text-sm text-white/80">{t("coinsPage.marketCap")}</div>
@@ -384,10 +366,10 @@ export default function Page() {
 
 
 
-                        <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
+                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <div className="text-sm text-white/80">{t("coinsPage.volume24h")}</div>
+                                    <div style={{ color: 'var(--foreground-grey)' }} className="text-sm">{t("coinsPage.volume24h")}</div>
                                     {/* on additionne le volume de tous les coins (total_volume) */}
                                     <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
                                 </div>
@@ -433,7 +415,7 @@ export default function Page() {
 
                     </div>
                     {/* Top Gagnants */}
-                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF' }}>
+                    <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: 'var(--foreground)', boxShadow: '5px 5px 5px rgba(0, 0, 0, 0.2)' }}>
                         <div className="flex items-center justify-between mb-3">
                             <h3 className="text-lg font-semibold">{t("coinsPage.topGainers")}</h3>
 
@@ -457,20 +439,23 @@ export default function Page() {
                                 </div>
                             ) : (
                                 topGainers.length === 0 ? (
-                                    <div className="text-sm text-white/60">{t("coinsPage.noData")}</div>
+                                    <div style={{ color: 'var(--foreground)' }} className="text-sm">{t("coinsPage.noData")}</div>
                                 ) : (
                                     topGainers.map(coin => (
                                         <div
                                             key={coin.id}
                                             onClick={() => router.push(`/secure/specificCoin/${coin.id}`)}
-                                            className="flex items-center justify-between p-2 rounded hover:bg-slate-800 cursor-pointer"
+                                            className="flex items-center justify-between p-2 rounded cursor-pointer"
+                                            style={{ transition: 'background 0.2s' }}
+                                            onMouseEnter={e => { e.currentTarget.style.background = 'var(--background-hover)'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.background = ''; }}
                                         >
                                             <div className="flex items-center gap-3">
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
                                                 <div>
                                                     <div className="font-medium">{coin.name}</div>
-                                                    <div className="text-sm text-white/60 uppercase">{coin.symbol}</div>
+                                                    <div style={{ color: "var(--foreground)", opacity: 0.5}} className="text-sm uppercase">{coin.symbol}</div>
                                                 </div>
                                             </div>
                                             <div className="text-sm">
@@ -484,7 +469,7 @@ export default function Page() {
                     </div>
 
                     {/* Top par volume */}
-                    <div style={{ backgroundColor: '#141418ff', borderRadius: '16px', padding: '16px', color: '#FFFFFF' }}>
+                    <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: 'var(--foreground)', boxShadow: '5px 5px 5px rgba(0, 0, 0, 0.2)' }}>
                         <div className="flex items-center justify-between mb-3">
                             <h3 className="text-lg font-semibold">{t("coinsPage.topVolume")}</h3>
 
@@ -501,29 +486,32 @@ export default function Page() {
                                                     <div className="h-3 w-20 rounded" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
                                                 </div>
                                             </div>
-                                            <div className="h-4 w-14 rounded" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
+                                            <div className="h-4 w-14 rounded" style={{ backgroundColor: 'rgba(58, 104, 177, 0.06)' }} />
                                         </div>
                                     ))}
                                 </div>
                             ) : (
                                 topTraded.length === 0 ? (
-                                    <div className="text-sm text-white/60">{t("coinsPage.noData")}</div>
+                                    <div style={{ color: "var(--foreground)", opacity: 0.5 }} className="text-sm">{t("coinsPage.noData")}</div>
                                 ) : (
                                     topTraded.map(coin => (
                                         <div
                                             key={coin.id}
                                             onClick={() => router.push(`/secure/specificCoin/${coin.id}`)}
-                                            className="flex items-center justify-between p-2 rounded hover:bg-slate-800 cursor-pointer"
+                                            className="flex items-center justify-between p-2 rounded cursor-pointer"
+                                            style={{ transition: 'background 0.2s' }}
+                                            onMouseEnter={e => { e.currentTarget.style.background = 'var(--background-hover)'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.background = ''; }}
                                         >
                                             <div className="flex items-center gap-3">
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
                                                 <div>
                                                     <div className="font-medium">{coin.name}</div>
-                                                    <div className="text-sm text-white/60 uppercase">{coin.symbol}</div>
+                                                    <div style={{ color: "var(--foreground)", opacity: 0.5}} className="text-sm uppercase">{coin.symbol}</div>
                                                 </div>
                                             </div>
-                                            <div className="text-sm text-white/80">
+                                            <div style={{ color: "var(--foreground)", opacity: 0.8}} className="text-medium">
                                                 {getFormatMarketCap(coin.total_volume || 0)}
                                             </div>
                                         </div>
@@ -672,10 +660,20 @@ export default function Page() {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                     disabled={currentPage === 1}
-                                    className={`p-2 rounded transition-transform ${currentPage === 1
-                                        ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-white hover:scale-125'
-                                        }`}
+                                    style={{
+                                        color: currentPage === 1
+                                        ? "var(--foreground-grey)" // or another variable for disabled
+                                        : "var(--foreground)",
+                                        opacity: currentPage === 1 ? 0.5 : 1,
+                                        transition: "transform 0.2s"
+                                    }}
+                                    className="p-2 rounded"
+                                    onMouseEnter={e => {
+                                        if (currentPage !== 1) e.currentTarget.style.transform = "scale(1.25)";
+                                    }}
+                                    onMouseLeave={e => {
+                                        if (currentPage !== 1) e.currentTarget.style.transform = "scale(1)";
+                                    }}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -743,10 +741,20 @@ export default function Page() {
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                     disabled={currentPage === totalPages}
-                                    className={`p-2 rounded transition-transform ${currentPage === totalPages
-                                        ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-white hover:scale-125'
-                                        }`}
+                                    style={{
+                                        color: currentPage === 1
+                                        ? "var(--foreground-grey)" // or another variable for disabled
+                                        : "var(--foreground)",
+                                        opacity: currentPage === 1 ? 0.5 : 1,
+                                        transition: "transform 0.2s"
+                                    }}
+                                    className="p-2 rounded"
+                                    onMouseEnter={e => {
+                                        if (currentPage !== 1) e.currentTarget.style.transform = "scale(1.25)";
+                                    }}
+                                    onMouseLeave={e => {
+                                        if (currentPage !== 1) e.currentTarget.style.transform = "scale(1)";
+                                    }}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -84,7 +84,7 @@ export default function WatchlistCarousel() {
 
   if (coins.length === 0) {
     return (
-      <Box sx={{ textAlign: 'center', py: 8, color: '#9CA3AF' }}>
+      <Box sx={{ textAlign: 'center', py: 8, color: 'var(--foreground-grey)' }}>
         <Typography variant="h6" gutterBottom>
           Votre liste de suivi est vide
         </Typography>

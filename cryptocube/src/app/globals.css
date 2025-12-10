@@ -2,8 +2,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0c0c11;
+  --background-footer: rgb(25, 32, 43);
+  --foreground: #ededed;
+  --foreground-grey: rgba(255, 255, 255, 0.6);
+  --foreground-alt: #FFDD00;
+  --foreground-search: #ffffff;
+  --color-main-bg: #1d202b;
+  --color-container-bg: #141418ff;
+  --x-axis-text-color: #ffffff40;
+  --y-axis-text-color: #ffffff40;
+  --background-hover: #1a1a20ff;
+  --background-search: #1e293b;
+  --background-search-hover: #0f172a;
+  --background-hover: #2e303c;
+  --background-filter: #1a1d29;
+  --background-filter-fields: #2d3240;
+
+
+
+  --color-green: #4caf50;
+  --color-red: #ff0000;
+  --color-blue: #3B82F6;
+
+
+  
+  --color-display-bg: #272d3f;
+  --color-footer-bg: rgb(25, 32, 43);
+  --color-input-bg: #232734;
+  --color-switch-thumb: #003892;
+  --color-switch-thumb-alt: #003892;
+  --color-switch-track: #8796A5;
+  --color-yellow: #FFDD00;
+  --color-yellow-alt: #facc15;
+  --color-yellow-hover: #e6c200;
+  --color-white: #fff;
+  --color-black: #000;
+}
+
+.light {
+    --background: #f6fdff;
+    --background-footer: rgb(143, 163, 195);
+    --foreground: #000000;
+    --foreground-grey: rgba(26, 26, 26, 0.753);
+    --foreground-alt: #140e4b;
+    --foreground-search: #ffffff;
+    --color-red: #f73636;
+    --color-green: #206d22;
+    --color-blue: #0b3893;
+
+    --x-axis-text-color: #00000040;
+    --y-axis-text-color: #00000040;
+
+    --color-main-bg: rgb(209, 222, 244);
+    --color-container-bg: rgb(235, 246, 255);
+    --background-hover: rgb(205, 219, 239);
+    --background-search: rgb(117, 151, 181);
+    --background-search-hover: rgb(83, 117, 146);
+    --background-hover: rgb(221, 230, 244);
+    --background-filter: rgb(241, 244, 249);
+    --background-filter-fields: rgb(205, 219, 239);
+
 }
 
 @theme inline {
@@ -20,16 +79,15 @@
   }
 }
 
-.footer-bg {
-    background-color: #06080e;
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Geologica', sans-serif;
 }
 
+.footer-bg {
+    background-color: rgb(25, 32, 43);
+}
 
 .btn-primary {
   @apply w-64 bg-yellow-400 px-6 py-2 text-white rounded-3xl hover:bg-yellow-700 font-mono font-semibold;

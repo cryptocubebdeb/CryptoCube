@@ -7,7 +7,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-  <footer className="w-full mt-50 footer-bg border-t border-white/8 text-white">
+  <footer 
+    style={{ color: "var(--foreground)", backgroundColor: "var(--background-footer)" }}
+    className="w-full mt-50 border-t border-white/8"
+  >
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
           <div className="flex-1">
@@ -17,7 +20,7 @@ export default function Footer() {
           <div className="flex-1 flex justify-between">
             <div>
               <h4 className="text-sm font-semibold mb-2">Produit</h4>
-              <ul className="space-y-2 text-sm text-white/80">
+              <ul className="space-y-2 text-sm">
                 <li><Link href="/secure/coins" className="hover:text-white">Coins</Link></li>
                 <li><Link href="/secure/categories" className="hover:text-white">Catégories</Link></li>
                 <li><Link href="/secure/simulator" className="hover:text-white">Simulateur</Link></li>
@@ -26,7 +29,7 @@ export default function Footer() {
 
             <div>
               <h4 className="text-sm font-semibold mb-2">Aide</h4>
-              <ul className="space-y-2 text-sm text-white/80">
+              <ul className="space-y-2 text-sm">
                 <li><Link href="/secure/about" className="hover:text-white">À propos</Link></li>
                 <li><Link href="/auth/login" className="hover:text-white">Se connecter</Link></li>
                 <li><Link href="/auth/signup" className="hover:text-white">S&apos;inscrire</Link></li>

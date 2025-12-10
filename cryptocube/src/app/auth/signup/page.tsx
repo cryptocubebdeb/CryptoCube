@@ -435,7 +435,7 @@ export default function Page() {
               <button
                 type="button"
                 onClick={handleGitHubSignUp}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900 hover:bg-black transition-colors"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-900 hover:bg-emerald-950 transition-colors"
                 aria-label={t("signup.oauthGitHub")}
               >
                 <FaGithub className="w-7 h-7 text-white" />

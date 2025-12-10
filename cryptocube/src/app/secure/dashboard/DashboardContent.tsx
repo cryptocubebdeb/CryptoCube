@@ -12,9 +12,18 @@ import PortfolioChart from "../components/Portfolio/PortfolioChart";
 import { useEffect, useState } from 'react';
 import { getFormatPrix } from '../../lib/getFormatData';
 import { useTranslation } from 'react-i18next';
+import ColourSwitch from '../components/Settings/ColourSwitch';
 
 export default function DashboardContent() {
   const { t } = useTranslation();
+  const [isLight, setIsLight] = useState(false);
+
+  function toggleLightMode(event) {
+    const checked = event.target.checked;
+    setIsLight(checked);
+    document.documentElement.classList.toggle('light', checked);
+  }
+
   const [loading, setLoading] = useState(true);
 
   // Store user's current cash balance
@@ -98,6 +107,10 @@ export default function DashboardContent() {
 
   return (
     <>
+    
+      <p>Mode de l&apos;app:</p>
+      <ColourSwitch checked={isLight} onChange={toggleLightMode} />
+
       <div
         style={{
           borderRadius: '20px',

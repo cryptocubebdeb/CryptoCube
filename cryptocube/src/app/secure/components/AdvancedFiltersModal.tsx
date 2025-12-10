@@ -137,8 +137,8 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
       fullWidth
       PaperProps={{
         sx: {
-          backgroundColor: '#1a1d29',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--background-filter)',
+          color: 'var(--foreground)',
           borderRadius: '16px',
           minHeight: '500px',
         }
@@ -148,26 +148,28 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: '1px solid #2d3240'
+        borderBottom: '1px solid var(--background-filter-fields)',
+        color: 'var(--foreground)',
+        marginBottom: '8px'
       }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: 'var(--foreground)' }}>
           Filtres
         </Typography>
         <IconButton
           onClick={onClose}
-          sx={{ color: '#9CA3AF' }}
+          sx={{ color: 'var(--foreground-grey)' }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ pt: 3 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
+  <DialogContent sx={{ color: 'var(--foreground)' }}>
+  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4, color: 'var(--foreground)' }}>
           {/* Performance Section */}
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <TrendingUpIcon sx={{ color: '#3B82F6' }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'var(--foreground)' }}>
                 Performance
               </Typography>
             </Box>
@@ -184,7 +186,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Top Gagnants"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
               <FormControlLabel
                 control={
@@ -198,7 +200,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Top Perdants"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
             </Box>
           </Box>
@@ -207,7 +209,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <SortIcon sx={{ color: '#3B82F6' }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'var(--foreground)' }}>
                 Tri
               </Typography>
             </Box>
@@ -216,11 +218,11 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 value={sortKey}
                 onChange={(e) => setSortKey(String(e.target.value))}
                 sx={{
-                  backgroundColor: '#2d3240',
-                  color: '#D1D5DB',
+                  backgroundColor: 'var(--background-filter-fields)',
+                  color: 'var(--foreground)',
                   borderRadius: '8px',
                   '.MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '.MuiSvgIcon-root': { color: '#9CA3AF' }
+                  '.MuiSvgIcon-root': { color: 'var(--foreground-grey)' }
                 }}
               >
                 {sortOptions.map(opt => (
@@ -232,11 +234,11 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 value={sortDirection}
                 onChange={(e) => setSortDirection(e.target.value as 'asc' | 'desc')}
                 sx={{
-                  backgroundColor: '#2d3240',
-                  color: '#D1D5DB',
+                  backgroundColor: 'var(--background-filter-fields)',
+                  color: 'var(--foreground)',
                   borderRadius: '8px',
                   '.MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '.MuiSvgIcon-root': { color: '#9CA3AF' }
+                  '.MuiSvgIcon-root': { color: 'var(--foreground-grey)' }
                 }}
               >
                 <MenuItem value={'asc'}>Ascendant</MenuItem>
@@ -249,7 +251,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <FlashOnIcon sx={{ color: '#3B82F6' }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'var(--foreground)' }}>
                 Volatilité
               </Typography>
             </Box>
@@ -266,7 +268,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Faible Volatilité en Premier"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
               <FormControlLabel
                 control={
@@ -280,7 +282,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Haute Volatilité en Premier"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
             </Box>
           </Box>
@@ -289,7 +291,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <TuneIcon sx={{ color: '#3B82F6' }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'var(--foreground)' }}>
                 Options
               </Typography>
             </Box>
@@ -303,7 +305,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Exclure les stablecoins"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
               <FormControlLabel
                 control={
@@ -314,7 +316,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   />
                 }
                 label="Seulement ma watchlist"
-                sx={{ color: '#D1D5DB' }}
+                sx={{ color: 'var(--foreground)' }}
               />
             </Box>
           </Box>
@@ -322,17 +324,17 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
 
         {/* Category Filter */}
         <Box sx={{ mt: 4 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Catégorie</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>Catégorie</Typography>
           <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             fullWidth
             sx={{
-              backgroundColor: '#2d3240',
-              color: '#D1D5DB',
+              backgroundColor: 'var(--background-filter-fields)',
+              color: 'var(--foreground)',
               borderRadius: '8px',
               '.MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '.MuiSvgIcon-root': { color: '#9CA3AF' }
+              '.MuiSvgIcon-root': { color: 'var(--foreground-grey)' }
             }}
           >
             {categories.map(cat => (
@@ -345,7 +347,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
         <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 4 }}>
           {/* Prix */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Prix</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>Prix</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 value={priceMin}
@@ -357,9 +359,9 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
                 sx={{
-                  backgroundColor: '#2d3240',
+                  backgroundColor: 'var(--background-filter-fields)',
                   borderRadius: '8px',
-                  input: { color: '#D1D5DB' }
+                  input: { color: 'var(--foreground)' }
                 }}
               />
               <TextField
@@ -372,9 +374,9 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
                 sx={{
-                  backgroundColor: '#2d3240',
+                  backgroundColor: 'var(--background-filter-fields)',
                   borderRadius: '8px',
-                  input: { color: '#D1D5DB' }
+                  input: { color: 'var(--foreground)' }
                 }}
               />
             </Box>
@@ -382,7 +384,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
 
           {/* Market Cap */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Capitalisation</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>Capitalisation</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 value={marketCapMin}
@@ -393,7 +395,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
               <TextField
                 value={marketCapMax}
@@ -404,14 +406,14 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
             </Box>
           </Box>
 
           {/* Volume 24h */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Volume (24h)</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>Volume (24h)</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 value={volumeMin}
@@ -422,7 +424,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
               <TextField
                 value={volumeMax}
@@ -433,14 +435,14 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
             </Box>
           </Box>
 
           {/* Variation (24h) */}
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Variation (24h)</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>Variation (24h)</Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 value={change24hMin}
@@ -451,7 +453,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
               <TextField
                 value={change24hMax}
@@ -462,7 +464,7 @@ export default function AdvancedFiltersModal({ open, onClose, initialValues, onA
                 InputProps={{
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
                 }}
-                sx={{ backgroundColor: '#2d3240', borderRadius: '8px', input: { color: '#D1D5DB' } }}
+                sx={{ backgroundColor: 'var(--background-filter-fields)', borderRadius: '8px', input: { color: 'var(--foreground)' } }}
               />
             </Box>
           </Box>
