@@ -228,7 +228,7 @@ export default function Page() {
       {/* You’ll need Sidebar to accept string userId now */}
       <Sidebar />
 
-      <main className={`${"main"} flex-1 mt-1 rounded-2xl overflow-auto`}>
+  <main className={`${"main"} flex-1 mt-1 rounded-2xl overflow-auto`} style={{ background: 'var(--color-container-bg)' }}>
         <h2 className={`${"title"}`}>Mes Détails</h2>
 
         <div className="p-6 ml-5 mt-2 w-full max-w-full">
@@ -355,8 +355,8 @@ export default function Page() {
               fullWidth
               PaperProps={{
                 sx: {
-                  backgroundColor: "#15171E",
-                  color: "white",
+                  backgroundColor: "var(--color-container-bg)",
+                  color: "var(--foreground)",
                   borderRadius: "12px",
                 },
               }}
@@ -390,12 +390,12 @@ export default function Page() {
                     InputProps={{
                       sx: {
                         borderRadius: 3,
-                        bgcolor: "rgba(255,255,255,0.08)",
-                        color: "white",
+                        bgcolor: "var(--background-details-input)",
+                        color: "var(--foreground)",
                       },
                     }}
                     InputLabelProps={{
-                      sx: { color: "rgba(255,255,255,0.5)" },
+                      sx: { color: "var(--foreground-grey)" },
                     }}
                   />
 
@@ -410,12 +410,12 @@ export default function Page() {
                     InputProps={{
                       sx: {
                         borderRadius: 3,
-                        bgcolor: "rgba(255,255,255,0.08)",
-                        color: "white",
+                        bgcolor: "var(--background-details-input)",
+                        color: "var(--foreground)",
                       },
                     }}
                     InputLabelProps={{
-                      sx: { color: "rgba(255,255,255,0.5)" },
+                      sx: { color: "var(--foreground-grey)" },
                     }}
                   />
 
@@ -430,12 +430,12 @@ export default function Page() {
                     InputProps={{
                       sx: {
                         borderRadius: 3,
-                        bgcolor: "rgba(255,255,255,0.08)",
-                        color: "white",
+                        bgcolor: "var(--background-details-input)",
+                        color: "var(--foreground)",
                       },
                     }}
                     InputLabelProps={{
-                      sx: { color: "rgba(255,255,255,0.5)" },
+                      sx: { color: "var(--foreground-grey)" },
                     }}
                   />
 

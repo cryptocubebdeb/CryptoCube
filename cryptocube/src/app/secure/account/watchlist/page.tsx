@@ -87,12 +87,12 @@ export default function Page() {
   }
 
   return (
-    <div className="flex h-screen p-10">
+  <div className="flex h-screen p-10">
       {/* userId is now a string */}
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+  <main className="main flex-1 mt-1 rounded-2xl overflow-auto" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
         <h2 className="title mb-12">Watchlist</h2>
 
         {isLoading && (

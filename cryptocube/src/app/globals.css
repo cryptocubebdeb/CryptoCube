@@ -38,6 +38,11 @@
     --foreground-tradepanel-active: #000000;
     --foreground-tradepanel-inactive: #ffffffcf;
 
+    --foreground-about: #d2dbed;
+    --foreground-about-border: #3a475e;
+
+    --background-details-input: rgba(255,255,255,0.08);
+    --background-details-display: rgba(255,255,255,0.08);
 
     --color-green: #4caf50;
     --color-red: #ff0000;
@@ -62,7 +67,7 @@
     --color-main-bg: rgb(209, 222, 244);
     --color-container-bg: rgb(235, 246, 255);
     --background-hover: rgb(205, 219, 239);
-    --background-search: rgb(117, 151, 181);
+    --background-search: rgb(104, 137, 167);
     --background-search-hover: rgb(83, 117, 146);
     --background-hover: rgb(221, 230, 244);
     --background-filter: rgb(241, 244, 249);
@@ -86,6 +91,12 @@
     --background-tradepanel-inactive: rgb(222, 232, 240);
     --foreground-tradepanel-active: #000000;
     --foreground-tradepanel-inactive: #868686;
+
+    --foreground-about: #21335e;
+    --foreground-about-border: #afbfda;
+    
+    --background-details-display: #ccd6ed;
+
 }
 
 @theme inline {
@@ -200,19 +211,19 @@ html {
 }
 
 .inputField {
-    background-color: #D3DAEF;
-    color: white;
+    background-color: #bec6e0;
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
     width: 13rem;
     margin-top: 0.5rem;
-    color: black;
+    color: var(--foreground);
 }
 
 .inputEmailField{
-    background-color: #D3DAEF;
-    color: white;
+    background-color: #bec6e0;
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
@@ -222,8 +233,8 @@ html {
 }
 
 .inputProfileField{
-    background-color: #D3DAEF;
-    color: black;
+    background-color: #bec6e0;
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
@@ -232,8 +243,8 @@ html {
 }
 
 .nameDisplay {
-    background-color: #232734;
-    color: white;
+    background-color: var(--background-details-display);
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
@@ -242,8 +253,8 @@ html {
 }
 
 .emailDisplay {
-    background-color: #232734;
-    color: white;
+    background-color: var(--background-details-display);
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
@@ -265,8 +276,8 @@ html {
 }
 
 .profileDisplay{
-    background-color: #232734;
-    color: white;
+    background-color: var(--background-details-display);
+    color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;

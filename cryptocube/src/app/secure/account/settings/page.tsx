@@ -50,12 +50,12 @@ export default function Page() {
   }
 
   return (
-    <div className="flex h-screen p-10">
+  <div className="flex h-screen p-10">
       {/* Sidebar now expects a string userId */}
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
         <h2 className="title">{t("settings.title")}</h2>
 
         <div className="mt-10 ml-10">

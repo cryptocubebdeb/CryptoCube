@@ -29,7 +29,7 @@ export default function NotificationsPage() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
         <h2 className="title">Mes Notifications</h2>
       </main>
     </div>
