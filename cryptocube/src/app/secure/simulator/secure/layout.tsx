@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import Toolbar from "../../components/Portfolio/Toolbar"
-import TradeSidePanel from "./components/TradeSidePanel";
+import TradeSidePanel from "../../components/Portfolio/TradeSidePanel";
 
 const sectionsIds = ["home", "wallet", "search", "percent", "orders", "activity"];
 
@@ -25,6 +25,7 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
           }
         }
       }
+      
       setActiveSection(current); // Update state active
     };
 
@@ -45,7 +46,7 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
       </main>
 
       {/* Right panel */}
-      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[#15171E] p-6 mr-5 border-l border-[#23252c] overflow-y-auto mt-2">
+      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[var(--color-container-bg)] p-6 mr-5 border-l border-[var(--background-toolbar-active)] overflow-y-auto mt-2">
         <TradeSidePanel />
       </aside>
 

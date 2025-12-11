@@ -2,41 +2,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0c0c11;
-  --background-footer: rgb(25, 32, 43);
-  --foreground: #ededed;
-  --foreground-grey: rgb(176, 176, 176);
-  --foreground-alt: #FFDD00;
-  --foreground-search: #ffffff;
-  --color-main-bg: #1d202b;
-  --color-container-bg: rgb(23, 23, 28);
-  --x-axis-text-color: #ffffff40;
-  --y-axis-text-color: #ffffff40;
-  --background-hover: #1a1a20ff;
-  --background-search: #1e293b;
-  --background-search-hover: #0f172a;
-  --background-hover: #2e303c;
-  --background-filter: #1a1d29;
-  --background-filter-fields: #2d3240;
-  --background-watchlist-card: #181f29ff;
-  --background-watchlist-card-hover: #374151;
+    --background: #0c0c11;
+    --background-footer: rgb(25, 32, 43);
+    --foreground: #ededed;
+    --foreground-grey: rgb(176, 176, 176);
+    --foreground-alt: #FFDD00;
+    --foreground-search: #ffffff;
+    --color-main-bg: #1d202b;
+    --color-container-bg: rgb(23, 23, 28);
+    --x-axis-text-color: #ffffff40;
+    --y-axis-text-color: #ffffff40;
+    --background-hover: #1a1a20ff;
+    --background-search: #1e293b;
+    --background-search-hover: #0f172a;
+    --background-hover: #2e303c;
+    --background-filter: #1a1d29;
+    --background-filter-fields: #2d3240;
+    --background-watchlist-card: #181f29ff;
+    --background-watchlist-card-hover: #374151;
 
-  --border-button-category: #b6b6deff;
-  --background-button-category-hover: #42425cff;
-  --background-button-category-hover-text: #e1e1f6ff;
-  
-  --background-section-category-active: #25253eff;
-  --background-section-border-category-active: #2d2d3fff;
-  --background-section-category: #303039ff;
-  --background-section-category-hover: #232330ff;
+    --border-button-category: #b6b6deff;
+    --background-button-category-hover: #42425cff;
+    --background-button-category-hover-text: #e1e1f6ff;
 
-  --auth-background: #15171E;
+    --background-section-category-active: #25253eff;
+    --background-section-border-category-active: #2d2d3fff;
+    --background-section-category: #303039ff;
+    --background-section-category-hover: #232330ff;
+
+    --auth-background: #15171E;
+
+    --background-toolbar-active: #23252c;
+    --background-tradepanel-alt: #FFDD00;
+    --background-tradepanel-inactive: #23252c;
+    --foreground-tradepanel-active: #000000;
+    --foreground-tradepanel-inactive: #ffffffcf;
 
 
-
-  --color-green: #4caf50;
-  --color-red: #ff0000;
-  --color-blue: #3B82F6;
+    --color-green: #4caf50;
+    --color-red: #ff0000;
+    --color-blue: #3B82F6;
 }
 
 .light {
@@ -44,7 +49,7 @@
     --background-footer: rgb(179, 191, 212);
     --foreground: #000000;
     --foreground-grey: rgba(26, 26, 26, 0.753);
-    --foreground-alt: #27215e;
+    --foreground-alt: #21335e;
     --foreground-search: #ffffff;
 
     --color-red: #f73636;
@@ -75,6 +80,12 @@
     --background-section-category-hover: rgb(165, 196, 220);
 
     --auth-background: #cbd9e8;
+
+    --background-toolbar-active: rgb(179, 205, 226);
+    --background-tradepanel-alt: rgb(179, 205, 226);
+    --background-tradepanel-inactive: rgb(222, 232, 240);
+    --foreground-tradepanel-active: #000000;
+    --foreground-tradepanel-inactive: #868686;
 }
 
 @theme inline {

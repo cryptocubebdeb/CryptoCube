@@ -159,7 +159,7 @@ export default function DashboardContent() {
             <Typography variant="h6" sx={{ mt: 2 }}>
               {t('dashboard.trySimulator')}
             </Typography>
-            <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
+            <Typography variant="h6" sx={{ mt: 2, color: 'var(--foreground-alt)', textDecoration: 'underline' }}>
               {t('dashboard.noRisk')}
             </Typography>
             <Button
@@ -170,15 +170,15 @@ export default function DashboardContent() {
                 mb: 1,
                 padding: '16px 40px',
                 borderRadius: '15px',
-                borderColor: '#FFDD00',
+                borderColor: 'var(--foreground-alt)',
                 borderWidth: '1.5px',
-                color: '#FFDD00',
+                color: 'var(--foreground-alt)',
                 fontWeight: 'bold',
                 transition: 'all 0.3s ease',
                 '&:hover': {
-                  backgroundColor: '#e6c200',
-                  color: 'black',
-                  borderColor: '#e6c200',
+                  backgroundColor: 'var(--foreground-alt)',
+                  color: 'var(--background)',
+                  borderColor: 'var(--foreground-alt)',
                   boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
                 }
               }}

@@ -88,7 +88,7 @@ export default function SimulateurAccueil()
             </>
         ) : (
             <div className="flex flex-col justify-center items-center">
-                <p className="text-3xl text-start max-w-3xl mt-4 mb-5 text-yellow-400 font-semibold">
+                <p style={{ color: 'var(--foreground-alt)' }} className="text-3xl text-start max-w-3xl mt-4 mb-5 font-semibold">
                     {t('simulatorWelcome.moreDetails')}
                 </p>
 
@@ -105,7 +105,7 @@ export default function SimulateurAccueil()
                 </p>
 
                 <p className="text-xl text-start mb-5">
-                    <span className="text-yellow-400">{t('simulatorWelcome.warning')}</span>: {t('simulatorWelcome.warningText')}
+                    <span style={{ color: 'var(--foreground-alt)' }}>{t('simulatorWelcome.warning')}</span>: {t('simulatorWelcome.warningText')}
                 </p>
 
                 <Button
@@ -117,15 +117,15 @@ export default function SimulateurAccueil()
                         mb: 1,
                         padding: '16px 40px',
                         borderRadius: '15px',
-                        borderColor: '#FFDD00',
+                        borderColor: 'var(--foreground-alt)',
                         borderWidth: '1.5px',
-                        color: '#FFDD00',
+                        color: 'var(--foreground-alt)',
                         fontWeight: 'bold',
                         transition: 'all 0.3s ease',
                         '&:hover': { 
-                            backgroundColor: '#e6c200', 
-                            color: 'black',
-                            borderColor: '#e6c200',
+                            backgroundColor: 'var(--foreground-alt)', 
+                            color: 'var(--background)',
+                            borderColor: 'var(--foreground-alt)',
                             boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
                         } 
                     }}
