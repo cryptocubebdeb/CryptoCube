@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 import Sidebar from "../../components/Sidebar";
 
@@ -27,6 +28,7 @@ type User = {
 export default function Page() {
   const { data: session, status } = useSession();
   const userId = (session?.user as { id?: string })?.id;
+  const { t } = useTranslation();
 
   // toggles
   const [isEditingPersonal, setIsEditingPersonal] = useState(false);
@@ -76,19 +78,19 @@ export default function Page() {
     if (!user || !userId) return;
 
     if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
-      setPasswordError("Tous les champs sont requis.");
+      setPasswordError(t("accountDetails.passwordAllFieldsRequired"));
       return;
     }
 
     if (!validatePasswordStrength(newPassword)) {
       setPasswordError(
-        "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+        t("accountDetails.passwordStrengthRequirement")
       );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError("Les mots de passe ne correspondent pas.");
+      setPasswordError(t("accountDetails.passwordsDoNotMatch"));
       return;
     }
 
@@ -108,14 +110,14 @@ export default function Page() {
       if (!res.ok) {
         const errorData = await res.json().catch(() => null);
         throw new Error(
-          errorData?.error || "Échec de la mise à jour du mot de passe"
+          errorData?.error || t("accountDetails.updatePasswordFailed")
         );
       }
 
       resetPasswordFields();
       setIsPopupOpen(false);
     } catch (e: unknown) {
-      setPasswordError((e as Error)?.message ?? "Une erreur s'est produite");
+      setPasswordError((e as Error)?.message ?? t("accountDetails.genericErrorOccurred"));
     } finally {
       setIsSavingPassword(false);
     }
@@ -126,7 +128,7 @@ export default function Page() {
     if (status === "loading") return;
 
     if (status === "unauthenticated" || !userId) {
-      setError("Non authentifié");
+      setError(t("accountDetails.unauthenticated"));
       setLoading(false);
       return;
     }
@@ -135,7 +137,7 @@ export default function Page() {
       try {
         const res = await fetch(`/api/user/${userId}/settings`);
         if (!res.ok) {
-          throw new Error("Failed to fetch user data");
+          throw new Error(t("accountDetails.fetchUserFailed"));
         }
         const userData: User = await res.json();
 
@@ -146,7 +148,7 @@ export default function Page() {
         setUsername(userData.username ?? "");
       } catch (e: unknown) {
         setError(
-          (e as Error)?.message ?? "An error occurred while loading user data"
+          (e as Error)?.message ?? t("accountDetails.loadUserError")
         );
       } finally {
         setLoading(false);
@@ -171,13 +173,13 @@ export default function Page() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.error || "Failed to update user data");
+        throw new Error(data?.error || t("accountDetails.updateUserFailed"));
       }
       const updatedUser: User = await res.json();
       setUser(updatedUser);
       setIsEditingPersonal(false);
     } catch (e: unknown) {
-      setError((e as Error)?.message ?? "An error occurred. Could not save personal info");
+      setError((e as Error)?.message ?? t("accountDetails.savePersonalError"));
     }
   };
 
@@ -196,13 +198,13 @@ export default function Page() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.error || "Failed to update user data");
+        throw new Error(data?.error || t("accountDetails.updateUserFailed"));
       }
       const updatedUser: User = await res.json();
       setUser(updatedUser);
       setIsEditingProfile(false);
     } catch (e: unknown) {
-      setError((e as Error)?.message ?? "An error occurred. Could not save profile info");
+      setError((e as Error)?.message ?? t("accountDetails.saveProfileError"));
     }
   };
 
@@ -210,7 +212,7 @@ export default function Page() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center text-white">
-        Chargement...
+        {t("accountDetails.loading")}
       </div>
     );
   }
@@ -218,7 +220,7 @@ export default function Page() {
   if (error || !user) {
     return (
       <div className="flex h-screen items-center justify-center text-red-400">
-        {error || "Impossible de charger les informations du compte."}
+        {error || t("accountDetails.loadError")}
       </div>
     );
   }
@@ -229,12 +231,12 @@ export default function Page() {
       <Sidebar />
 
       <main className={`${"main"} flex-1 mt-1 rounded-2xl overflow-auto`}>
-        <h2 className={`${"title"}`}>Mes Détails</h2>
+        <h2 className={`${"title"}`}>{t("accountDetails.title")}</h2>
 
         <div className="p-6 ml-5 mt-2 w-full max-w-full">
           {/* ----- Personal Info ----- */}
           <div className={`${"personalInfoHeader"}`}>
-            <h2 className="text-xl">Information Personnel</h2>
+            <h2 className="text-xl">{t("accountDetails.personalHeader")}</h2>
 
             <Button
               variant="outlined"
@@ -243,7 +245,7 @@ export default function Page() {
               }
               sx={{ mt: 1, mb: 1, mr: 10 }}
             >
-              {isEditingPersonal ? "Sauvegarder" : "Modifier"}
+              {isEditingPersonal ? t("accountDetails.save") : t("accountDetails.edit")}
             </Button>
           </div>
 
@@ -253,7 +255,7 @@ export default function Page() {
             <div className="infoText">
               <div className="nameFields">
                 <div>
-                  <p className="infoTitles">PRÉNOM</p>
+                  <p className="infoTitles">{t("accountDetails.firstNameLabel")}</p>
                   {isEditingPersonal ? (
                     <input
                       type="text"
@@ -269,7 +271,7 @@ export default function Page() {
                 </div>
 
                 <div>
-                  <p className="infoTitles">NOM</p>
+                  <p className="infoTitles">{t("accountDetails.lastNameLabel")}</p>
                   {isEditingPersonal ? (
                     <input
                       type="text"
@@ -286,7 +288,7 @@ export default function Page() {
               </div>
 
               <div>
-                <p className="infoTitles">COURRIEL</p>
+                <p className="infoTitles">{t("accountDetails.emailLabel")}</p>
                 {isEditingPersonal ? (
                   <input
                     type="email"
@@ -303,7 +305,7 @@ export default function Page() {
 
           {/* ----- Profile Info ----- */}
           <div className="profileInfoHeader">
-            <h2 className="text-xl">Information de Profil</h2>
+            <h2 className="text-xl">{t("accountDetails.profileHeader")}</h2>
 
             <Button
               variant="outlined"
@@ -320,7 +322,7 @@ export default function Page() {
 
           <div className="profileInfo">
             <div>
-              <p className="infoTitles">NOM D&apos;UTILISATEUR</p>
+              <p className="infoTitles">{t("accountDetails.usernameLabel")}</p>
               {isEditingProfile ? (
                 <input
                   type="text"
@@ -336,8 +338,8 @@ export default function Page() {
             </div>
 
             <div>
-              <p className="infoTitles">MOT DE PASSE</p>
-              <div className="profileDisplay">•••••••</div>
+              <p className="infoTitles">{t("accountDetails.passwordLabel")}</p>
+              <div className="profileDisplay">{t("accountDetails.maskedPassword")}</div>
             </div>
 
             <Button
@@ -345,7 +347,7 @@ export default function Page() {
               sx={{ width: "20%", marginTop: "1px" }}
               onClick={togglePopup}
             >
-              Changer le mot de passe
+              {t("accountDetails.changePassword")}
             </Button>
 
             <Dialog
@@ -362,7 +364,7 @@ export default function Page() {
               }}
             >
               <DialogTitle sx={{ position: "relative", pr: 6 }}>
-                Changer le mot de passe
+                {t("accountDetails.changePassword")}
                 <IconButton
                   aria-label="close"
                   onClick={closePasswordDialog}
@@ -380,7 +382,7 @@ export default function Page() {
               <DialogContent sx={{ pb: 0 }}>
                 <Stack spacing={2} sx={{ mt: 1 }}>
                   <TextField
-                    label="Mot de passe actuel"
+                    label={t("accountDetails.currentPasswordLabel")}
                     type="password"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
@@ -400,7 +402,7 @@ export default function Page() {
                   />
 
                   <TextField
-                    label="Nouveau mot de passe"
+                    label={t("accountDetails.newPasswordLabel")}
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -420,7 +422,7 @@ export default function Page() {
                   />
 
                   <TextField
-                    label="Confirmer le mot de passe"
+                    label={t("accountDetails.confirmPasswordLabel")}
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -457,7 +459,7 @@ export default function Page() {
                         flexShrink: 0,
                       }}
                     >
-                      Forgot password?
+                      {t("accountDetails.forgotPassword")}
                     </Button>
                   </div>
                 </Stack>
@@ -477,7 +479,7 @@ export default function Page() {
                   onClick={handlePasswordChange}
                   disabled={isSavingPassword}
                 >
-                  {isSavingPassword ? "Enregistrement..." : "Enregistrer"}
+                  {isSavingPassword ? t("accountDetails.savingPassword") : t("accountDetails.savePassword")}
                 </Button>
 
                 <Button
@@ -485,7 +487,7 @@ export default function Page() {
                   onClick={closePasswordDialog}
                   disabled={isSavingPassword}
                 >
-                  Annuler
+                  {t("accountDetails.cancel")}
                 </Button>
               </DialogActions>
             </Dialog>
