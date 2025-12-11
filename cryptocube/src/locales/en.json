@@ -329,6 +329,11 @@
     "text": "For any request, write to us:"
   }
 },
+"coinNews": {
+  "loading": "Loading news...",
+  "empty": "No recent news for this coin.",
+  "latestUpdates": "Latest updates"
+},
 "specificCoin": {
   "marketStats": "Market Statistics",
   "marketCap": "Market Cap",
@@ -369,7 +374,10 @@
   "updated": "Updated",
 
   "globalPrices": "Global Prices",
-  "realTimeFrom": "Real-time prices from CoinGecko"
+  "realTimeFrom": "Real-time prices from CoinGecko",
+  "source": "Source",
+  "unknown": "Unknown",
+  "pricesUpdatedFrom": "prices updated from CoinGecko"
 },
 "markets": {
     "loading": "Loading market data...",

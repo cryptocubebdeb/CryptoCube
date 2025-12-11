@@ -294,7 +294,7 @@ export default async function Page({
                                     <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.globalMarket" /></h3>
                                     <RiskGauge value={Math.round(marketHealth)} />
                                     <p className="text-sm text-white/60 mt-2">
-                                        {marketHealth >= 55 ? "En croissance" : marketHealth <= 45 ? "En repli" : "Stable"}
+                                        {marketHealth >= 55 ? <T k="specificCoin.growing" /> : marketHealth <= 45 ? <T k="specificCoin.declining" /> : <T k="specificCoin.stable" />}
                                     </p>
                                 </div>
                             </div>
@@ -318,15 +318,15 @@ export default async function Page({
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
                             <div>
                                 <span className="block text-white/50"><T k="specificCoin.launchDate" /></span>
-                                <span>{coinData?.genesis_date || "Inconnu"}</span>
+                                <span>{coinData?.genesis_date || <T k="specificCoin.unknown" />}</span>
                             </div>
                             <div>
                                 <span className="block text-white/50"><T k="specificCoin.hashAlgorithm" /></span>
-                                <span>{coinData?.hashing_algorithm || "Inconnu"}</span>
+                                <span>{coinData?.hashing_algorithm || <T k="specificCoin.unknown" />}</span>
                             </div>
                             <div>
                                 <span className="block text-white/50"><T k="specificCoin.category" /></span>
-                                <span>{coinData?.categories?.[0] || "Inconnu"}</span>
+                                <span>{coinData?.categories?.[0] || <T k="specificCoin.unknown" />}</span>
                             </div>
                         </div>
 
@@ -376,7 +376,7 @@ export default async function Page({
                                         dangerouslySetInnerHTML={{ __html: coinDescription }}
                                     />
                                     <p className="text-white/50 text-sm italic mt-6">
-                                        <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" /> : CoinGecko
+                                        <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" />: CoinGecko
                                     </p>
                                 </div>
                             </details>
@@ -417,7 +417,7 @@ export default async function Page({
                             </div>
 
                             <p className="text-white/50 text-xs mt-5 text-center">
-                                prices updated from CoinGecko
+                                <T k="specificCoin.pricesUpdatedFrom" />
                             </p>
                         </div>
 

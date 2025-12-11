@@ -5,6 +5,7 @@ import { Box, Typography, Link, Avatar, IconButton } from "@mui/material"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { getCoinNews } from "../../lib/getCoinNews"
+import { T } from "./Translate"
 
 // Simple shape for each news item (kept beginner-friendly)
 interface NewsItem {
@@ -52,7 +53,7 @@ export default function CoinDailyNews({
   if (loading) {
     return (
       <Typography variant="body2" sx={{ textAlign: "center", mt: 2, color: "white" }}>
-        Loading news...
+        <T k="coinNews.loading" />
       </Typography>
     )
   }
@@ -60,7 +61,7 @@ export default function CoinDailyNews({
   if (news.length === 0) {
     return (
       <Typography variant="body2" sx={{ textAlign: "center", mt: 2, color: "error.main" }}>
-        No recent news for this coin.
+        <T k="coinNews.empty" />
       </Typography>
     )
   }
@@ -81,7 +82,7 @@ export default function CoinDailyNews({
     <Box sx={{ position: "relative" }}>
       {/* Header with arrows */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h5" sx={{ color: "white" }}>Latest updates</Typography>
+        <Typography variant="h5" sx={{ color: "white" }}><T k="coinNews.latestUpdates" /></Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton onClick={prev} size="small" sx={{ color: "white" }}>
             <ArrowBackIosIcon fontSize="inherit" />

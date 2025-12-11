@@ -330,6 +330,11 @@
     "text": "Pour toute demande, écrivez-nous :"
   }
 },
+"coinNews": {
+  "loading": "Chargement des actualités...",
+  "empty": "Aucune actualité récente pour cette crypto.",
+  "latestUpdates": "Dernières actualités"
+},
 "specificCoin": {
   "marketStats": "Statistiques du marché",
   "marketCap": "Capitalisation",
@@ -370,7 +375,10 @@
   "updated": "Mis à jour",
 
   "globalPrices": "Prix globaux",
-  "realTimeFrom": "Prix mis à jour en temps réel depuis CoinGecko"
+  "realTimeFrom": "Prix mis à jour en temps réel depuis CoinGecko",
+  "source": "Source",
+  "unknown": "Inconnu",
+  "pricesUpdatedFrom": "prix mis à jour depuis CoinGecko"
 },
 "markets": {
   "loading": "Chargement des données du marché...",
