@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import Sidebar from "../../components/Sidebar";
 import { useSession } from "next-auth/react"
 import LanguageSelector from "../../components/LanguageSelector"
+import ColourSwitch from '../../components/Settings/ColourSwitch';
+import { useState } from 'react';
 
 export default function Page() {
   const { t } = useTranslation();
@@ -13,6 +15,21 @@ export default function Page() {
 
   const { data: session, status } = useSession()
   const userId = (session?.user as { id?: string })?.id
+
+  const [isLight, setIsLight] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('light');
+    }
+    return false;
+  });
+  
+  function toggleLightMode(event) {
+    const checked = event.target.checked;
+    setIsLight(checked);
+    const theme = checked ? "light" : "dark";
+    document.documentElement.classList.toggle('light', checked);
+    localStorage.setItem("theme", theme);
+  }
 
   // While session is loading
   if (status === "loading") {
@@ -43,10 +60,18 @@ export default function Page() {
 
         <div className="mt-10 ml-10">
           <h3 className="text-2xl mt-20 mb-6">{t("settings.language")}</h3>
-      <LanguageSelector />
-        </div>
+          <LanguageSelector />
 
-        {/*Light/Dark mode*/}
+          {/* Light/Dark mode toggle */}
+          <h3 className="text-2xl mt-15 mb-4">{t("settings.appearance")}</h3>
+          <div className="flex flex-row gap-3">
+              <h4 className="text-lg mb-2">
+              {isLight ? t('settings.lightMode') : t('settings.darkMode')}
+            </h4>
+            <ColourSwitch checked={isLight} onChange={toggleLightMode} />
+          </div>
+
+        </div>
       </main>
     </div>
   )

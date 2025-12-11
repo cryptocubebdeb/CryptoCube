@@ -27,7 +27,10 @@
     "title": "My Settings",
     "loading": "Loading...",
     "mustLogin": "Please log in to access your settings",
-    "language": "Language"
+    "language": "Language",
+    "appearance": "Appearance",
+    "lightMode": "Light Mode :",
+    "darkMode": "Dark Mode :"
   },
   "sidebar": {
     "title": "My Account",

@@ -27,7 +27,10 @@
     "title": "Mes Paramètres",
     "loading": "Chargement...",
     "mustLogin": "Veuillez vous connecter pour accéder à vos paramètres",
-    "language": "Langue"
+    "language": "Langue",
+    "appearance": "Apparence",
+    "lightMode": "Mode clair :",
+    "darkMode": "Mode sombre :"
   },
   "sidebar": {
     "title": "Mon Compte",

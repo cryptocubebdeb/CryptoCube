@@ -12,17 +12,9 @@ import PortfolioChart from "../components/Portfolio/PortfolioChart";
 import { useEffect, useState } from 'react';
 import { getFormatPrix } from '../../lib/getFormatData';
 import { useTranslation } from 'react-i18next';
-import ColourSwitch from '../components/Settings/ColourSwitch';
 
 export default function DashboardContent() {
   const { t } = useTranslation();
-  const [isLight, setIsLight] = useState(false);
-
-  function toggleLightMode(event) {
-    const checked = event.target.checked;
-    setIsLight(checked);
-    document.documentElement.classList.toggle('light', checked);
-  }
 
   const [loading, setLoading] = useState(true);
 
@@ -107,10 +99,6 @@ export default function DashboardContent() {
 
   return (
     <>
-    
-      <p>Mode de l&apos;app:</p>
-      <ColourSwitch checked={isLight} onChange={toggleLightMode} />
-
       <div
         style={{
           borderRadius: '20px',
@@ -136,21 +124,21 @@ export default function DashboardContent() {
         {hasPortfolio ? (
           <>
             <div className="flex flex-col gap-2 mt-7 mb-5">
-              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt" }}>{t('dashboard.portfolioOverview')}</h2>
+              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt)" }}>{t('dashboard.portfolioOverview')}</h2>
               {loading ? (
                 <p className="text-slate-400 text-sm">Loading data…</p>
               ) : (
                 <div className="grid grid-cols-3 gap-50 mb-5 text-sm">
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.cash')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.cash')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{getFormatPrix(cash)}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.holdings')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.holdings')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{holdings.length}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.pendingOrders')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.pendingOrders')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{pendingOrders.length}</p>
                   </div>
                 </div>

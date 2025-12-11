@@ -142,10 +142,10 @@ export default function Page()
                             variant="contained"
                             onClick={() => setActiveTopTab(section.title.toLowerCase())}
                             sx={{
-                                backgroundColor: isActive ? '#232330ff' : '#303039ff',
+                                backgroundColor: isActive ? 'var(--background-section-category-active)' : 'var(--background-section-category)',
                                 boxShadow: '10px 10px 5px rgba(0, 0, 0, 0.2)',
-                                color: isActive ? 'white' : 'gray',
-                                borderColor: isActive ? '#2d2d3fff' : 'transparent',
+                                color: isActive ? 'var(--foreground)' : 'var(--foreground-grey)',
+                                borderColor: isActive ? 'var(--background-section-border-category-active)' : 'transparent',
                                 borderWidth: isActive ? '3px' : '0px',
                                 height: '100px',
                                 width: '150px',
@@ -157,7 +157,7 @@ export default function Page()
                                 gap: '0.5rem',
                                 transition: 'all 0.2s ease',
                                 '&:hover': { 
-                                    backgroundColor: '#232330ff',
+                                    backgroundColor: 'var(--background-section-category-hover)',
                                     transform: 'scale(1.07)'
                                 }
                             }}
@@ -183,7 +183,7 @@ export default function Page()
                     <div
                         key={category.id}
                         style={{
-                            backgroundColor: '#2d2d3fff',
+                            backgroundColor: 'var(--color-container-bg)',
                             height: '380px',
                             width: '360px',
                             borderRadius: '10px',
@@ -201,6 +201,7 @@ export default function Page()
                                 justifyContent: 'flex-start',
                                 alignItems: 'flex-start',
                                 gap: '1rem',
+                                marginBottom: '1rem'
                             }}
                         >
                             <div
@@ -212,24 +213,24 @@ export default function Page()
                                     gap: '0.5rem'
                                 }}
                             >
-                                <h1 style={{fontSize: '1.3rem', color: '#f1f1feff'}}>{category.name}</h1>
+                                <h1 style={{fontSize: '1.3rem', color: 'var(--foreground)'}}>{category.name}</h1>
                                 <div
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'row',
                                         gap: '1rem',
-                                        color: '#dcdcedff',
+                                        color: 'var(--foreground-grey)',
                                         fontSize: '1rem'
                                     }}
                                 >
-                                    <h2>{getFormatMarketCap(category.market_cap)}</h2>
+                                    <h2 style={{ fontSize: '1.1rem' }}>{getFormatMarketCap(category.market_cap)}</h2>
                                     <h2 style={{ fontSize: '0.85rem' }}>{formatPercentage(category.market_cap_change_24h)}</h2>
                                 </div>
                             </div>
                         
                             {/* Volume 24h */}
                             <div>
-                                <h4 style={{fontSize: '2rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
+                                <h4 style={{fontSize: '1.7rem'}}>{getFormatMarketCap(category.volume_24h)}</h4>
                                 <h4 style={{fontSize: '1rem', opacity: 0.7}}>{t("categories.volume24h")}</h4>
                             </div>
                             
@@ -269,18 +270,18 @@ export default function Page()
                             variant="outlined"
                             onClick={() => window.location.href = `/secure/coins?category=${category.id}`}
                             sx={{
-                                borderColor: '#b6b6deff',
+                                borderColor: 'var(--border-button-category)',
                                 width: '100%',
                                 paddingTop: '0.5rem',
                                 paddingBottom: '0.5rem',
                                 borderRadius: '0.5rem',
-                                color: '#b6b6deff',
+                                color: 'var(--border-button-category)',
                                 fontWeight: 'bold',
                                 transition: 'all 0.3s ease',
                                 '&:hover': { 
-                                    backgroundColor: '#42425cff',
+                                    backgroundColor: 'var(--background-button-category-hover)',
                                     transform: 'scale(1.03)',
-                                    color: '#e1e1f6ff'
+                                    color: 'var(--background-button-category-hover-text)'
                                 }
                             }}
                         >
@@ -355,20 +356,15 @@ export default function Page()
                                             return (
                                             <tr 
                                                 key={`${category.id}-${currentPage}-${index}`}
-                                                className="border-b border-gray-500 hover:bg-zinc-900 transition-colors cursor-pointer h-[73px]"
+                                                className="border-b border-gray-500 hover:bg-[var(--background-hover)] transition-colors cursor-pointer h-[73px]"
                                                 onClick={() => window.location.href = `/secure/coins?category=${category.id}`}
                                             >
                                                 <td className="py-6 px-4 w-16">
-                                                    <div className="flex items-center space-x-2">
-                                                        <button className="text-gray-400 hover:text-yellow-500 transition-colors">
-                                                            
-                                                        </button>
-                                                        <span className="font-medium">{actualRank}</span>
-                                                    </div>
+                                                    <span className="font-medium">{actualRank}</span>
                                                 </td>
                                                 <td className="py-6 px-4 w-64">
                                                     <div className="flex items-center space-x-3">
-                                                        <div className="font-medium truncate max-w-[300px]" title={category.name}>
+                                                        <div style={{ color: 'var(--foreground)' }} className="font-medium truncate max-w-[300px]" title={category.name}>
                                                             {category.name}
                                                         </div>
                                                     </div>

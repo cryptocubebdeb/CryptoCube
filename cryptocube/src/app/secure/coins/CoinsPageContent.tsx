@@ -19,6 +19,9 @@ import { fetchWatchlistIds, addToWatchlist, removeFromWatchlist } from '@/app/li
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useTranslation } from "react-i18next";
+import MiniChart from '../components/Dashboard/MiniChart';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 
 export default function Page() {
@@ -260,7 +263,7 @@ export default function Page() {
                             <div
                                 style={{
                                     backgroundColor: 'var(--color-container-bg)',
-                                    color: 'white',
+                                    color: 'var(--foreground-grey)',
                                     height: '110px',
                                     width: '290px',
                                     borderRadius: '10px',
@@ -289,7 +292,7 @@ export default function Page() {
                             <div
                                 style={{
                                     backgroundColor: 'var(--color-container-bg)',
-                                    color: 'white',
+                                    color: 'var(--foreground-grey)',
                                     height: '110px',
                                     width: '290px',
                                     borderRadius: '10px',
@@ -344,10 +347,10 @@ export default function Page() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Colonne métriques gauche : Capitalisation + Volume 24h */}
                     <div className="flex flex-col gap-4">
-                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '120px' }}>
-                            <div className="flex items-start justify-between">
+                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: 'var(--foreground)', height: '120px', boxShadow: '5px 5px 5px rgba(0, 0, 0, 0.2)' }}>
+                            <div className="flex items-start justify-between gap-5">
                                 <div>
-                                    <div className="text-sm text-white/80">{t("coinsPage.marketCap")}</div>
+                                    <div style={{ color: 'var(--foreground-grey)' }} className="text-sm">{t("coinsPage.marketCap")}</div>
                                     <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}</div>
                                     <div style={{ fontSize: '1rem', marginTop: '0.25rem' }}>{formatPercentage(totalMarketCapChangePercent)}</div>
                                 </div>
@@ -366,17 +369,17 @@ export default function Page() {
 
 
 
-                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', color: '#FFFFFF', height: '140px' }}>
-                            <div className="flex items-start justify-between">
+                        <div style={{ backgroundColor: 'var(--color-container-bg)', borderRadius: '16px', padding: '16px', height: '140px', boxShadow: '5px 5px 5px rgba(0, 0, 0, 0.2)' }}>
+                            <div className="flex items-start justify-between gap-3">
                                 <div>
                                     <div style={{ color: 'var(--foreground-grey)' }} className="text-sm">{t("coinsPage.volume24h")}</div>
                                     {/* on additionne le volume de tous les coins (total_volume) */}
-                                    <div className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
+                                    <div style={{ color: 'var(--foreground)' }} className="text-xl font-bold mt-2">{getFormatMarketCap(coins.reduce((s, c) => s + (c.total_volume || 0), 0))}</div>
                                 </div>
                                 <div style={{ width: 240, height: '100px', display: 'flex', alignItems: 'flex-start' }}>
                                     {/* Mini-barres */}
                                     {topTraded.length === 0 ? (
-                                        <div className="text-sm text-white/60"> {t("coinsPage.noData")}</div>
+                                        <div style={{ color: 'var(--foreground)', opacity: 0.6 }} className="text-sm"> {t("coinsPage.noData")}</div>
                                     ) : (
                                         <div className="space-y-1 w-full" style={{ maxHeight: '150px', overflow: 'hidden' }}>
                                             {(() => {
@@ -389,15 +392,15 @@ export default function Page() {
                                                     //calcul du pourcentage
                                                     const pct = Math.round((vol / maxVol) * 100);
                                                     return (
-                                                        <div key={c.id} className="flex items-center gap-2" style={{ lineHeight: 1 }}>
+                                                        <div key={c.id} className="flex items-center gap-1" style={{ lineHeight: 1, paddingBottom: '6px' }}>
                                                             {/*  */}
                                                             <img src={c.image} alt={c.name} className="w-6 h-6 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
                                                             <div className="flex-1">
-                                                                <div className="flex items-center justify-between">
-                                                                    <div className="text-sm font-medium uppercase">{c.symbol}</div>
-                                                                    <div className="text-xs text-white/80">{getFormatMarketCap(vol)}</div>
+                                                                <div className="flex items-center justify-between gap-2">
+                                                                    <div style={{ color: 'var(--foreground-grey)' }} className="text-xs uppercase">{c.symbol}</div>
+                                                                    <div style={{ color: 'var(--foreground)', opacity: 0.8 }} className="text-xs">{getFormatMarketCap(vol)}</div>
                                                                 </div>
-                                                                <div className="w-full h-2 bg-white/10 rounded mt-1 overflow-hidden">
+                                                                <div style={{ color: 'var(--foreground)'}} className="w-full h-2 rounded mt-1 overflow-hidden">
                                                                     {/* la barre de volume  */}
                                                                     <div style={{ width: `${pct}%`, height: '100%', background: '#3b82f6', transition: 'width 360ms ease' }} />
                                                                 </div>
@@ -445,22 +448,48 @@ export default function Page() {
                                         <div
                                             key={coin.id}
                                             onClick={() => router.push(`/secure/specificCoin/${coin.id}`)}
-                                            className="flex items-center justify-between p-2 rounded cursor-pointer"
+                                            className="flex items-start justify-between p-2 rounded cursor-pointer"
                                             style={{ transition: 'background 0.2s' }}
                                             onMouseEnter={e => { e.currentTarget.style.background = 'var(--background-hover)'; }}
                                             onMouseLeave={e => { e.currentTarget.style.background = ''; }}
                                         >
+                                            {/* Left: Logo, name, symbol */}
                                             <div className="flex items-center gap-3">
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNjY2MiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=' }} />
-                                                <div>
-                                                    <div className="font-medium">{coin.name}</div>
-                                                    <div style={{ color: "var(--foreground)", opacity: 0.5}} className="text-sm uppercase">{coin.symbol}</div>
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium" style={{ color: 'var(--foreground)' }}>{coin.name}</span>
+                                                    <span className="text-xs uppercase" style={{ color: 'var(--foreground-grey)' }}>{coin.symbol}</span>
                                                 </div>
                                             </div>
-                                            <div className="text-sm">
-                                                {formatPercentage(coin.price_change_percentage_24h)}
-                                            </div>
+
+                                            {/* Prix actuel et changement */}
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <Typography variant="body1" sx={{ fontWeight: 500, color: "var(--foreground)" }}>
+                                                    ${coin.current_price.toFixed(2)}
+                                                </Typography>
+                                                
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 1.5, marginRight: 1 }}>
+                                                    {coin.price_change_percentage_24h >= 0 ? (
+                                                        <TrendingUpIcon sx={{ color: 'var(--color-green)', fontSize: '1rem' }} />
+                                                    ) : (
+                                                        <TrendingDownIcon sx={{ color: 'var(--color-red)', fontSize: '1rem' }} />
+                                                    )}
+
+                                                    <Typography
+                                                        variant="body1"
+                                                        sx={{ color: coin.price_change_percentage_24h >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}
+                                                    >
+                                                        {coin.price_change_percentage_24h >= 0 ? '+' : ''}
+                                                        {coin.price_change_percentage_24h.toFixed(2)}%
+                                                    </Typography>
+                                                </Box>
+
+                                                <MiniChart
+                                                    data={coin.sparkline_in_7d?.price || []}
+                                                    isPositive={(coin.price_change_percentage_24h || 0) >= 0}
+                                                    timeframe="24h"
+                                                />
+                                            </Box>
                                         </div>
                                     ))
                                 )
@@ -534,84 +563,81 @@ export default function Page() {
                     </h2>
 
                     {/* Onglets de navigation */}
-<div className="flex justify-between items-center mb-5 border-b border-gray-400">
-    
-    {/* LISTE DES TABS */}
-    <div className="flex space-x-8">
+                    <div className="flex justify-between items-center mb-5 border-b border-gray-400">
+                        
+                        {/* LISTE DES TABS */}
+                        <div className="flex space-x-8">
 
-        {tabs.map(({ key, label }) => {
-            // coins filtrés selon l'onglet
-            const tabFilteredCoins = getFilteredCoinsByTab(coins, key);
+                            {tabs.map(({ key, label }) => {
+                                // coins filtrés selon l'onglet
+                                const tabFilteredCoins = getFilteredCoinsByTab(coins, key);
 
-            // recherche + filtrage onglet
-            const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
-                coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+                                // recherche + filtrage onglet
+                                const searchAndTabFiltered = tabFilteredCoins.filter(coin =>
+                                    coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+                                );
 
-            const tabCount = searchAndTabFiltered.length;
+                                const tabCount = searchAndTabFiltered.length;
 
-            return (
-                <button
-                    key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={`pb-4 px-1 text-md transition-colors ${
-                        activeTab === key
-                            ? 'border-b-2 border-blue-500 text-blue-600'
-                            : 'text-gray-500 hover:text-gray-300'
-                    }`}
-                >
-                    {label}
-                    <span className="ml-1 text-xs opacity-60">({tabCount})</span>
-                </button>
-            );
-        })}
+                                return (
+                                    <button
+                                        key={key}
+                                        onClick={() => setActiveTab(key)}
+                                        className={`pb-4 px-1 text-md transition-colors ${
+                                            activeTab === key
+                                                ? 'border-b-2 border-blue-500 text-blue-600'
+                                                : 'text-gray-500 hover:text-gray-300'
+                                        }`}
+                                    >
+                                        {label}
+                                        <span className="ml-1 text-xs opacity-60">({tabCount})</span>
+                                    </button>
+                                );
+                            })}
 
-    </div>
+                        </div>
 
-    {/* BOUTONS FILTRES + REFRESH */}
-    <div className="flex items-center gap-3">
-        <Button
-            variant="outlined"
-            onClick={() => setFiltersModalOpen(true)}
-            startIcon={
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
-                </svg>
-            }
-            sx={{ mt: -1, mb: 1 }}
-        >
-            {t("coinsPage.filters")}
-        </Button>
+                        {/* BOUTONS FILTRES + REFRESH */}
+                        <div className="flex items-center gap-3">
+                            <Button
+                                variant="outlined"
+                                onClick={() => setFiltersModalOpen(true)}
+                                startIcon={
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M8 12h8M10 18h4" />
+                                    </svg>
+                                }
+                                sx={{ mt: -1, mb: 1 }}
+                            >
+                                {t("coinsPage.filters")}
+                            </Button>
 
-        <Button
-            variant="outlined"
-            onClick={handleRefresh}
-            disabled={loading || refreshCooldown}
-            startIcon={
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-            }
-            sx={{
-                mt: -1,
-                mb: 1,
-                color: refreshCooldown ? 'gray' : undefined,
-                borderColor: refreshCooldown ? 'gray' : undefined,
-                background: refreshCooldown
-                    ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
-                    : undefined,
-                transition: 'background 0.3s',
-            }}
-        >
-            {t("coinsPage.refresh")}
-        </Button>
-    </div>
+                            <Button
+                                variant="outlined"
+                                onClick={handleRefresh}
+                                disabled={loading || refreshCooldown}
+                                startIcon={
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                }
+                                sx={{
+                                    mt: -1,
+                                    mb: 1,
+                                    color: refreshCooldown ? 'gray' : undefined,
+                                    borderColor: refreshCooldown ? 'gray' : undefined,
+                                    background: refreshCooldown
+                                        ? `linear-gradient(90deg, #222222ff ${cooldownProgress * 100}%, transparent ${cooldownProgress * 100}%)`
+                                        : undefined,
+                                    transition: 'background 0.3s',
+                                }}
+                            >
+                                {t("coinsPage.refresh")}
+                            </Button>
+                        </div>
 
-</div>
-
-
-
+                    </div>
 
                     {/* Tableau des cryptomonnaies */}
                     {loading ? (

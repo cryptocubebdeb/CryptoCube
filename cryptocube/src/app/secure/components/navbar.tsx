@@ -169,14 +169,9 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl h-20 px-6 flex items-center justify-between">
-<<<<<<< Updated upstream
 
-        <Link href="/secure/dashboard" className="font-bold text-2xl">
-          Crypto<span className="text-yellow-400">Cube</span>
-=======
         <Link href="/secure/dashboard" style={{ color: "var(--foreground)" }} className="font-bold text-2xl">
-          Crypto<span className="text-yellow-500">Cube</span>
->>>>>>> Stashed changes
+          Crypto<span className="text-yellow-400">Cube</span>
         </Link>
 
         <ul className="flex flex-row items-center gap-6">
@@ -187,18 +182,14 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-<<<<<<< Updated upstream
-                  className={
-                    "navbar-text uppercase text-base transition-colors " +
-                    (active ? "text-yellow-400" : "text-white/80 hover:text-white")
-                  }
-=======
                   style={{
                     color: active ? "var(--foreground-alt)" : "var(--foreground)",
                     opacity: active ? "1" : "0.8",
                   }}
-                  className={["navbar-text uppercase text-base transition-colors"].join(" ")}
->>>>>>> Stashed changes
+                  className={
+                    "navbar-text uppercase text-base transition-colors " +
+                    (active ? "text-yellow-400" : "text-white/80 hover:text-white")
+                  }
                 >
                   {t(link.text)}
                 </Link>
@@ -232,17 +223,13 @@ export default function Navbar() {
           <li className="relative" ref={searchContainerRef}>
 
             <div
-<<<<<<< Updated upstream
+              style={{
+                backgroundColor: "var(--background-search)"
+              }}
               className={
                 "flex items-center bg-slate-800 rounded-full transition-all duration-200 " +
                 (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")
               }
-=======
-              style={{
-                backgroundColor: "var(--background-search)"
-              }}
-              className={"flex items-center rounded-full transition-all duration-200 " + (searchOpen ? "px-3 py-1 w-64 opacity-100" : "px-0 py-0 w-0 opacity-0 pointer-events-none")}
->>>>>>> Stashed changes
             >
               <input
                 type="text"
@@ -254,49 +241,30 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onFocus={() => setSearchOpen(true)}
-<<<<<<< Updated upstream
                 placeholder={t("navbar.searchPlaceholder")}
+                style={{
+                  color: "var(--foreground-search)"
+                }}
                 className={
                   "appearance-none bg-transparent text-white placeholder-white/60 outline-none transition-all duration-200 " +
                   (searchOpen ? "w-full pl-2" : "w-0 pl-0")
                 }
-=======
-                placeholder="Rechercher une crypto..."
-                style={{
-                  color: "var(--foreground-search)"
-                }}
-                className={"appearance-none bg-transparent placeholder-white/60 outline-none transition-all duration-200 " + (searchOpen ? "w-full pl-2" : "w-0 pl-0")}
->>>>>>> Stashed changes
               />
             </div>
 
             <div
-<<<<<<< Updated upstream
               className={
                 "absolute left-0 mt-2 w-64 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " +
                 (searchOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none")
               }
-=======
               style={{
                 backgroundColor: "var(--background-search)"
               }}
-              className={"absolute left-0 mt-2 w-64 rounded shadow-lg ring-1 ring-black/20 z-50 overflow-hidden transform transition-all duration-150 " + (searchOpen ? "opacity-100 scale-100 pointer-events-auto translate-y-0" : "opacity-0 scale-95 pointer-events-none -translate-y-2")}
->>>>>>> Stashed changes
               id="search-results"
               role="listbox"
             >
               {searchLoading ? (
-<<<<<<< Updated upstream
                 <div className="px-3 py-2 text-sm text-white/70">{t("navbar.searching")}</div>
-=======
-                <div 
-                  style={{
-                    color: "var(--foreground-search)",
-                    opacity: "0.7"
-                  }}
-                  className="px-3 py-2 text-sm">Recherche...
-                </div>
->>>>>>> Stashed changes
               ) : results.length > 0 ? (
                 results.map((r) => (
                   <Link
@@ -324,26 +292,17 @@ export default function Navbar() {
                     </div>
                   </Link>
                 ))
-<<<<<<< Updated upstream
               ) : query.length > 0 ? (
-                <div className="px-3 py-2 text-sm text-white/60">{t("navbar.noMatches")}</div>
-              ) : null}
-=======
-              ) : (
-                //Si Aucun résultat trouvé
-                query.length > 0 ? (
-                  <div 
+                <div 
                     style={{
                       color: "var(--foreground-search)",
                       opacity: "0.8"
                     }}
                     className="px-3 py-2 text-sm"
                   >
-                      Aucune correspondance
+                    {t("navbar.noMatches")}
                   </div>
-                ) : null
-              )}
->>>>>>> Stashed changes
+              ) : null}
             </div>
 
           </li>

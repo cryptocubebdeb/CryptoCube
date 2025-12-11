@@ -5,11 +5,11 @@
   --background: #0c0c11;
   --background-footer: rgb(25, 32, 43);
   --foreground: #ededed;
-  --foreground-grey: rgba(255, 255, 255, 0.6);
+  --foreground-grey: rgb(176, 176, 176);
   --foreground-alt: #FFDD00;
   --foreground-search: #ffffff;
   --color-main-bg: #1d202b;
-  --color-container-bg: #141418ff;
+  --color-container-bg: rgb(23, 23, 28);
   --x-axis-text-color: #ffffff40;
   --y-axis-text-color: #ffffff40;
   --background-hover: #1a1a20ff;
@@ -18,35 +18,35 @@
   --background-hover: #2e303c;
   --background-filter: #1a1d29;
   --background-filter-fields: #2d3240;
+  --background-watchlist-card: #181f29ff;
+  --background-watchlist-card-hover: #374151;
+
+  --border-button-category: #b6b6deff;
+  --background-button-category-hover: #42425cff;
+  --background-button-category-hover-text: #e1e1f6ff;
+  
+  --background-section-category-active: #25253eff;
+  --background-section-border-category-active: #2d2d3fff;
+  --background-section-category: #303039ff;
+  --background-section-category-hover: #232330ff;
+
+  --auth-background: #15171E;
 
 
 
   --color-green: #4caf50;
   --color-red: #ff0000;
   --color-blue: #3B82F6;
-
-
-  
-  --color-display-bg: #272d3f;
-  --color-footer-bg: rgb(25, 32, 43);
-  --color-input-bg: #232734;
-  --color-switch-thumb: #003892;
-  --color-switch-thumb-alt: #003892;
-  --color-switch-track: #8796A5;
-  --color-yellow: #FFDD00;
-  --color-yellow-alt: #facc15;
-  --color-yellow-hover: #e6c200;
-  --color-white: #fff;
-  --color-black: #000;
 }
 
 .light {
     --background: #f6fdff;
-    --background-footer: rgb(143, 163, 195);
+    --background-footer: rgb(179, 191, 212);
     --foreground: #000000;
     --foreground-grey: rgba(26, 26, 26, 0.753);
-    --foreground-alt: #140e4b;
+    --foreground-alt: #27215e;
     --foreground-search: #ffffff;
+
     --color-red: #f73636;
     --color-green: #206d22;
     --color-blue: #0b3893;
@@ -62,7 +62,19 @@
     --background-hover: rgb(221, 230, 244);
     --background-filter: rgb(241, 244, 249);
     --background-filter-fields: rgb(205, 219, 239);
+    --background-watchlist-card: rgb(210, 223, 234);
+    --background-watchlist-card-hover: rgb(206, 218, 227);
 
+    --border-button-category: rgb(62, 62, 97);
+    --background-button-category-hover: rgb(126, 143, 183);
+    --background-button-category-hover-text: rgb(255, 255, 255);
+
+    --background-section-category-active: rgb(188, 217, 241);
+    --background-section-border-category-active: #2d2d3fff;
+    --background-section-category: rgb(229, 237, 243);
+    --background-section-category-hover: rgb(165, 196, 220);
+
+    --auth-background: #cbd9e8;
 }
 
 @theme inline {
@@ -72,21 +84,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0c11;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Geologica', sans-serif;
-}
-
-.footer-bg {
-    background-color: rgb(25, 32, 43);
 }
 
 .btn-primary {
