@@ -98,18 +98,17 @@ export default function ResetPasswordForm() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <div className="flex flex-col flex-1 justify-center items-center">
 
-      <div className="flex flex-1 items-center justify-center py-8">
+        <h1 className="text-3xl mb-9 mt-12 text-center font-bold" style={{ color: 'var(--foreground)' }}>{t("resetPassword.title")}</h1>
+
         <div className="max-w-md w-full mx-auto p-4 rounded-2xl shadow p-8" style={{ backgroundColor: 'var(--color-container-bg)' }}>
-
-          <h1 className="text-2xl font-bold mb-3" style={{ color: 'var(--foreground)' }}>{t("resetPassword.title")}</h1>
-
           {submitted ? (
-            <p>{t("resetPassword.submitted")}</p>
+            <p style={{ textAlign: 'center' }}>{t("resetPassword.submitted")}</p>
           ) : (
             <form onSubmit={handleSubmit}>
-              <label className="block mb-4">
 
+              <label className="block mb-8">
                 {t("resetPassword.newPasswordLabel")}
 
                 {/* Password input */}
@@ -117,7 +116,7 @@ export default function ResetPasswordForm() {
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    className="w-full border p-2 mt-1 pr-10"
+                    className="w-full border p-2 mt-1 pr-10 rounded-lg"
                     value={form.password}
                     onChange={handleChange}
                     required
@@ -125,6 +124,7 @@ export default function ResetPasswordForm() {
                     style={{ backgroundColor: "white", color: "black" }}
                   />
                   <span className="absolute right-2 top-1/2 -translate-y-1/2">
+
                     <IconButton
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
@@ -133,29 +133,30 @@ export default function ResetPasswordForm() {
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
+
                   </span>
                 </div>
 
                 {errors.password && <p style={{ color: 'var(--color-red)' }} className="mb-2 text-sm">{errors.password}</p>}
-
+              
               </label>
 
-              <label className="block mb-4">
-                
-                {/* Password confirmation */}
+              <label className="block mb-6">
                 {t("resetPassword.confirmPasswordLabel")}
 
+                {/* Password confirmation input */}
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
-                    className="w-full border p-2 mt-1 pr-10"
+                    className="w-full border p-2 mt-1 pr-10 rounded-lg"
                     value={form.confirmPassword}
                     onChange={handleChange}
                     required
                     placeholder={t("resetPassword.confirmPasswordPlaceholder")}
                     style={{ backgroundColor: "white", color: "black" }}
                   />
+
                   <span className="absolute right-2 top-1/2 -translate-y-1/2">
                     <IconButton
                       aria-label="toggle confirm password visibility"
@@ -165,23 +166,25 @@ export default function ResetPasswordForm() {
                     >
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
+
                   </span>
                 </div>
 
                 {errors.confirmPassword && <p style={{ color: 'var(--color-red)' }} className="mb-2 text-sm">{errors.confirmPassword}</p>}
-
+              
               </label>
 
               {serverError && <p style={{ color: 'var(--color-red)' }} className="mb-2">{serverError}</p>}
-
+              
               <button
                 type="submit"
-                className="w-full py-2 rounded mt-2"
+                className="w-full py-2 rounded-lg mt-2"
                 style={{ color: 'var(--foreground)', backgroundColor: 'var(--forgotpassword-btn)' }}
                 disabled={submitting}
               >
                 {submitting ? t("resetPassword.submitting") : t("resetPassword.resetButton")}
               </button>
+
             </form>
           )}
         </div>

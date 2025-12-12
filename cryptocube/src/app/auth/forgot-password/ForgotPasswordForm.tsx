@@ -37,13 +37,12 @@ export function ForgotPasswordForm() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <Navbar />
-      <div className="flex flex-1 items-center justify-center py-8">
-        <div className="max-w-md w-full mx-auto p-4 rounded-2xl shadow p-8" style={{ backgroundColor: 'var(--color-container-bg)' }}>
+      <div className="flex flex-col flex-1 justify-center items-center">
+        <h1 className="text-3xl mb-9 text-center font-bold" style={{ color: 'var(--foreground)' }}>{t("forgotPassword.title")}</h1>
 
-          <h1 className="text-2xl font-bold mb-3" style={{ color: 'var(--foreground)' }}>{t("forgotPassword.title")}</h1>
-
+        <div className="max-w-md w-full mx-auto rounded-2xl shadow p-8" style={{ backgroundColor: 'var(--color-container-bg)' }}>
           {submitted ? (
-            <p>{t("forgotPassword.submitted")}</p>
+            <p style={{ textAlign: 'center' }}>{t("forgotPassword.submitted")}</p>
           ) : (
             <form onSubmit={handleSubmit}>
 
@@ -51,7 +50,7 @@ export function ForgotPasswordForm() {
                 {t("forgotPassword.emailLabel")}
                 <input
                   type="email"
-                  className="w-full border p-2 mt-1"
+                  className="w-full border p-2 mt-1 rounded-lg"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
@@ -64,7 +63,7 @@ export function ForgotPasswordForm() {
 
               <button
                 type="submit"
-                className="w-full py-2 rounded mt-2"
+                className="w-full py-2 rounded-lg mt-2"
                 style={{ color: 'var(--foreground)', backgroundColor: 'var(--forgotpassword-btn)' }}
               >
                 {t("forgotPassword.sendLink")}
