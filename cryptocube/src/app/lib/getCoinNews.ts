@@ -1,8 +1,8 @@
-export async function getCoinNews(coinQuery: string) {
-  if (!coinQuery) return [];
+export async function getCoinNews(coin: string, limit = 10) {
+  if (!coin) return [];
 
   const response = await fetch(
-    `/api/home/coin-news?coin=${encodeURIComponent(coinQuery)}`,
+    `/api/home/coinNews?coin=${encodeURIComponent(coin)}&limit=${limit}`,
     { cache: "no-store" }
   );
 

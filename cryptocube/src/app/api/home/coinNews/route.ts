@@ -2,15 +2,13 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const coin = searchParams.get("coin");
-
-  if (!coin) {
-    return NextResponse.json({ articles: [] });
-  }
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const coin = searchParams.get("coin") ?? "crypto";
+  const limit = Number(searchParams.get("limit") || 10);
 
   const API_KEY = process.env.NEWSAPI_API_KEY;
+
   if (!API_KEY) {
     return NextResponse.json(
       { error: "Missing NEWSAPI_API_KEY" },
@@ -19,13 +17,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const cryptoTerms =
-      "cryptocurrency OR crypto OR blockchain OR price OR market OR trading OR token";
-
-    const q = encodeURIComponent(`${coin} AND (${cryptoTerms})`);
+    const query = encodeURIComponent(
+      `${coin} AND (cryptocurrency OR crypto OR blockchain OR price)`
+    );
 
     const response = await fetch(
-      `https://newsapi.org/v2/everything?q=${q}&searchIn=title,description&language=en&sortBy=publishedAt&pageSize=10&apiKey=${API_KEY}`,
+      `https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=${limit}&language=en&apiKey=${API_KEY}`,
       { cache: "no-store" }
     );
 
@@ -35,24 +32,24 @@ export async function GET(request: Request) {
 
     const data = await response.json();
 
-    const articles = (data.articles ?? [])
-      .filter((article: any) => {
-        const text = `${article.title} ${article.description}`.toLowerCase();
-        return text.includes(coin.toLowerCase());
-      })
-      .map((article: any, index: number) => ({
-        id: index.toString(),
+    const articles = (data.articles || []).map(
+      (article: any, index: number) => ({
+        id: `${coin}-${index}`,
         title: article.title,
         url: article.url,
         description: article.description,
         created_at: article.publishedAt,
-        news_site: article.source?.name,
+        news_site: article.source?.name ?? "Unknown",
         thumbnail: article.urlToImage || "/placeholder.png",
-      }));
+      })
+    );
 
     return NextResponse.json({ articles });
   } catch (error) {
-    console.error("Coin news fetch failed:", error);
-    return NextResponse.json({ articles: [] });
+    console.error("Error fetching coin news:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch news" },
+      { status: 500 }
+    );
   }
 }
