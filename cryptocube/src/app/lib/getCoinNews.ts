@@ -1,8 +1,16 @@
-export async function getCoinNews(coin: string) {
-  const response = await fetch(`/api/home/coinNews?coin=${coin}`);
+export async function getCoinNews(coinQuery: string) {
+  if (!coinQuery) return [];
 
-  if (!response.ok) return [];
+  const response = await fetch(
+    `/api/home/coin-news?coin=${encodeURIComponent(coinQuery)}`,
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    console.error("Failed to fetch coin news");
+    return [];
+  }
 
   const data = await response.json();
-  return data.articles;
+  return Array.isArray(data.articles) ? data.articles : [];
 }
