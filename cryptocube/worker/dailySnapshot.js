@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Fetch Binance symbols in one request
+ * Fetch all Binance tickers in one request.
  */
 async function fetchBinancePrices() {
   const res = await fetch("https://api.binance.com/api/v3/ticker/price");
@@ -19,28 +19,39 @@ async function fetchBinancePrices() {
 }
 
 /**
- * Converts a simulator coinSymbol to a Binance trading pair.
+ * Converts a coin symbol (BTC) or trading symbol (BTCUSDT)
+ * into a valid Binance ticker.
  */
 function toBinanceSymbol(coinSymbol) {
-  return `${coinSymbol.toUpperCase()}USDT`;
+  coinSymbol = coinSymbol.toUpperCase();
+
+  // Already a valid Binance ticker
+  if (coinSymbol.endsWith("USDT")) {
+    return coinSymbol;
+  }
+
+  // Convert raw coin symbol
+  return `${coinSymbol}USDT`;
 }
 
 async function runSnapshot() {
   console.log("Running daily snapshot using Binance market prices...");
 
-  // Load ALL Binance prices globally
+  // Load all Binance prices once
   const priceMap = await fetchBinancePrices();
 
-  // Load all simulator accounts + their portfolios
+  // Load all simulator accounts including the user info
   const accounts = await prisma.simulatorAccount.findMany({
     include: {
       portfolio: true,
+      user: true, 
     },
   });
 
   for (const account of accounts) {
     let portfolioValue = 0;
 
+    // Sum all portfolio positions
     for (const item of account.portfolio) {
       const symbol = toBinanceSymbol(item.coinSymbol);
       const priceUsd = priceMap[symbol];
@@ -56,6 +67,7 @@ async function runSnapshot() {
     const totalValue =
       Number(account.currentCashBalance) + portfolioValue;
 
+    // Save snapshot
     await prisma.portfolioHistory.create({
       data: {
         simulatorAccountId: account.id,
@@ -64,7 +76,7 @@ async function runSnapshot() {
     });
 
     console.log(
-      `Snapshot saved for account ${account.id}: $${totalValue.toFixed(2)}`
+      `Snapshot saved for account ${account.id} (user: ${account.user.email || account.userId}): $${totalValue.toFixed(2)}`
     );
   }
 

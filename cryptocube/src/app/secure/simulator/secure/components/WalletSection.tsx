@@ -2,293 +2,194 @@
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Sector,
-} from "recharts";
 import { useRouter } from "next/navigation";
 
-type Holding = {
-  id: number;
+import CircleChart from "./WalletChart";
+
+// Structure of each coin the user owns
+type coinHolding = {
   coinId: string;
   coinSymbol: string;
   amountOwned: number;
-  averageEntryPriceUsd: number;
+  currentValueUsd: number;
 };
 
 export default function WalletSection() {
-  const { t } = useTranslation();
+  const { t: translator } = useTranslation();
   const router = useRouter();
 
-  const [cash, setCash] = useState(0);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [loading, setLoading] = useState(true);
+  // cash available in USD
+  const [cashBalance, setCashBalance] = useState(0);
 
-  const [logos, setLogos] = useState<Record<string, string>>({});
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [hoverInfo, setHoverInfo] = useState<{
-    x: number;
-    y: number;
-    symbol: string;
-    value: number;
-    pct: number;
-    id: string;
-  } | null>(null);
+  // list of coins the user owns
+  const [portfolioHoldings, setPortfolioHoldings] = useState<coinHolding[]>([]);
 
+  // images for each coin
+  const [coinLogos, setCoinLogos] = useState<Record<string, string>>({});
+
+  // loading indicator
+  const [isLoading, setIsLoading] = useState(true);
+
+  /*
+    Fetch the wallet data: cash + holdings + live valuation.
+  */
   useEffect(() => {
-    async function loadWallet() {
+    async function fetchWalletData() {
       try {
-        const res = await fetch("/api/simulator/portfolio");
-        const data = await res.json();
+        const response = await fetch("/api/simulator/value");
+        const jsonData = await response.json();
 
-        setCash(Number(data.cash || 0));
+        setCashBalance(Number(jsonData.cash || 0));
 
-        if (Array.isArray(data.holdings)) {
-          const sorted = [...data.holdings].sort((a, b) => {
-            const v1 = Number(a.amountOwned) * Number(a.averageEntryPriceUsd);
-            const v2 = Number(b.amountOwned) * Number(b.averageEntryPriceUsd);
-            return v2 - v1;
-          });
-          setHoldings(sorted);
+        // make sure we only set the holdings if the API returns an array
+        if (Array.isArray(jsonData.holdings)) {
+          // sort the holdings by market value descending
+          const sortedHoldings = [...jsonData.holdings].sort(
+            (a, b) => b.currentValueUsd - a.currentValueUsd
+          );
+
+          setPortfolioHoldings(sortedHoldings);
         } else {
-          setHoldings([]);
+          setPortfolioHoldings([]);
         }
-      } catch {
-        setCash(0);
-        setHoldings([]);
+      } catch (error) {
+        console.error("Error while loading wallet:", error);
+        setCashBalance(0);
+        setPortfolioHoldings([]);
       }
 
-      setLoading(false);
+      setIsLoading(false);
     }
 
-    loadWallet();
+    fetchWalletData();
   }, []);
 
+  /*
+    Fetch the logos for each coin using the coinId.
+    This runs as soon as portfolioHoldings is filled.
+  */
   useEffect(() => {
+    // if no holdings, skip
+    if (portfolioHoldings.length === 0) return;
+
     async function fetchLogos() {
       const result: Record<string, string> = {};
 
-      await Promise.all(
-        holdings.map(async (h) => {
-          try {
-            const r = await fetch(
-              `https://api.coingecko.com/api/v3/coins/${h.coinId}`
-            );
-            const json = await r.json();
-            result[h.coinSymbol] = json.image?.small || "";
-          } catch {
-            result[h.coinSymbol] = "";
-          }
-        })
-      );
+      for (const holding of portfolioHoldings) {
+        try {
+          const response = await fetch(
+            `https://api.coingecko.com/api/v3/coins/${holding.coinId}`
+          );
+          const data = await response.json();
 
-      setLogos(result);
+          // store the small image when available
+          result[holding.coinSymbol] = data.image?.small || "";
+        } catch (error) {
+          // if logo not available, fallback to empty
+          result[holding.coinSymbol] = "";
+        }
+      }
+
+      setCoinLogos(result);
     }
 
-    if (holdings.length > 0) fetchLogos();
-  }, [holdings]);
+    fetchLogos();
+  }, [portfolioHoldings]);
 
-  const COLORS = [
-    "#FFDD00",
-    "#0EA5E9",
-    "#16A34A",
-    "#EF4444",
-    "#A855F7",
-    "#F97316",
-    "#14B8A6",
-    "#EAB308",
-  ];
+  // total value of the positions (coins only)
+  const totalPortfolioValue = portfolioHoldings.reduce(
+    (sum, item) => sum + item.currentValueUsd,
+    0
+  );
 
-  const chartData = holdings.map((h) => ({
-    name: h.coinSymbol,
-    id: h.coinId,
-    logo: logos[h.coinSymbol] || "",
-    value: Number(h.amountOwned) * Number(h.averageEntryPriceUsd),
-    amount: Number(h.amountOwned),
+  // data passed to the circle chart component
+  const chartData = portfolioHoldings.map((holding) => ({
+    label: holding.coinSymbol,
+    value: holding.currentValueUsd,
+    id: holding.coinId,
   }));
 
-  const total = chartData.reduce((s, c) => s + c.value, 0);
-
-  // EXPLODING SLICE
-  const renderActiveShape = (props: any) => {
-    const RADIAN = Math.PI / 180;
-    const {
-      cx,
-      cy,
-      midAngle,
-      innerRadius,
-      outerRadius,
-      startAngle,
-      endAngle,
-      fill,
-      payload,
-      value,
-    } = props;
-
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-
-    const offset = 12;
-    const mx = cx + (outerRadius + offset) * cos;
-    const my = cy + (outerRadius + offset) * sin;
-
-    return (
-      <g>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius + 10}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-        />
-
-        <text
-          x={mx}
-          y={my}
-          fill="#fff"
-          textAnchor="middle"
-          dominantBaseline="central"
-          style={{ fontSize: "12px", fontWeight: "600" }}
-        >
-          {((value / total) * 100).toFixed(1)}%
-        </text>
-      </g>
-    );
-  };
+  // when the user clicks a chart slice, we redirect to that coin
+  function handleChartSliceClick(selectedSlice: any) {
+    router.push(`/secure/specificCoin/${selectedSlice.id}`);
+  }
 
   return (
     <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
-      {/* HEADER */}
+
+      {/* Title + Available Cash */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-yellow-400">{t("wallet.title")}</h2>
+        <h2 className="text-xl font-bold text-yellow-400">
+          {translator("wallet.title")}
+        </h2>
 
         <p className="text-sm text-slate-400">
-          {t("wallet.cashLabel")}{" "}
-          <span className="text-white">${cash.toFixed(2)}</span>
+          {translator("wallet.availableCash")}{" "}
+          <span className="text-white">${cashBalance.toFixed(2)}</span>
         </p>
       </div>
 
-      {loading && <p className="text-slate-400">{t("wallet.loading")}</p>}
-      {!loading && holdings.length === 0 && (
-        <p className="text-slate-500">{t("wallet.noHoldings")}</p>
+      {/* Loading */}
+      {isLoading && (
+        <p className="text-slate-400">{translator("wallet.loading")}</p>
       )}
 
-      {/* ============================
-           CHART LEFT — LIST RIGHT
-      ============================== */}
-      {!loading && holdings.length > 0 && (
+      {/* No holdings */}
+      {!isLoading && portfolioHoldings.length === 0 && (
+        <p className="text-slate-500">{translator("wallet.noHoldings")}</p>
+      )}
+
+      {/* Chart + List */}
+      {!isLoading && portfolioHoldings.length > 0 && (
         <div className="flex gap-6">
 
-          {/* ─────────── LEFT : PIE CHART ─────────── */}
-          <div className="w-[60%] h-[380px] relative">
-
-            {/* CUSTOM TOOLTIP */}
-            {hoverInfo && (
-              <div
-                className="absolute z-50 px-3 py-2 rounded-lg bg-[#1b1e27] border border-[#2a2d36] shadow-lg"
-                style={{
-                  top: hoverInfo.y - 40,
-                  left: hoverInfo.x + 20,
-                  pointerEvents: "none",
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <img
-                    src={logos[hoverInfo.symbol]}
-                    alt=""
-                    className="w-5 h-5 rounded-full"
-                  />
-                  <span className="text-white font-semibold">
-                    {hoverInfo.symbol}
-                  </span>
-                </div>
-                <div className="text-slate-300 text-sm">
-                  ${hoverInfo.value.toFixed(2)}
-                </div>
-                <div className="text-yellow-400 text-xs font-semibold">
-                  {hoverInfo.pct.toFixed(1)}%
-                </div>
-              </div>
-            )}
-
-            <ResponsiveContainer>
-              <PieChart
-                onMouseMove={(e: any) => {
-                  if (!e?.activePayload) {
-                    setHoverInfo(null);
-                    return;
-                  }
-
-                  const p = e.activePayload[0].payload;
-                  setHoverInfo({
-                    x: e.chartX,
-                    y: e.chartY,
-                    symbol: p.name,
-                    value: p.value,
-                    pct: (p.value / total) * 100,
-                    id: p.id,
-                  });
-                }}
-                onMouseLeave={() => setHoverInfo(null)}
-              >
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  innerRadius={70}
-                  outerRadius={110}
-                  paddingAngle={4}
-                  activeShape={renderActiveShape}
-                  onMouseEnter={(_, idx) => setActiveIndex(idx)}
-                  onClick={(entry) =>
-                    router.push(`/secure/specificCoin/${entry.id}`)
-                  }
-                >
-                  {chartData.map((entry, i) => (
-                    <Cell
-                      key={i}
-                      fill={COLORS[i % COLORS.length]}
-                      style={{ cursor: "pointer" }}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+          {/* Donut Chart */}
+          <div className="w-1/2 flex justify-center items-center">
+            <CircleChart data={chartData} onClick={handleChartSliceClick} />
           </div>
 
-          {/* ─────────── RIGHT : SIMPLE LIST ─────────── */}
-          <div className="w-[40%] space-y-2">
-            {chartData.map((c) => (
+          {/* Coin List on the right */}
+          <div className="w-1/2 space-y-2">
+            {portfolioHoldings.map((holding) => (
               <div
-                key={c.id}
+                key={holding.coinId}
                 className="flex items-center justify-between bg-[#15171f] border border-[#23252c] px-4 py-3 rounded-lg cursor-pointer hover:bg-[#1b1e27]"
-                onClick={() => router.push(`/secure/specificCoin/${c.id}`)}
+                onClick={() =>
+                  router.push(`/secure/specificCoin/${holding.coinId}`)
+                }
               >
+
+                {/* Left: image + coin symbol */}
                 <div className="flex items-center gap-3">
                   <img
-                    src={c.logo}
-                    className="w-7 h-7 rounded-full"
-                    alt={c.name}
+                    src={coinLogos[holding.coinSymbol]}
+                    alt=""
+                    className="w-6 h-6 rounded-full"
                   />
+
                   <div>
-                    <p className="text-white font-semibold">{c.name}</p>
+                    <p className="text-white font-semibold">{holding.coinSymbol}</p>
+
                     <p className="text-slate-400 text-xs">
-                      {(c.value / total * 100).toFixed(1)}% {t('wallet.ofPortfolio')}
+                      {(
+                        (holding.currentValueUsd / totalPortfolioValue) *
+                        100
+                      ).toFixed(1)}
+                      % {translator("wallet.ofPortfolio")}
                     </p>
                   </div>
                 </div>
 
+                {/* Right: value + amount */}
                 <div className="text-right">
                   <p className="text-white font-semibold">
-                    ${c.value.toFixed(2)}
+                    ${holding.currentValueUsd.toFixed(2)}
                   </p>
-                  <p className="text-slate-400 text-xs">{c.amount.toFixed(6)}</p>
+                  <p className="text-slate-400 text-xs">
+                    {holding.amountOwned.toFixed(6)}
+                  </p>
                 </div>
+
               </div>
             ))}
           </div>
