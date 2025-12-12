@@ -470,5 +470,17 @@
     "passwordsDoNotMatch": "Passwords do not match.",
     "updatePasswordFailed": "Failed to update password",
     "genericErrorOccurred": "An error occurred"
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "loading": "Loading...",
+    "mustLogin": "Please log in to access your watchlist",
+    "error": "Error:",
+    "errorOccurred": "An error occurred",
+    "removeError": "Error removing coin",
+    "empty": "Your watchlist is empty",
+    "browseCryptos": "Browse cryptocurrencies →",
+    "removeFromWatchlist": "Remove from watchlist",
+    "removeAriaLabel": "Remove from watchlist"
   }
 }
