@@ -180,7 +180,10 @@
   "cancelError": "Échec de l'annulation de l'ordre.",
   "amount": "Montant",
   "placed": "Placé",
-  "portfolioValueTitle": "Valeur du portefeuille dans le temps"
+  "portfolioValueTitle": "Valeur du portefeuille dans le temps",
+  "available": "Disponible",
+  "availableBalance": "Solde disponible",
+  "portfolioValue": "Valeur du portefeuille"
 },
 "simulatorWelcome": {
   "title": "Bienvenue dans le simulateur CryptoCube",
@@ -241,7 +244,8 @@
   "loading": "Chargement du portefeuille…",
   "noHoldings": "Aucun avoir pour le moment.",
   "avgEntry": "Prix moyen d'entrée : ${{price}}",
-  "ofPortfolio": "du portefeuille"
+  "ofPortfolio": "du portefeuille",
+  "availableCash": "Argent disponible"
 },
 "coinsTable": {
   "name": "Nom",

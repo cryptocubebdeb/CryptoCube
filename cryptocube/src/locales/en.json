@@ -179,7 +179,10 @@
   "cancelError": "Failed to cancel order.",
   "amount": "Amount",
   "placed": "Placed",
-  "portfolioValueTitle": "Portfolio Value Over Time"
+  "portfolioValueTitle": "Portfolio Value Over Time",
+  "available": "Available",
+  "availableBalance": "Available Balance",
+  "portfolioValue": "Portfolio Value"
 },
 "simulatorWelcome": {
   "title": "Welcome to the CryptoCube Simulator",
@@ -240,7 +243,8 @@
   "loading": "Loading portfolio…",
   "noHoldings": "No holdings yet.",
   "avgEntry": "Avg entry: ${{price}}",
-  "ofPortfolio": "of portfolio"
+  "ofPortfolio": "of portfolio",
+  "availableCash": "Available Cash"
 },
 "coinsTable": {
   "name": "Name",
