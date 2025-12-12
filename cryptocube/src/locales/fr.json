@@ -183,7 +183,10 @@
   "cancelError": "Échec de l'annulation de l'ordre.",
   "amount": "Montant",
   "placed": "Placé",
-  "portfolioValueTitle": "Valeur du portefeuille dans le temps"
+  "portfolioValueTitle": "Valeur du portefeuille dans le temps",
+  "available": "Disponible",
+  "availableBalance": "Solde disponible",
+  "portfolioValue": "Valeur du portefeuille"
 },
 "simulatorWelcome": {
   "title": "Bienvenue dans le simulateur CryptoCube",
@@ -244,7 +247,8 @@
   "loading": "Chargement du portefeuille…",
   "noHoldings": "Aucun avoir pour le moment.",
   "avgEntry": "Prix moyen d'entrée : ${{price}}",
-  "ofPortfolio": "du portefeuille"
+  "ofPortfolio": "du portefeuille",
+  "availableCash": "Argent disponible"
 },
 "coinsTable": {
   "name": "Nom",
@@ -444,6 +448,40 @@
     "serverError": "Erreur d'inscription (status {{status}})",
     "autoLoginFailed": "Compte créé, mais la connexion automatique a échoué. Veuillez vous connecter manuellement.",
     "networkError": "Erreur de connexion au serveur."
+  },
+  "accountDetails": {
+    "title": "Mes Détails",
+    "personalHeader": "Information Personnel",
+    "profileHeader": "Information de Profil",
+    "firstNameLabel": "PRÉNOM",
+    "lastNameLabel": "NOM",
+    "emailLabel": "COURRIEL",
+    "usernameLabel": "NOM D'UTILISATEUR",
+    "passwordLabel": "MOT DE PASSE",
+    "save": "Sauvegarder",
+    "edit": "Modifier",
+    "changePassword": "Changer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loading": "Chargement...",
+    "unauthenticated": "Non authentifié",
+    "loadError": "Impossible de charger les informations du compte.",
+    "fetchUserFailed": "Échec du chargement des données utilisateur",
+    "loadUserError": "Une erreur s'est produite lors du chargement des données utilisateur",
+    "updateUserFailed": "Échec de la mise à jour des informations utilisateur",
+    "savePersonalError": "Une erreur s'est produite. Impossible d'enregistrer les informations personnelles",
+    "saveProfileError": "Une erreur s'est produite. Impossible d'enregistrer les informations de profil",
+    "maskedPassword": "•••••••",
+    "currentPasswordLabel": "Mot de passe actuel",
+    "newPasswordLabel": "Nouveau mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "savePassword": "Enregistrer",
+    "savingPassword": "Enregistrement...",
+    "cancel": "Annuler",
+    "passwordAllFieldsRequired": "Tous les champs sont requis.",
+    "passwordStrengthRequirement": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+    "updatePasswordFailed": "Échec de la mise à jour du mot de passe",
+    "genericErrorOccurred": "Une erreur s'est produite"
   }
 }
   

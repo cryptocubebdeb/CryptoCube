@@ -1,105 +1,138 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import PortfolioChart from "../../../components/Portfolio/PortfolioChart";
 
 export default function HomeSection() {
   const { t } = useTranslation();
-  // Store user's current cash balance
-  const [cash, setCash] = useState(0);
 
-  // Store user's coin holdings
-  const [holdings, setHoldings] = useState<any[]>([]);
+  // live valuation of the portfolio
+  const [currentCashValue, setCurrentCashValue] = useState(0);
+  const [currentPortfolioValue, setCurrentPortfolioValue] = useState(0);
+  const [totalHoldingsCount, setTotalHoldingsCount] = useState(0);
 
-  // Store pending orders (submitted but not executed)
-  const [pendingOrders, setPendingOrders] = useState<any[]>([]);
+  // orders lists
+  const [pendingOrdersList, setPendingOrdersList] = useState<any[]>([]);
+  const [executedOrdersList, setExecutedOrdersList] = useState<any[]>([]);
 
-  // Store executed orders (already completed trades)
-  const [executedOrders, setExecutedOrders] = useState<any[]>([]);
+  // loading state
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Loading state while fetching data
-  const [loading, setLoading] = useState(true);
-
-  // Load portfolio, pending orders, and executed orders on component mount
+  /*
+    when the component opens, we load: 
+    - live simulator value (cash + holdings + portfolio value)
+    - pending orders
+    - executed orders
+  */
   useEffect(() => {
-    async function loadData() {
+    async function loadAllSimulatorData() {
       try {
-        // Fetch all three API endpoints in parallel for efficiency
-        const [portfolioRes, pendingRes, executedRes] = await Promise.all([
-          fetch("/api/simulator/portfolio"),
+        // fetch live value
+        const valueResponse = await fetch("/api/simulator/value");
+        const valueJson = await valueResponse.json();
+
+        setCurrentCashValue(Number(valueJson.cash || 0));
+        setCurrentPortfolioValue(Number(valueJson.portfolioValue || 0));
+
+        // count the holdings
+        const holdingsCount = Array.isArray(valueJson.holdings)
+          ? valueJson.holdings.length
+          : 0;
+        setTotalHoldingsCount(holdingsCount);
+
+        // fetch pending + executed orders at the same time
+        const [pendingResponse, executedResponse] = await Promise.all([
           fetch("/api/simulator/orders/list/pending"),
           fetch("/api/simulator/orders/list/executed"),
         ]);
 
-        // Parse JSON responses
-        const portfolioData = await portfolioRes.json();
-        const pendingData = await pendingRes.json();
-        const executedData = await executedRes.json();
+        const pendingJson = await pendingResponse.json();
+        const executedJson = await executedResponse.json();
 
-        // Set state values safely
-        setCash(Number(portfolioData.cash || 0));
-        setHoldings(Array.isArray(portfolioData.holdings) ? portfolioData.holdings : []);
+        // store the lists safely
+        setPendingOrdersList(
+          Array.isArray(pendingJson.orders) ? pendingJson.orders : []
+        );
+        setExecutedOrdersList(
+          Array.isArray(executedJson.orders) ? executedJson.orders : []
+        );
+      } catch (error) {
+        console.error("Failed to load simulator home section:", error);
 
-        setPendingOrders(Array.isArray(pendingData.orders) ? pendingData.orders : []);
-        setExecutedOrders(Array.isArray(executedData.orders) ? executedData.orders : []);
-      } catch (err) {
-        // If API fails, reset all state to defaults and log the error
-        console.error("Failed to load home data:", err);
-        setCash(0);
-        setHoldings([]);
-        setPendingOrders([]);
-        setExecutedOrders([]);
+        setCurrentCashValue(0);
+        setCurrentPortfolioValue(0);
+        setTotalHoldingsCount(0);
+
+        setPendingOrdersList([]);
+        setExecutedOrdersList([]);
       }
 
-      // Mark loading as complete
-      setLoading(false);
+      setIsLoading(false);
     }
 
-    loadData();
+    loadAllSimulatorData();
   }, []);
+
+  // simple helper to format any USD value
+  function formatUsd(value: number) {
+    return `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+  }
 
   return (
     <div className="space-y-8 bg-[#11131b] border border-[#23252c] rounded-xl p-6">
 
-      {/* ================= Header Overview ================= */}
+      {/* overview header of the simulator */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-yellow-400">{t('simulator.overviewTitle')}</h2>
+        <h2 className="text-xl font-bold text-yellow-400">
+          {t("simulator.overviewTitle")}
+        </h2>
 
-        {loading ? (
-          // Display loading text while fetching data
-          <p className="text-slate-400 text-sm">{t('simulator.loadingData')}</p>
+        {isLoading ? (
+          <p className="text-slate-400 text-sm">{t("simulator.loadingData")}</p>
         ) : (
-          // Display summary of key portfolio information
-          <div className="grid grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-4 gap-4 text-sm">
 
-            {/* Cash Balance */}
+            {/* cash */}
             <div>
-              <p className="text-slate-400">{t('simulator.cash')}</p>
-              <p className="text-white font-semibold">${cash.toFixed(2)}</p>
+              <p className="text-slate-400">{t("simulator.cash")}</p>
+              <p className="text-white font-semibold">
+                {formatUsd(currentCashValue)}
+              </p>
             </div>
 
-            {/* Number of Coin Holdings */}
+            {/* available balance (same value for now, but we keep it separated) */}
             <div>
-              <p className="text-slate-400">{t('simulator.holdings')}</p>
-              <p className="text-white font-semibold">{holdings.length}</p>
+              <p className="text-slate-400">{t("simulator.availableBalance")}</p>
+              <p className="text-white font-semibold">
+                {formatUsd(currentCashValue)}
+              </p>
             </div>
 
-            {/* Number of Pending Orders */}
+            {/* number of holdings */}
             <div>
-              <p className="text-slate-400">{t('simulator.pendingOrders')}</p>
-              <p className="text-white font-semibold">{pendingOrders.length}</p>
+              <p className="text-slate-400">{t("simulator.holdings")}</p>
+              <p className="text-white font-semibold">{totalHoldingsCount}</p>
+            </div>
+
+            {/* total portfolio value */}
+            <div>
+              <p className="text-slate-400">{t("simulator.portfolioValue")}</p>
+              <p className="text-white font-semibold">
+                {formatUsd(currentPortfolioValue)}
+              </p>
             </div>
 
           </div>
         )}
       </div>
 
-      {/* ================= Portfolio Chart ================= */}
-      {/* Displays a visual chart of user's portfolio holdings */}
+      {/* title for the portfolio chart */}
       <h2 className="text-2xl font-semibold mb-6 text-center">
-          {t('simulator.portfolioValueTitle')}
+        {t("simulator.portfolioValueTitle")}
       </h2>
+
+      {/* the portfolio chart itself */}
       <PortfolioChart />
     </div>
   );
