@@ -30,12 +30,6 @@ export default async function Page({
         getCoinChart(id, 30, "usd"),
     ]);
 
-    let news: Awaited<ReturnType<typeof getCoinNews>> = [];
-    try {
-        news = await getCoinNews(id);
-    } catch {
-        news = [];
-    }
 
     // --- Basic coin info ---
     const name = coinData?.name ?? id; // Name of the current crypto
@@ -112,7 +106,7 @@ export default async function Page({
 
     return (
         <div className={`min-h-screen w-full flex flex-col ${geologica.className}`}>
-            <div className="flex flex-1 justify-center w-full pt-4">               
+            <div className="flex flex-1 justify-center w-full pt-4">
                 {/* Main container */}
                 <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start gap-12 mt-10">
                     {/* Right column - details */}
@@ -159,7 +153,7 @@ export default async function Page({
                                 logo={logo}
                             />
                         </div>
-                       
+
 
                         {/*------------- Market Stats -------------*/}
                         <div className="mt-6 ml-4">
@@ -363,30 +357,28 @@ export default async function Page({
                             </div>
 
                             <details className="group border border-white/10 rounded-md" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
-                                <details className="group border border-white/10 rounded-md" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
-                                    <summary className="cursor-pointer list-none px-4 py-3 text-sm sm:text-base select-none" style={{ color: 'var(--foreground)', opacity: 0.75 }}>
-                                        <span className="mr-2 font-medium"><T k="specificCoin.about" /> {name}</span>
-                                        <span className="group-open:hidden" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeMore" /></span>
-                                        <span className="hidden group-open:inline" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeLess" /></span>
-                                    </summary>
+                                <summary className="cursor-pointer list-none px-4 py-3 text-sm sm:text-base select-none" style={{ color: 'var(--foreground)', opacity: 0.75 }}>
+                                    <span className="mr-2 font-medium"><T k="specificCoin.about" /> {name}</span>
+                                    <span className="group-open:hidden" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeMore" /></span>
+                                    <span className="hidden group-open:inline" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeLess" /></span>
+                                </summary>
 
-                                    <div className="px-4 pb-5">
-                                        <div
-                                            className="text-[13px] sm:text-[14px] leading-relaxed sm:leading-7"
-                                            style={{
-                                                color: 'var(--foreground)',
-                                                opacity: 0.8,
-                                                textAlign: "justify",
-                                                textJustify: "inter-word",
-                                                lineHeight: "1.6",
-                                            }}
-                                            dangerouslySetInnerHTML={{ __html: coinDescription }}
-                                        />
-                                        <p className="text-sm italic mt-6" style={{ color: 'var(--foreground)', opacity: 0.5 }}>
-                                            <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" />: CoinGecko
-                                        </p>
-                                    </div>
-                                </details>
+                                <div className="px-4 pb-5">
+                                    <div
+                                        className="text-[13px] sm:text-[14px] leading-relaxed sm:leading-7"
+                                        style={{
+                                            color: 'var(--foreground)',
+                                            opacity: 0.8,
+                                            textAlign: "justify",
+                                            textJustify: "inter-word",
+                                            lineHeight: "1.6",
+                                        }}
+                                        dangerouslySetInnerHTML={{ __html: coinDescription }}
+                                    />
+                                    <p className="text-sm italic mt-6" style={{ color: 'var(--foreground)', opacity: 0.5 }}>
+                                        <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" />: CoinGecko
+                                    </p>
+                                </div>
                             </details>
                         </div>
 

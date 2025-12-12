@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Box, Typography, Link, Avatar, IconButton } from "@mui/material"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
-import { getCoinNews } from "../../lib/getCoinNews"
+//import { getCoinNews } from "../../lib/getCoinNews"
 import { T } from "./Translate"
 
 // Simple shape for each news item (kept beginner-friendly)
@@ -34,20 +34,33 @@ export default function CoinDailyNews({
 
   // Load news when coin changes
   useEffect(() => {
+    let cancelled = false;
+
     async function load() {
+      setLoading(true);
       try {
-        const items = await getCoinNews(coinId)
-        setNews(items || [])
-        setCurrentIndex(0) // always start on first page for a new coin
+        const res = await fetch(`/api/home/coinNews?coin=${coinId}`);
+        if (!res.ok) throw new Error("Failed to fetch news");
+        const items = await res.json();
+
+        if (!cancelled) {
+          setNews(items || []);
+          setCurrentIndex(0);
+        }
       } catch (err) {
-        console.error("Failed to load coin news:", err)
-        setNews([])
+        console.error("Failed to load coin news:", err);
+        if (!cancelled) setNews([]);
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false);
       }
     }
-    load()
-  }, [coinId, fetchSize])
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [coinId]);
+
 
   // Loading + empty states
   if (loading) {

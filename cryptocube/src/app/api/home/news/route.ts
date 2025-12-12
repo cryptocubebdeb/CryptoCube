@@ -1,50 +1,46 @@
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const coin = searchParams.get("coin");
+
+  if (!coin) {
+    return NextResponse.json([], { status: 200 });
+  }
+
   const API_KEY = process.env.NEWSAPI_API_KEY;
 
   if (!API_KEY) {
-    return NextResponse.json(
-      { error: "Missing NEWSAPI_API_KEY" },
-      { status: 500 }
-    );
+    console.error("Missing NEWSAPI_API_KEY");
+    return NextResponse.json([], { status: 200 });
   }
 
-  try {
-    const response = await fetch(
-      `https://newsapi.org/v2/everything?q=cryptocurrency OR bitcoin OR ethereum OR crypto&sortBy=publishedAt&pageSize=10`,
-      {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-        },
-        next: { revalidate: 300 },
-      }
-    );
+  const q = encodeURIComponent(
+    `${coin} AND (crypto OR cryptocurrency OR blockchain)`
+  );
 
-    if (!response.ok) {
-      throw new Error(`News API error ${response.status}`);
-    }
+  const res = await fetch(
+    `https://newsapi.org/v2/everything?q=${q}&language=en&pageSize=9&apiKey=${API_KEY}`
+  );
 
-    const data = await response.json();
-
-    const articles = data.articles.map((article: any, index: number) => ({
-      id: index.toString(),
-      title: article.title,
-      url: article.url,
-      description: article.description,
-      created_at: article.publishedAt,
-      news_site: article.source.name,
-      thumbnail: article.urlToImage || "/placeholder.png",
-    }));
-
-    return NextResponse.json({ articles });
-  } catch (error) {
-    console.error("Error fetching Crypto news:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch news" },
-      { status: 500 }
-    );
+  if (!res.ok) {
+    console.error("NewsAPI error:", res.status);
+    return NextResponse.json([], { status: 200 });
   }
+
+  const data = await res.json();
+
+  const articles = (data.articles ?? []).map((a: any, i: number) => ({
+    id: String(i),
+    title: a.title,
+    url: a.url,
+    description: a.description,
+    created_at: a.publishedAt,
+    news_site: a.source?.name,
+    thumbnail: a.urlToImage,
+  }));
+
+  return NextResponse.json(articles);
 }
