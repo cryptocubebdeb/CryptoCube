@@ -105,8 +105,8 @@ export default function SearchSection() {
       style={{ paddingBottom: open ? "1.5rem" : "1.5rem", background: "var(--color-container-bg)" }}
     >
       {/* Section header */}
-  <h2 className="text-xl font-bold" style={{ color: 'var(--foreground-alt)', marginBottom: '0.75rem' }}>{t('search.title')}</h2>
-  <p className="text-sm mb-4" style={{ color: 'var(--foreground-grey)' }}>{t('search.subtitle')}</p>
+      <h2 className="text-xl font-bold" style={{ color: 'var(--foreground-alt)', marginBottom: '0.75rem' }}>{t('search.title')}</h2>
+      <p className="text-sm mb-4" style={{ color: 'var(--foreground-grey)' }}>{t('search.subtitle')}</p>
 
       {/* Search input bar */}
       <div
@@ -120,10 +120,9 @@ export default function SearchSection() {
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder={t('search.placeholder')}
-          className="ml-3 w-full bg-transparent outline-none"
+          className="ml-3 w-full bg-transparent outline-none placeholder:text-[var(--foreground-grey)]"
           style={{
             color: 'var(--foreground-search)',
-            '::placeholder': { color: 'var(--foreground-grey)' },
           }}
         />
       </div>
