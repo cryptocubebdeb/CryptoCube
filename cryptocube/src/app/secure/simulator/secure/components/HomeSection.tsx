@@ -80,45 +80,51 @@ export default function HomeSection() {
   }
 
   return (
-    <div className="space-y-8 bg-[#11131b] border border-[#23252c] rounded-xl p-6">
+    <div
+      className="space-y-8 shadow-lg rounded-xl p-6"
+      style={{ background: "var(--color-container-bg)" }}
+    >
 
       {/* overview header of the simulator */}
       <div className="flex flex-col gap-2">
-        <h2 className="text-xl font-bold text-yellow-400">
+        <h2
+          className="text-xl font-bold"
+          style={{ color: "var(--foreground)" }}
+        >
           {t("simulator.overviewTitle")}
         </h2>
 
         {isLoading ? (
-          <p className="text-slate-400 text-sm">{t("simulator.loadingData")}</p>
+          <p className="text-sm" style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.loadingData")}</p>
         ) : (
           <div className="grid grid-cols-4 gap-4 text-sm">
 
             {/* cash */}
             <div>
-              <p className="text-slate-400">{t("simulator.cash")}</p>
-              <p className="text-white font-semibold">
+              <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.cash")}</p>
+              <p className="font-semibold" style={{ color: "var(--foreground)" }}>
                 {formatUsd(currentCashValue)}
               </p>
             </div>
 
             {/* available balance (same value for now, but we keep it separated) */}
             <div>
-              <p className="text-slate-400">{t("simulator.availableBalance")}</p>
-              <p className="text-white font-semibold">
+              <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.availableBalance")}</p>
+              <p className="font-semibold" style={{ color: "var(--foreground)" }}>
                 {formatUsd(currentCashValue)}
               </p>
             </div>
 
             {/* number of holdings */}
             <div>
-              <p className="text-slate-400">{t("simulator.holdings")}</p>
-              <p className="text-white font-semibold">{totalHoldingsCount}</p>
+              <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.holdings")}</p>
+              <p className="font-semibold" style={{ color: "var(--foreground)" }}>{totalHoldingsCount}</p>
             </div>
 
             {/* total portfolio value */}
             <div>
-              <p className="text-slate-400">{t("simulator.portfolioValue")}</p>
-              <p className="text-white font-semibold">
+              <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.portfolioValue")}</p>
+              <p className="font-semibold" style={{ color: "var(--foreground)" }}>
                 {formatUsd(currentPortfolioValue)}
               </p>
             </div>
@@ -128,7 +134,10 @@ export default function HomeSection() {
       </div>
 
       {/* title for the portfolio chart */}
-      <h2 className="text-2xl font-semibold mb-6 text-center">
+      <h2
+        className="text-2xl font-semibold mb-6 text-center"
+        style={{ color: "var(--foreground)" }}
+      >
         {t("simulator.portfolioValueTitle")}
       </h2>
 

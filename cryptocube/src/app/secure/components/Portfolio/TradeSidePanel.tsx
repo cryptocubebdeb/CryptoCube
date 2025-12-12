@@ -214,7 +214,7 @@ export default function TradeSidePanel() {
 
   return (
     <div className="flex flex-col h-full text-white space-y-6">
-      <h2 className="text-xl font-bold text-center text-yellow-400">
+      <h2 style={{ color: "var(--foreground-alt)" }} className="text-xl font-bold text-center">
         {t('trade.title')}
       </h2>
 
@@ -227,10 +227,11 @@ export default function TradeSidePanel() {
               setMode(side as "BUY" | "SELL");
               setMsg("");
             }}
-            className={`flex-1 py-2 text-sm font-semibold ${mode === side
-                ? "bg-yellow-400 text-black"
-                : "text-white/60 hover:bg-white/10"
-              }`}
+            className={`flex-1 py-2 text-sm font-semibold hover:bg-white/10`}
+            style={mode === side
+              ? { background: 'var(--background-tradepanel-alt)', color: 'var(--foreground-tradepanel-active)' }
+              : { background: 'var(--background-tradepanel-inactive)', color: 'var(--foreground-tradepanel-inactive)' }
+            }
           >
             {side === 'BUY' ? t('activity.buy') : t('activity.sell')}
           </button>
@@ -243,10 +244,11 @@ export default function TradeSidePanel() {
           <button
             key={k}
             onClick={() => setOrderKind(k as "MARKET" | "LIMIT")}
-            className={`flex-1 py-1.5 text-xs font-semibold ${orderKind === k
-                ? "bg-yellow-400 text-black"
-                : "text-white/60 hover:bg-white/10"
-              }`}
+            className={`flex-1 py-1.5 text-xs font-semibold`}
+            style={orderKind === k
+              ? { background: 'var(--background-tradepanel-alt)', color: 'var(--foreground-tradepanel-active)' }
+              : { background: 'var(--background-tradepanel-inactive)', color: 'var(--foreground-tradepanel-inactive)' }
+            }
           >
             {k === 'MARKET' ? t('activity.market') : t('activity.limit')}
           </button>
@@ -261,17 +263,21 @@ export default function TradeSidePanel() {
             inputMode="decimal"
             value={limitPrice}
             onChange={(e) => setLimitPrice(e.target.value)}
-            className="w-full bg-[#0e1117] border border-white/10 rounded-xl px-3 py-2 text-sm outline-none"
+            className="w-full border border-white/10 rounded-xl px-3 py-2 text-sm outline-none"
+            style={{
+              backgroundColor: 'var(--tradepanel-background)',
+              color: 'var(--foreground)'
+            }}
           />
         </div>
       )}
 
       {/* Select coin */}
       <div>
-        <p className="text-xs text-slate-400 mb-1">{t('trade.selectCoin')}</p>
+        <p style={{ color: 'var(--foreground-grey)' }} className="text-xs mb-1">{t('trade.selectCoin')}</p>
         <div className="relative">
           <select
-            className="appearance-none w-full bg-[#0e1117] border border-white/10 rounded-xl px-10 py-3 text-sm"
+            className="appearance-none w-full bg-[var(--background-toolbar-active)] rounded-xl px-10 py-3 text-sm"
             value={coinId}
             onChange={(e) => {
               const found = holdings.find((h) => h.coinId === e.target.value);
@@ -313,7 +319,10 @@ export default function TradeSidePanel() {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="0"
-          className="w-full bg-transparent text-center text-5xl font-semibold outline-none text-white py-3"
+          style={{
+            color: 'var(--foreground)'
+          }}
+          className="w-full bg-transparent text-center text-5xl font-semibold outline-none py-3"
         />
       </div>
 
@@ -325,14 +334,16 @@ export default function TradeSidePanel() {
               <button
                 key={usd}
                 onClick={() => setValue(usd.toString())}
-                className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+                style={{ color: 'var(--foreground-grey)' }}
               >
                 {t('trade.usdShort')}{usd}
               </button>
             ))}
             <button
               onClick={handleMax}
-              className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10"
+              className="rounded-xl bg-white/5 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+              style={{ color: 'var(--foreground-grey)' }}
             >
               {t('trade.max')}
             </button>
@@ -352,19 +363,21 @@ export default function TradeSidePanel() {
         <button
           onClick={() => setInputMode("FIAT")}
           className={`flex-1 py-2 rounded-md ${inputMode === "FIAT"
-              ? "bg-yellow-400 text-black"
+              ? "text-black"
               : "bg-white/10 text-white/60"
             }`}
-        >
+          style={inputMode === "FIAT" ? { background: 'var(--background-tradepanel-alt)', color: 'black' } : {}}
+        >f
           {t('trade.usdLabel')}
         </button>
 
         <button
           onClick={() => setInputMode("CRYPTO")}
           className={`flex-1 py-2 rounded-md ${inputMode === "CRYPTO"
-              ? "bg-yellow-400 text-black"
+              ? "text-black"
               : "bg-white/10 text-white/60"
             }`}
+          style={inputMode === "CRYPTO" ? { background: 'var(--background-tradepanel-alt)', color: 'black' } : {}}
         >
           {symbol}
         </button>
@@ -381,7 +394,8 @@ export default function TradeSidePanel() {
       <button
         onClick={submitOrder}
         disabled={submitting}
-        className="w-full py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300 disabled:opacity-60"
+    className="w-full py-2 rounded-md font-semibold disabled:opacity-60"
+    style={{ background: 'var(--background-tradepanel-alt)', color: 'black' }}
       >
           {submitting
             ? t('trade.processing')
@@ -389,7 +403,7 @@ export default function TradeSidePanel() {
       </button>
 
       {msg && (
-        <p className="text-xs text-center text-yellow-300 mt-1">{msg}</p>
+  <p className="text-xs text-center mt-1" style={{ color: 'var(--background-tradepanel-alt)' }}>{msg}</p>
       )}
     </div>
   );

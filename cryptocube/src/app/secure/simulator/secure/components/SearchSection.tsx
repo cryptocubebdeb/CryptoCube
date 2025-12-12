@@ -101,21 +101,29 @@ export default function SearchSection() {
   return (
     <div
       ref={containerRef}
-      className="bg-[#11131b] border border-[#23252c] rounded-xl p-6 transition-all duration-300 ease-out"
-      style={{ paddingBottom: open ? "1.5rem" : "1.5rem" }}
+      className="shadow-lg rounded-xl p-6 transition-all duration-300 ease-out"
+      style={{ paddingBottom: open ? "1.5rem" : "1.5rem", background: "var(--color-container-bg)" }}
     >
       {/* Section header */}
-      <h2 className="text-xl font-bold text-yellow-400 mb-3">{t('search.title')}</h2>
-      <p className="text-sm text-slate-400 mb-4">{t('search.subtitle')}</p>
+      <h2 className="text-xl font-bold" style={{ color: 'var(--foreground-alt)', marginBottom: '0.75rem' }}>{t('search.title')}</h2>
+      <p className="text-sm mb-4" style={{ color: 'var(--foreground-grey)' }}>{t('search.subtitle')}</p>
 
       {/* Search input bar */}
-      <div className="flex items-center bg-slate-800 rounded-full px-4 py-2 transition-shadow duration-200">
-        <Search size={18} className="text-white/60" />
+      <div
+        className="flex items-center rounded-full px-4 py-2 transition-shadow duration-200"
+        style={{
+          background: 'var(--background-search)',
+        }}
+      >
+        <Search size={18} style={{ color: 'var(--background)', opacity: 0.7 }} />
         <input
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder={t('search.placeholder')}
-          className="ml-3 w-full bg-transparent text-white placeholder-white/50 outline-none"
+          className="ml-3 w-full bg-transparent outline-none placeholder:text-[var(--foreground-grey)]"
+          style={{
+            color: 'var(--foreground-search)',
+          }}
         />
       </div>
 
@@ -124,30 +132,36 @@ export default function SearchSection() {
         className="overflow-hidden transition-all duration-300 ease-out mt-3 rounded-lg"
         style={{ height: dropdownHeight }}
       >
-        <div className="bg-slate-800 border border-[#23252c] rounded-lg h-full overflow-y-auto">
+        <div
+          className="border border-[#23252c] rounded-lg h-full overflow-y-auto"
+          style={{ background: 'var(--background-search)' }}
+        >
           {loading ? (
-            <div className="px-4 py-3 text-sm text-white/70">{t('search.searching')}</div>
+            <div className="px-4 py-3 text-sm" style={{ color: 'var(--background)', opacity: 0.6 }}>{t('search.searching')}</div>
           ) : results.length > 0 ? (
             results.map((coin) => (
               <Link
                 key={coin.id}
                 href={`/secure/specificCoin/${coin.id}`}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-slate-700 text-white transition"
+                className="flex items-center gap-3 px-4 py-3 transition"
+                style={{ color: 'var(--foreground-search)' }}
                 onClick={() => setOpen(false)}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--background-search-hover)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = ''; }}
               >
                 {coin.thumb ? (
                   <img src={coin.thumb} className="w-7 h-7 rounded" alt={coin.name} />
                 ) : (
-                  <div className="w-7 h-7 rounded bg-white/10" />
+                  <div className="w-7 h-7 rounded" style={{ background: 'rgba(255,255,255,0.10)' }} />
                 )}
                 <div className="flex flex-col text-sm">
-                  <span className="font-medium">{coin.name}</span>
-                  <span className="text-white/60 uppercase">{coin.symbol}</span>
+                  <span className="font-medium" style={{ color: 'var(--foreground-search)' }}>{coin.name}</span>
+                  <span className="uppercase" style={{ color: 'var(--foreground-background)', opacity: 0.7 }}>{coin.symbol}</span>
                 </div>
               </Link>
             ))
           ) : query.length > 0 ? (
-            <div className="px-4 py-3 text-sm text-white/60">{t('search.noMatches')}</div>
+            <div className="px-4 py-3 text-sm" style={{ color: 'var(--foreground-grey)' }}>{t('search.noMatches')}</div>
           ) : null}
         </div>
       </div>

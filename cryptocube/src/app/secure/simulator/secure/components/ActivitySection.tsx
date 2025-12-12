@@ -87,11 +87,10 @@ export default function ActivitySection() {
   }, [executedTrades, sideFilter, kindFilter, coinFilter]);
 
   return (
-    <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
-
+    <div className="shadow-lg rounded-xl p-6" style={{ backgroundColor: 'var(--color-container-bg)' }}>
       {/* Header section with filters */}
       <div className="flex items-center justify-between mb-4 gap-4">
-        <h2 className="text-xl font-bold text-yellow-400">
+        <h2 className="text-xl font-bold" style={{ color: 'var(--foreground-alt)' }}>
           {t("activity.title")}
         </h2>
 
@@ -100,18 +99,31 @@ export default function ActivitySection() {
 
           {/* Filter for BUY / SELL / ALL */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">{t("activity.side")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.side")}</span>
 
-            <div className="flex rounded-lg overflow-hidden border border-[#23252c]">
+            <div className="flex rounded-lg overflow-hidden shadow-sm">
               {(["ALL", "BUY", "SELL"] as SideFilter[]).map((value) => (
                 <button
                   key={value}
                   onClick={() => setSideFilter(value)}
-                  className={`px-2 py-1 ${
-                    sideFilter === value
-                      ? "bg-yellow-400 text-black"
-                      : "bg-[#15171f] text-slate-300 hover:bg-[#1b1e26]"
-                  }`}
+                  style={{
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: 0,
+                    fontSize: '0.95rem',
+                    background: sideFilter === value ? 'var(--foreground-alt)' : 'var(--auth-background)',
+                    color: sideFilter === value ? 'var(--background)' : 'var(--foreground-grey)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background 0.18s',
+                    fontWeight: sideFilter === value ? 700 : 400,
+                    boxShadow: sideFilter === value ? '0 1px 6px 0 rgba(0,0,0,0.10)' : undefined,
+                  }}
+                  onMouseOver={e => {
+                    if (sideFilter !== value) e.currentTarget.style.background = 'var(--chart-range-hover)';
+                  }}
+                  onMouseOut={e => {
+                    if (sideFilter !== value) e.currentTarget.style.background = 'var(--auth-background)';
+                  }}
                 >
                   {value === "ALL"
                     ? t("activity.all")
@@ -125,18 +137,31 @@ export default function ActivitySection() {
 
           {/* Filter for MARKET / LIMIT / ALL */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">{t("activity.type")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.type")}</span>
 
             <div className="flex rounded-lg overflow-hidden border border-[#23252c]">
               {(["ALL", "MARKET", "LIMIT"] as KindFilter[]).map((value) => (
                 <button
                   key={value}
                   onClick={() => setKindFilter(value)}
-                  className={`px-2 py-1 ${
-                    kindFilter === value
-                      ? "bg-yellow-400 text-black"
-                      : "bg-[#15171f] text-slate-300 hover:bg-[#1b1e26]"
-                  }`}
+                  style={{
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: 0,
+                    fontSize: '0.95rem',
+                    background: kindFilter === value ? 'var(--foreground-alt)' : 'var(--auth-background)',
+                    color: kindFilter === value ? 'var(--background)' : 'var(--foreground-grey)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background 0.18s',
+                    fontWeight: kindFilter === value ? 700 : 400,
+                    boxShadow: kindFilter === value ? '0 1px 6px 0 rgba(0,0,0,0.10)' : undefined,
+                  }}
+                  onMouseOver={e => {
+                    if (kindFilter !== value) e.currentTarget.style.background = 'var(--chart-range-hover)';
+                  }}
+                  onMouseOut={e => {
+                    if (kindFilter !== value) e.currentTarget.style.background = 'var(--auth-background)';
+                  }}
                 >
                   {value === "ALL"
                     ? t("activity.all")
@@ -150,12 +175,13 @@ export default function ActivitySection() {
 
           {/* Filter by coin */}
           <div className="flex items-center gap-1">
-            <span className="text-slate-500">{t("activity.coin")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.coin")}</span>
 
             <select
               value={coinFilter}
               onChange={(e) => setCoinFilter(e.target.value)}
-              className="bg-[#15171f] border border-[#23252c] text-slate-200 px-2 py-1 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              className="border border-[#23252c] text-slate-200 px-2 py-1 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-yellow-400"
+              style={{ backgroundColor: 'var(--simulator-wallet-coins)', color: 'var(--foreground-grey)' }}
             >
               {coinOptions.map((symbol) => (
                 <option key={symbol} value={symbol}>

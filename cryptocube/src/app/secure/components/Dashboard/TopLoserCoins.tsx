@@ -39,9 +39,21 @@ export default function TopLoserCoins(): React.JSX.Element {
 
     if (loading) {
         return (
-            <Typography variant="body2" sx={{ textAlign: 'center', mt: 2, color: 'white' }}>
-                Chargement des plus fortes baisses...
-            </Typography>
+            // squelettes - placeholders bleus translucides
+            <div className="space-y-2">
+                {[1,2,3].map(i => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded animate-pulse" style={{ backgroundColor: 'rgba(59,130,246,0.04)' }}>
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
+                            <div className="space-y-1">
+                                <div className="h-4 w-40 rounded" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
+                                <div className="h-3 w-20 rounded" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
+                            </div>
+                        </div>
+                        <div className="h-4 w-14 rounded" style={{ backgroundColor: 'rgba(59,130,246,0.06)' }} />
+                    </div>
+                ))}
+            </div>
         );
     }
 
@@ -70,7 +82,7 @@ export default function TopLoserCoins(): React.JSX.Element {
                         borderBottom: index < 2 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
                         cursor: 'pointer',
                         '&:hover': {
-                            backgroundColor: '#1a1a20ff',
+                            backgroundColor: 'var(--background-hover)',
                         },
                         transition: 'background-color 0.2s ease',
                     }}
@@ -85,11 +97,11 @@ export default function TopLoserCoins(): React.JSX.Element {
                         />
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="body1" sx={{ fontWeight: 500, color: 'white' }}>
+                            <Typography variant="body1" sx={{ fontWeight: 500, color: 'var(--foreground)' }}>
                                 {coin.name}
                             </Typography>
 
-                            <Typography variant="body1" sx={{ color: 'gray' }}>
+                            <Typography variant="body1" sx={{ color: 'var(--foreground-alt)' }}>
                                 {coin.symbol.toUpperCase()}
                             </Typography>
                         </Box>
@@ -97,20 +109,20 @@ export default function TopLoserCoins(): React.JSX.Element {
 
                 {/* Prix actuel et changement */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="body1" sx={{ fontWeight: 500, color: 'white' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: 'var(--foreground)' }}>
                         ${coin.current_price.toFixed(2)}
                     </Typography>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 2, marginRight: 2 }}>
                         {coin.price_change_percentage_24h >= 0 ? (
-                            <TrendingUpIcon sx={{ color: '#4caf50', fontSize: '1rem' }} />
+                            <TrendingUpIcon sx={{ color: 'var(--color-green)', fontSize: '1rem' }} />
                         ) : (
-                            <TrendingDownIcon sx={{ color: '#f44336', fontSize: '1rem' }} />
+                            <TrendingDownIcon sx={{ color: 'var(--color-red)', fontSize: '1rem' }} />
                         )}
 
                         <Typography
                             variant="body1"
-                            sx={{ color: coin.price_change_percentage_24h >= 0 ? '#4caf50' : '#f44336' }}
+                            sx={{ color: coin.price_change_percentage_24h >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}
                         >
                             {coin.price_change_percentage_24h >= 0 ? '+' : ''}
                             {coin.price_change_percentage_24h.toFixed(2)}%

@@ -67,7 +67,7 @@ export default function WatchlistCarousel() {
 
   if (loading) {
     return (
-      <Box sx={{ textAlign: 'center', py: 8, color: '#9CA3AF' }}>
+      <Box sx={{ textAlign: 'center', py: 8, color: 'var(--foreground)' }}>
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
         <Typography>Chargement de votre liste de suivi...</Typography>
       </Box>
@@ -84,7 +84,7 @@ export default function WatchlistCarousel() {
 
   if (coins.length === 0) {
     return (
-      <Box sx={{ textAlign: 'center', py: 8, color: '#9CA3AF' }}>
+      <Box sx={{ textAlign: 'center', py: 8, color: 'var(--foreground-grey)' }}>
         <Typography variant="h6" gutterBottom>
           Votre liste de suivi est vide
         </Typography>
@@ -173,14 +173,14 @@ export default function WatchlistCarousel() {
               key={coin.id}
               onClick={() => handleCoinClick(coin.id)}
               sx={{
-                backgroundColor: '#181f29ff',
+                backgroundColor: 'var(--background-watchlist-card)',
                 boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)',
                 borderRadius: '16px',
                 padding: '20px',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 '&:hover': {
-                  backgroundColor: '#374151',
+                  backgroundColor: 'var(--background-watchlist-card-hover)',
                   transform: 'translateY(-4px)',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                 }
@@ -202,7 +202,7 @@ export default function WatchlistCarousel() {
                   <Typography
                     variant="h6"
                     sx={{
-                      color: '#FFFFFF',
+                      color: 'var(--foreground)',
                       fontWeight: 600,
                       fontSize: '1.1rem',
                       whiteSpace: 'nowrap',
@@ -215,7 +215,7 @@ export default function WatchlistCarousel() {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: '#9CA3AF',
+                      color: 'var(--foreground-grey)',
                       textTransform: 'uppercase',
                       fontSize: '0.85rem'
                     }}
@@ -242,7 +242,7 @@ export default function WatchlistCarousel() {
                 <Typography
                   variant="h5"
                   sx={{
-                    color: '#FFFFFF',
+                    color: 'var(--foreground)',
                     fontWeight: 700,
                     mb: 0.5,
                     fontSize: '1.35rem'
@@ -252,14 +252,14 @@ export default function WatchlistCarousel() {
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   {isPositive ? (
-                    <TrendingUpIcon sx={{ color: '#10B981', fontSize: 20 }} />
+                    <TrendingUpIcon sx={{ color: 'var(--color-green)', fontSize: 20 }} />
                   ) : (
-                    <TrendingDownIcon sx={{ color: '#EF4444', fontSize: 20 }} />
+                    <TrendingDownIcon sx={{ color: 'var(--color-red)', fontSize: 20 }} />
                   )}
                   <Typography
                     variant="body1"
                     sx={{
-                      color: isPositive ? '#10B981' : '#EF4444',
+                      color: isPositive ? 'var(--color-green)' : 'var(--color-red)',
                       fontWeight: 600,
                       fontSize: '1rem'
                     }}

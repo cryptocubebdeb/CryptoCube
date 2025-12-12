@@ -27,7 +27,10 @@
     "title": "Mes Paramètres",
     "loading": "Chargement...",
     "mustLogin": "Veuillez vous connecter pour accéder à vos paramètres",
-    "language": "Langue"
+    "language": "Langue",
+    "appearance": "Apparence",
+    "lightMode": "Mode clair :",
+    "darkMode": "Mode sombre :"
   },
   "sidebar": {
     "title": "Mon Compte",
@@ -379,7 +382,15 @@
   "realTimeFrom": "Prix mis à jour en temps réel depuis CoinGecko",
   "source": "Source",
   "unknown": "Inconnu",
-  "pricesUpdatedFrom": "prix mis à jour depuis CoinGecko"
+  "pricesUpdatedFrom": "prix mis à jour depuis CoinGecko",
+
+  "livebinancetrades": "Transactions Binance en direct",
+  "tradeTime": "Heure",
+  "tradePrice": "Prix",
+  "tradeAmount": "Montant",
+  "tradeSide": "Côté",
+  "tradeSell": "VENTE",
+  "tradeBuy": "ACHAT"
 },
 "markets": {
   "loading": "Chargement des données du marché...",

@@ -115,28 +115,31 @@ export default function WalletSection() {
   }
 
   return (
-    <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
+    <div
+      className="shadow-lg rounded-xl p-6"
+      style={{ background: "var(--color-container-bg)" }}
+    >
 
       {/* Title + Available Cash */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-yellow-400">
+        <h2 className="text-xl font-bold" style={{ color: "var(--foreground-alt)" }}>
           {translator("wallet.title")}
         </h2>
 
-        <p className="text-sm text-slate-400">
-          {translator("wallet.availableCash")}{" "}
-          <span className="text-white">${cashBalance.toFixed(2)}</span>
+        <p className="text-sm" style={{ color: "var(--foreground-grey)" }}>
+          {translator("wallet.availableCash")} {" "}
+          <span style={{ color: "var(--foreground)" }}>${cashBalance.toFixed(2)}</span>
         </p>
       </div>
 
       {/* Loading */}
       {isLoading && (
-        <p className="text-slate-400">{translator("wallet.loading")}</p>
+        <p style={{ color: "var(--foreground-grey)" }}>{translator("wallet.loading")}</p>
       )}
 
       {/* No holdings */}
       {!isLoading && portfolioHoldings.length === 0 && (
-        <p className="text-slate-500">{translator("wallet.noHoldings")}</p>
+        <p style={{ color: "var(--foreground-grey)" }}>{translator("wallet.noHoldings")}</p>
       )}
 
       {/* Chart + List */}
@@ -153,7 +156,10 @@ export default function WalletSection() {
             {portfolioHoldings.map((holding) => (
               <div
                 key={holding.coinId}
-                className="flex items-center justify-between bg-[#15171f] border border-[#23252c] px-4 py-3 rounded-lg cursor-pointer hover:bg-[#1b1e27]"
+                className="flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer shadow-sm"
+                style={{ background: "var(--simulator-wallet-coins)" }}
+                onMouseOver={e => e.currentTarget.style.background = 'var(--simulator-wallet-coins-hover)'}
+                onMouseOut={e => e.currentTarget.style.background = 'var(--simulator-wallet-coins)'}
                 onClick={() =>
                   router.push(`/secure/specificCoin/${holding.coinId}`)
                 }
@@ -168,9 +174,9 @@ export default function WalletSection() {
                   />
 
                   <div>
-                    <p className="text-white font-semibold">{holding.coinSymbol}</p>
+                    <p className="font-semibold" style={{ color: "var(--foreground)" }}>{holding.coinSymbol}</p>
 
-                    <p className="text-slate-400 text-xs">
+                    <p className="text-xs" style={{ color: "var(--foreground-grey)" }}>
                       {(
                         (holding.currentValueUsd / totalPortfolioValue) *
                         100
@@ -182,10 +188,10 @@ export default function WalletSection() {
 
                 {/* Right: value + amount */}
                 <div className="text-right">
-                  <p className="text-white font-semibold">
+                  <p className="font-semibold" style={{ color: "var(--foreground)" }}>
                     ${holding.currentValueUsd.toFixed(2)}
                   </p>
-                  <p className="text-slate-400 text-xs">
+                  <p className="text-xs" style={{ color: "var(--foreground-grey)" }}>
                     {holding.amountOwned.toFixed(6)}
                   </p>
                 </div>

@@ -20,7 +20,8 @@ export default function LanguageSelector() {
       {/* Dropdown Button */}
       <button
         onClick={() => setOpen(!open)}
-        className="bg-zinc-800 text-white px-5 py-2 rounded-lg border border-zinc-700 hover:bg-zinc-700 transition flex items-center gap-2"
+        style={{ background: 'var(--background-search)', color: 'var(--foreground-search)', border: '1px solid var(--background-search-hover)' }}
+        className="px-5 py-2 rounded-lg transition flex items-center gap-2"
       >
         🌐 {currentLang}
         <span className={`transition-transform ${open ? "rotate-180" : ""}`}>
@@ -30,17 +31,23 @@ export default function LanguageSelector() {
 
       {/* Menu */}
       {open && (
-        <div className="absolute mt-2 w-40 bg-zinc-800 border border-zinc-700 rounded-lg shadow-lg z-20">
+        <div className="absolute mt-2 w-40 rounded-lg shadow-lg z-20" style={{ background: 'var(--background-search)', border: '1px solid var(--background-search-hover)' }}>
           <button
             onClick={() => changeLang("fr")}
-            className="w-full text-left px-4 py-2 text-white hover:bg-zinc-700 flex items-center gap-2"
+            className="w-full text-left px-4 py-2 flex items-center gap-2"
+            style={{ color: 'var(--foreground-search)', background: 'transparent' }}
+            onMouseOver={e => (e.currentTarget.style.background = 'var(--background-search-hover)')}
+            onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
           >
             🇫🇷 Français
           </button>
 
           <button
             onClick={() => changeLang("en")}
-            className="w-full text-left px-4 py-2 text-white hover:bg-zinc-700 flex items-center gap-2"
+            className="w-full text-left px-4 py-2 flex items-center gap-2"
+            style={{ color: 'var(--foreground-search)', background: 'transparent' }}
+            onMouseOver={e => (e.currentTarget.style.background = 'var(--background-search-hover)')}
+            onMouseOut={e => (e.currentTarget.style.background = 'transparent')}
           >
             🇬🇧 English
           </button>

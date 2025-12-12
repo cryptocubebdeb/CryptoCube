@@ -27,7 +27,10 @@
     "title": "My Settings",
     "loading": "Loading...",
     "mustLogin": "Please log in to access your settings",
-    "language": "Language"
+    "language": "Language",
+    "appearance": "Appearance",
+    "lightMode": "Light Mode :",
+    "darkMode": "Dark Mode :"
   },
   "sidebar": {
     "title": "My Account",
@@ -378,7 +381,15 @@
   "realTimeFrom": "Real-time prices from CoinGecko",
   "source": "Source",
   "unknown": "Unknown",
-  "pricesUpdatedFrom": "prices updated from CoinGecko"
+  "pricesUpdatedFrom": "prices updated from CoinGecko",
+
+  "livebinancetrades": "Live Binance Trades",
+  "tradeTime": "Time",
+  "tradePrice": "Price",
+  "tradeAmount": "Amount",
+  "tradeSide": "Side",
+  "tradeSell": "SELL",
+  "tradeBuy": "BUY"
 },
 "markets": {
     "loading": "Loading market data...",

@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function DashboardContent() {
   const { t } = useTranslation();
+
   const [loading, setLoading] = useState(true);
 
   // Store user's current cash balance
@@ -112,7 +113,7 @@ export default function DashboardContent() {
           marginLeft: 'auto',
           marginRight: 'auto',
           width: '90%',
-          height: hasPortfolio ? '650px' : '500px',
+          height: hasPortfolio ? '700px' : '500px',
           boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
         }}
 
@@ -123,21 +124,21 @@ export default function DashboardContent() {
         {hasPortfolio ? (
           <>
             <div className="flex flex-col gap-2 mt-7 mb-5">
-              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt" }}>{t('dashboard.portfolioOverview')}</h2>
+              <h2 className="text-3xl font-bold mb-5" style={{ color: "var(--foreground-alt)" }}>{t('dashboard.portfolioOverview')}</h2>
               {loading ? (
                 <p className="text-slate-400 text-sm">Loading data…</p>
               ) : (
                 <div className="grid grid-cols-3 gap-50 mb-5 text-sm">
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.cash')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.cash')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{getFormatPrix(cash)}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.holdings')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.holdings')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{holdings.length}</p>
                   </div>
                   <div>
-                    <p style={{ color: "var(--foreground)", opacity: "0.8" }} className="text-xl mb-2">{t('dashboard.pendingOrders')}</p>
+                    <p style={{ color: "var(--foreground-grey)", opacity: 0.8 }} className="text-xl mb-2">{t('dashboard.pendingOrders')}</p>
                     <p style={{ color: "var(--foreground)" }} className="text-xl font-semibold">{pendingOrders.length}</p>
                   </div>
                 </div>
@@ -169,15 +170,15 @@ export default function DashboardContent() {
                 mb: 1,
                 padding: '16px 40px',
                 borderRadius: '15px',
-                borderColor: '#FFDD00',
+                borderColor: 'var(--foreground-alt)',
                 borderWidth: '1.5px',
-                color: '#FFDD00',
+                color: 'var(--foreground-alt)',
                 fontWeight: 'bold',
                 transition: 'all 0.3s ease',
                 '&:hover': {
-                  backgroundColor: '#e6c200',
-                  color: 'black',
-                  borderColor: '#e6c200',
+                  backgroundColor: 'var(--foreground-alt)',
+                  color: 'var(--background)',
+                  borderColor: 'var(--foreground-alt)',
                   boxShadow: '0 4px 20px rgba(255, 221, 0, 0.3)'
                 }
               }}

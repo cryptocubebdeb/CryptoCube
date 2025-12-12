@@ -35,7 +35,7 @@ export default function SearchBar({ searchTerm, onSearchChange, placeholder = "E
             '& .MuiOutlinedInput-root': {
               transition: 'border-color 0.3s',
               borderRadius: '50px',
-              color: '#fff',
+              color: 'var(--foreground)',
               '& fieldset': {
                 borderColor: '#434344ff', // Change border color (default state)
                 borderWidth: '2px', // Make border thicker

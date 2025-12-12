@@ -86,11 +86,10 @@ export default function BuySection({ coinId, symbol, price, logo }) {
   }
 
   return (
-    <div className="bg-[#0e1117] border border-yellow-400/30 rounded-lg p-3 w-full max-w-sm shadow-lg">
-      
+  <div className="rounded-lg p-3 w-full max-w-sm shadow-lg" style={{ background: 'var(--color-container-bg)', border: '1px solid var(--foreground-alt)', color: 'var(--foreground)' }}>
       {/* When Binance doesn’t support this coin */}
       {binanceAvailable === false && (
-        <p className="text-red-400 text-sm mb-2 text-center">
+        <p className="text-sm mb-2 text-center" style={{ color: 'var(--color-red)' }}>
           This coin is not available for trading on Binance.
         </p>
       )}
@@ -100,11 +99,17 @@ export default function BuySection({ coinId, symbol, price, logo }) {
         <button
           onClick={toggleBuy}
           disabled={binanceAvailable === false}
-          className={`flex-1 py-1.5 rounded-md text-sm font-semibold ${
-            openPanel === "BUY"
-              ? "bg-yellow-400 text-black"
-              : "bg-white/10 text-white/70 hover:bg-white/20"
-          } ${binanceAvailable === false ? "opacity-40 cursor-not-allowed" : ""}`}
+          style={{
+            background: openPanel === "BUY" ? 'var(--foreground-alt)' : 'rgba(9, 41, 224, 0.08)',
+            color: openPanel === "BUY" ? 'var(--background)' : 'var(--foreground)',
+            opacity: binanceAvailable === false ? 0.4 : 1,
+            cursor: binanceAvailable === false ? 'not-allowed' : 'pointer',
+            borderRadius: '6px',
+            fontWeight: 600,
+            fontSize: '1rem',
+            padding: '0.375rem 0',
+            flex: 1
+          }}
         >
           BUY
         </button>
@@ -112,13 +117,25 @@ export default function BuySection({ coinId, symbol, price, logo }) {
         <button
           onClick={toggleSell}
           disabled={!hasCoin || binanceAvailable === false}
-          className={`flex-1 py-1.5 rounded-md text-sm font-semibold ${
-            !hasCoin || binanceAvailable === false
-              ? "bg-white/5 text-white/30 cursor-not-allowed"
+          style={{
+            background: !hasCoin || binanceAvailable === false
+              ? 'rgba(17, 81, 229, 0.05)'
               : openPanel === "SELL"
-              ? "bg-yellow-400 text-black"
-              : "bg-white/10 text-white/70 hover:bg-white/20"
-          }`}
+                ? 'var(--foreground-alt)'
+                : 'rgba(13, 67, 216, 0.08)',
+            color: !hasCoin || binanceAvailable === false
+              ? 'var(--foreground)'
+              : openPanel === "SELL"
+                ? 'var(--foreground)'
+                : 'var(--foreground)',
+            opacity: !hasCoin || binanceAvailable === false ? 0.3 : 1,
+            cursor: !hasCoin || binanceAvailable === false ? 'not-allowed' : 'pointer',
+            borderRadius: '6px',
+            fontWeight: 600,
+            fontSize: '1rem',
+            padding: '0.375rem 0',
+            flex: 1
+          }}
         >
           SELL
         </button>

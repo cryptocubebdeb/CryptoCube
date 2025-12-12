@@ -7,15 +7,10 @@ import ActivitySection from "./components/ActivitySection";
 
 export default function SimulatorPage() {
   return (
-    <div className="space-y-24 pb-32">
+    <div className="space-y-10 pb-32">
       {/* Dashboard / Overview */}
       <section id="home" className="scroll-mt-10">
         <HomeSection />
-      </section>
-
-      {/* Analytics / Percent */}
-      <section id="percent" className="scroll-mt-32">
-        <PercentSection />
       </section>
 
       {/* Portfolio / Wallet */}
@@ -28,18 +23,20 @@ export default function SimulatorPage() {
         <SearchSection />
       </section>
 
+      {/* Analytics / Percent / Performance */}
+      <section id="percent" className="scroll-mt-32">
+        <PercentSection />
+      </section>
+
       {/* Pending orders */}
       <section id="orders" className="scroll-mt-32">
         <OrdersSection />
       </section>
 
       {/* Trade history / activity */}
-      <section id="activity" className="scroll-mt-32">
+      <section id="activity" className="scroll-mt-32 mb-60">
         <ActivitySection />
       </section>
-
-
-
     </div>
   );
 }

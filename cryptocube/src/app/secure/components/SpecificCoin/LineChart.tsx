@@ -154,7 +154,7 @@ function createLineChart(data: any[], {
         .call(xAxis);
 
     svg.selectAll(".x-axis text")
-        .attr("fill", "#ffffff40")     // light gray text color
+        .attr("fill", "var(--x-axis-text-color)")     // light gray text color
         .style("font-size", "20px")  // larger text
         .style("font-weight", "500");
 
@@ -195,7 +195,7 @@ function createLineChart(data: any[], {
 
 
     svg.selectAll(".y-axis text")
-        .attr("fill", "#ffffff40")
+        .attr("fill", "var(--y-axis-text-color)") // light gray text color
         .style("font-size", "20px")
         .style("font-weight", "500");
 

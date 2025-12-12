@@ -83,16 +83,29 @@ export default function PortfolioChart({ width, height }: { width?: number; heig
   return (
     <div ref={containerRef} className="shadow-md w-full max-w-[1600px] mx-auto">
       {/* RANGE SELECTOR */}
-      <div className="flex gap-3 justify-end mb-4 pr-4">
+      <div className="flex gap-2 mb-4 mr-3 justify-end">
         {RANGES.map((r) => (
           <button
             key={r.key}
             onClick={() => setSelectedRange(r.key)}
-            className={`px-3 py-1 rounded text-sm transition-all ${
-              selectedRange === r.key
-                ? "bg-yellow-400 text-black font-bold shadow"
-                : "bg-slate-800 text-white/70 hover:bg-slate-700"
-            }`}
+            style={{
+              padding: '0.25rem 0.75rem',
+              borderRadius: '0.375rem',
+              fontSize: '0.95rem',
+              background: selectedRange === r.key ? 'var(--foreground-alt)' : 'var(--auth-background)',
+              color: selectedRange === r.key ? 'var(--background)' : 'var(--foreground-grey)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'background 0.18s',
+              fontWeight: selectedRange === r.key ? 700 : 400,
+              boxShadow: selectedRange === r.key ? '0 1px 6px 0 rgba(0,0,0,0.10)' : undefined,
+            }}
+            onMouseOver={e => {
+              if (selectedRange !== r.key) e.currentTarget.style.background = 'var(--chart-range-hover)';
+            }}
+            onMouseOut={e => {
+              if (selectedRange !== r.key) e.currentTarget.style.background = 'var(--auth-background)';
+            }}
           >
             {r.key}
           </button>

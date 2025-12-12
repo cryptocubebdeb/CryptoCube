@@ -89,7 +89,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex h-screen p-10">
+  <div className="flex h-screen p-10">
       {/* userId is now a string */}
       <Sidebar userId={userId} />
 

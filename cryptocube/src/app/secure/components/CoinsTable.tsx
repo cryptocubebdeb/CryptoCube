@@ -85,7 +85,19 @@ export default function CoinsTable({
             coins.map((coin, index) => (
               <tr
                 key={coin.id}
-                className={`border-b border-gray-500 ${isClickable ? 'hover:bg-zinc-900 transition-colors cursor-pointer' : ''} h-[73px]`}
+                style={{
+                  borderBottom: "1px solid var(--foreground-grey)",
+                  height: "73px",
+                  backgroundColor: undefined,
+                  transition: isClickable ? "background 0.2s" : undefined
+                }}
+                className={isClickable ? "transition-colors cursor-pointer" : ""}
+                onMouseEnter={e => {
+                  if (isClickable) e.currentTarget.style.backgroundColor = "var(--background-hover)";
+                }}
+                onMouseLeave={e => {
+                  if (isClickable) e.currentTarget.style.backgroundColor = "";
+                }}
                 onClick={() => isClickable && onRowClick && onRowClick(coin.id)}
               >
                 <td className="py-6 px-4 w-16">

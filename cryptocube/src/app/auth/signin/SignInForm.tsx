@@ -123,8 +123,8 @@ export function SignInForm({ urlError }: { urlError?: string }) {
           onSubmit={handleSubmit}
           sx={{
             width: 500,
-            bgcolor: "#15171E",
-            color: "white",
+            bgcolor: "var(--auth-background)",
+            color: "var(--foreground)",
             p: 4,
             borderRadius: 2,
             boxShadow: 3,
@@ -146,10 +146,10 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 sx: {
                   borderRadius: 2,
                   bgcolor: "rgba(255,255,255,0.08)",
-                  color: "white",
+                  color: "var(--foreground)",
                 },
               }}
-              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
+              InputLabelProps={{ sx: { color: "var(--foreground-grey)" } }}
             />
 
             <TextField
@@ -167,7 +167,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 sx: {
                   borderRadius: 2,
                   bgcolor: "rgba(255,255,255,0.08)",
-                  color: "white",
+                  color: 'var(--foreground)',
                 },
                 endAdornment: (
                   <InputAdornment position="end">
@@ -184,7 +184,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                   </InputAdornment>
                 ),
               }}
-              InputLabelProps={{ sx: { color: "rgba(255,255,255,0.6)" } }}
+              InputLabelProps={{ sx: { color: "var(--foreground-grey)" } }}
             />
 
             {message && (
@@ -210,7 +210,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
               </Button>
             </Box>
 
-            <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }}>{t("signin.orWith")}</Divider>
+            <Divider sx={{ color: 'var(--foreground-grey)', borderColor: "rgba(229, 24, 24, 0.2)" }}>{t("signin.orWith")}</Divider>
 
             <div className="flex justify-center gap-6">
               <button
@@ -225,22 +225,23 @@ export function SignInForm({ urlError }: { urlError?: string }) {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-white hover:bg-gray-100"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600"
                 aria-label={t("signin.oauthGoogle")}
               >
-                <FaGoogle className="w-7 h-7" />
+                <FaGoogle className="w-7 h-7 text-white" />
               </button>
 
               <button
                 type="button"
                 onClick={handleGitHubSignIn}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-900 hover:bg-black"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-900 hover:bg-emerald-950"
                 aria-label={t("signin.oauthGitHub")}
               >
                 <FaGithub className="w-7 h-7 text-white" />
               </button>
             </div>
-            <p className="text-center text-sm mt-2 text-gray-300">
+
+            <p style={{ color: 'var(--foreground-grey)' }} className="text-center text-sm mt-2">
               {t("signin.noAccount")} {" "}
               <Link href="/auth/signup" className="underline">
                 {t("signin.signup")}
