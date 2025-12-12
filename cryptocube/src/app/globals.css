@@ -3,14 +3,14 @@
 
 :root {
     --background: #0c0c11;
-    --background-landing:
-    --background-footer: rgb(25, 32, 43);
+    --background-landing: #0C0C11;
+    --background-footer: rgb(14, 16, 21);
     --foreground: #ededed;
     --foreground-grey: rgb(176, 176, 176);
     --foreground-alt: #FFDD00;
     --foreground-search: #ffffff;
     --color-main-bg: #1d202b;
-    --color-container-bg: rgb(23, 23, 28);
+    --color-container-bg: rgb(19, 19, 27);
     --chart-range-hover: #35374a;
     --x-axis-text-color: var(--foreground);
     --y-axis-text-color: var(--foreground);
@@ -50,6 +50,8 @@
 
     --color-green: #4caf50;
     --color-red: #ff0000;
+    --color-red-hover: rgb(220, 26, 26);
+    --color-red-light: #ff0000;
     --color-blue: #3B82F6;
 
     --news-dot-active: #dadadaff;
@@ -62,11 +64,14 @@
     --tradepanel-buttons-inactive: #262b35;
 
     --landing-alt: #e9ca00;
+
+    --simulator-wallet-coins: #15171f;
+    --simulator-wallet-coins-hover: #1b1e27;
 }
 
 .light {
     --background: #fdffff;
-    --background-footer: rgb(179, 191, 212);
+    --background-footer: rgb(172, 199, 220);
     --foreground: #000000;
     --foreground-grey: rgba(26, 26, 26, 0.753);
     --foreground-alt: #21335e;
@@ -74,6 +79,8 @@
     --chart-range-hover: rgb(219, 226, 242);
 
     --color-red: #f73636;
+    --color-red-hover: rgb(207, 22, 22);
+    --color-red-light: #ff9a9a;
     --color-green: #206d22;
     --color-blue: #0b3893;
 
@@ -88,8 +95,8 @@
     --background-hover: rgb(221, 230, 244);
     --background-filter: rgb(241, 244, 249);
     --background-filter-fields: rgb(205, 219, 239);
-    --background-watchlist-card: rgb(210, 223, 234);
-    --background-watchlist-card-hover: rgb(206, 218, 227);
+    --background-watchlist-card: rgb(213, 234, 250);
+    --background-watchlist-card-hover: rgb(203, 228, 247);
 
     --border-button-category: rgb(62, 62, 97);
     --background-button-category-hover: rgb(126, 143, 183);
@@ -125,6 +132,9 @@
     --tradepanel-buttons-inactive: rgb(183, 200, 218);
 
     --landing-alt: #0630ae;
+
+    --simulator-wallet-coins: rgb(220, 235, 248);
+    --simulator-wallet-coins-hover: rgb(216, 236, 251);
 }
 
 @theme inline {

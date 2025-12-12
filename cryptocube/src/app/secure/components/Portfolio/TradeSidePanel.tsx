@@ -263,7 +263,11 @@ export default function TradeSidePanel() {
             inputMode="decimal"
             value={limitPrice}
             onChange={(e) => setLimitPrice(e.target.value)}
-            className="w-full bg-[#0e1117] border border-white/10 rounded-xl px-3 py-2 text-sm outline-none"
+            className="w-full border border-white/10 rounded-xl px-3 py-2 text-sm outline-none"
+            style={{
+              backgroundColor: 'var(--tradepanel-background)',
+              color: 'var(--foreground)'
+            }}
           />
         </div>
       )}

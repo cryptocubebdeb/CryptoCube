@@ -23,7 +23,7 @@ export default function SimulatorPage() {
         <SearchSection />
       </section>
 
-      {/* Analytics / Percent */}
+      {/* Analytics / Percent / Performance */}
       <section id="percent" className="scroll-mt-32">
         <PercentSection />
       </section>

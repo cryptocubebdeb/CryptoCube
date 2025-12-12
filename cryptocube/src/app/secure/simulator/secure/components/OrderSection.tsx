@@ -90,11 +90,11 @@ export default function OrdersSection() {
   return (
     <div className="space-y-4">
       {/* Section title */}
-      <h2 className="text-xl font-bold text-yellow-400">{t('simulator.pendingOrders')}</h2>
-
+      <h2 className="text-xl font-bold" style={{ color: 'var(--foreground-alt)' }}>{t('simulator.pendingOrders')}</h2>
+    
       {/* Display message if there are no pending orders */}
       {orders.length === 0 && (
-        <p className="text-white/60 text-sm">{t('simulator.noPendingOrders')}</p>
+        <p className="text-sm" style={{ color: 'var(--foreground)', opacity: 0.6 }}>{t('simulator.noPendingOrders')}</p>
       )}
 
       {/* List of pending orders */}
@@ -102,7 +102,8 @@ export default function OrdersSection() {
         {orders.map((order) => (
           <div
             key={order.id}
-            className="rounded-xl bg-white/5 p-4 border border-white/10"
+            className="rounded-xl p-4 shadow-sm"
+            style={{ backgroundColor: 'var(--color-container-bg)' }}
           >
             <div className="flex justify-between items-center">
               {/* Left side: order details */}
@@ -111,19 +112,19 @@ export default function OrdersSection() {
                   {order.orderType === 'BUY' ? t('activity.buy').toUpperCase() : t('activity.sell').toUpperCase()} {order.coinSymbol}
 
                   {order.orderKind === "LIMIT" && (
-                    <span className="text-xs text-yellow-300 ml-2">({t('activity.limitAt', { price: Number(order.price).toFixed(2) })})</span>
+                    <span className="text-xs ml-2" style={{ color: 'var(--foreground-alt)' }}>({t('activity.limitAt', { price: Number(order.price).toFixed(2) })})</span>
                   )}
 
                   {order.orderKind === "MARKET" && (
-                    <span className="text-xs text-yellow-300 ml-2">({t('activity.market')})</span>
+                    <span className="text-xs ml-2" style={{ color: 'var(--foreground-alt)' }}>({t('activity.market')})</span>
                   )}
                 </p>
 
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs" style={{ color: 'var(--foreground-grey)', marginTop: '0.25rem' }}>
                   {t('simulator.amount')}: {Number(order.amount).toFixed(6)}
                 </p>
 
-                <p className="text-[10px] text-slate-500">
+                <p className="text-[10px]" style={{ color: 'var(--foreground-grey)' }}>
                   {t('simulator.placed')}: {new Date(order.createdAt).toLocaleString()}
                 </p>
               </div>
@@ -131,8 +132,10 @@ export default function OrdersSection() {
               {/* Right side: cancel button */}
               <button
                 onClick={() => cancelOrder(order.id)}
-                className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 
-                text-black text-xs rounded-md font-semibold"
+                className="px-3 py-1.5 text-xs rounded-md"
+                style={{ backgroundColor: 'var(--color-red)', color: 'var(--background)', transition: 'background 0.18s' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--color-red-hover)'; }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--color-red)'; }}
               >
                 {t('simulator.cancel')}
               </button>
@@ -143,7 +146,7 @@ export default function OrdersSection() {
 
       {/* Feedback message for user actions */}
       {msg && (
-        <p className="text-xs text-center text-yellow-300 mt-1">
+        <p className="text-xs text-center mt-1" style={{ color: 'var(--foreground-alt)' }}>
           {msg}
         </p>
       )}

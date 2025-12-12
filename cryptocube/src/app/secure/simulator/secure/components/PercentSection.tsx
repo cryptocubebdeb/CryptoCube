@@ -70,11 +70,14 @@ export default function PercentSection() {
   */
   if (isLoading) {
     return (
-      <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
-        <h2 className="text-xl font-bold text-yellow-400 mb-4">
+      <div 
+        className="shadow-lg rounded-xl p-6"
+        style={{ background: "var(--color-container-bg)" }}
+      >
+        <h2 className="text-xl font-bold mb-4" style={{ color: "var(--foreground-alt)" }}>
           {t("percent.title")}
         </h2>
-        <p className="text-sm text-slate-400">{t("percent.loading")}</p>
+        <p className="text-sm" style={{ color: "var(--foreground-grey)" }}>{t("percent.loading")}</p>
       </div>
     );
   }
@@ -84,11 +87,11 @@ export default function PercentSection() {
   */
   if (!valueData) {
     return (
-      <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
-        <h2 className="text-xl font-bold text-yellow-400 mb-4">
+      <div className="shadow-lg rounded-xl p-6" style={{ background: "var(--color-container-bg)" }}>
+        <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--foreground-alt)' }}>
           {t("percent.title")}
         </h2>
-        <p className="text-sm text-red-400">Failed to load performance data.</p>
+        <p className="text-sm" style={{ color: "var(--color-error)" }}>{t("percent.error")}</p>
       </div>
     );
   }
@@ -103,8 +106,8 @@ export default function PercentSection() {
   const totalReturnPercentage = valueData.totalReturnPct;
 
   return (
-    <div className="bg-[#11131b] border border-[#23252c] rounded-xl p-6">
-      <h2 className="text-xl font-bold text-yellow-400 mb-4">
+    <div className="shadow-lg rounded-xl p-6" style={{ background: "var(--color-container-bg)" }}>
+      <h2 className="text-xl font-bold mb-4" style={{ color: "var(--foreground-alt)" }}>
         {t("percent.title")}
       </h2>
 
@@ -112,46 +115,42 @@ export default function PercentSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         
         {/* total portfolio value */}
-        <div className="bg-[#15171f] border border-[#23252c] rounded-lg px-4 py-3">
-          <p className="text-xs text-slate-400 mb-1">
+        <div className="shadow-md rounded-lg px-4 py-3" style={{ backgroundColor: 'var(--simulator-wallet-coins)' }}>
+          <p className="text-xs mb-1" style={{ color: 'var(--foreground-grey)' }}>
             {t("percent.metricTotalValue")}
           </p>
-          <p className="text-lg font-semibold text-white">
+          <p className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>
             {formatUsd(portfolioValue)}
           </p>
         </div>
 
         {/* unrealized profit / loss */}
-        <div className="bg-[#15171f] border border-[#23252c] rounded-lg px-4 py-3">
-          <p className="text-xs text-slate-400 mb-1">
+        <div className="shadow-md rounded-lg px-4 py-3" style={{ backgroundColor: 'var(--simulator-wallet-coins)' }}>
+          <p className="text-xs mb-1" style={{ color: 'var(--foreground-grey)' }}>
             {t("percent.metricProfitLoss")}
           </p>
           <p
-            className={
-              "text-lg font-semibold " +
-              (unrealizedProfitLoss >= 0 ? "text-emerald-400" : "text-red-400")
-            }
+            className={"text-lg font-semibold "}
+            style={{ color: unrealizedProfitLoss >= 0 ? "var(--color-green)" : "var(--color-red)" }}
           >
             {formatUsd(unrealizedProfitLoss)}
-            <span className="text-sm text-slate-400 ml-1">
+            <span className="text-sm" style={{ color: 'var(--foreground-grey)' }}>
               ({formatPercentage(unrealizedPercentage)})
             </span>
           </p>
         </div>
 
         {/* total return (realized + unrealized) */}
-        <div className="bg-[#15171f] border border-[#23252c] rounded-lg px-4 py-3">
-          <p className="text-xs text-slate-400 mb-1">
+        <div className="shadow-md rounded-lg px-4 py-3" style={{ backgroundColor: 'var(--simulator-wallet-coins)' }}>
+          <p className="text-xs mb-1" style={{ color: 'var(--foreground-grey)' }}>
             {t("percent.metricTotalReturn")}
           </p>
           <p
-            className={
-              "text-lg font-semibold " +
-              (totalReturnUsd >= 0 ? "text-emerald-400" : "text-red-400")
-            }
+            className={"text-lg font-semibold "}
+            style={{ color: totalReturnUsd >= 0 ? "var(--color-green)" : "var(--color-red)" }}
           >
             {formatUsd(totalReturnUsd)}
-            <span className="text-sm text-slate-400 ml-1">
+            <span className="text-sm" style={{ color: 'var(--foreground-grey)' }}>
               ({formatPercentage(totalReturnPercentage)})
             </span>
           </p>

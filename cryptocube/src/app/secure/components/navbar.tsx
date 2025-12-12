@@ -331,8 +331,9 @@ export default function Navbar() {
             <div
               role="menu"
               aria-label={t("navbar.userMenu")}
+              style={{ backgroundColor: 'var(--background-search)' }}
               className={
-                "absolute left-1/2 mt-1 w-44 -translate-x-1/2 bg-slate-800 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
+                "absolute left-1/2 mt-1 w-44 -translate-x-1/2 rounded shadow-lg ring-1 ring-black/20 transform transition-all duration-150 " +
                 (userMenuOpen
                   ? "opacity-100 scale-100 pointer-events-auto"
                   : "opacity-0 scale-95 pointer-events-none")
@@ -409,7 +410,7 @@ export default function Navbar() {
                     }}
                     role="menuitem"
                     style={{
-                      color: "var(--color-red)"
+                      color: "var(--color-red-light)"
                     }}
                     className="w-full text-left block px-4 py-2 text-sm"
                     onMouseEnter={e => {

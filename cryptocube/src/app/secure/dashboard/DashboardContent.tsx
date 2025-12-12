@@ -113,7 +113,7 @@ export default function DashboardContent() {
           marginLeft: 'auto',
           marginRight: 'auto',
           width: '90%',
-          height: hasPortfolio ? '650px' : '500px',
+          height: hasPortfolio ? '700px' : '500px',
           boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
         }}
 

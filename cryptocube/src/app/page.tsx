@@ -76,7 +76,7 @@ export default function Page() {
 
         <div
           className="rounded-scrollbar w-[1200px] h-[1000px] overflow-y-auto rounded-4xl border-solid border-3 mx-auto"
-          style={{ boxShadow: "25px 30px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
+          style={{ boxShadow: "25px 30px 0 rgba(63, 59, 59, 0.7)", borderColor: "var(--landing-alt)" }}
         >
             <Image
               src="/images/portfoliosim.png"
@@ -102,7 +102,7 @@ export default function Page() {
         <div className="flex flex-row justify-center items-center gap-20">
           <div
             className="mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-2 hover:scale-110 transform transition-all duration-300"
-            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
+            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(63, 59, 59, 0.7)", borderColor: "var(--landing-alt)" }}
           >
             <h2 className="text-7xl text-center font-semibold">
               2500+ <br />
@@ -112,7 +112,7 @@ export default function Page() {
 
           <div
             className="self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-2 hover:scale-110 transform transition-all duration-300"
-            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
+            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(63, 59, 59, 0.7)", borderColor: "var(--landing-alt)" }}
           >
             <h2 className="text-7xl text-center font-semibold">
               $12M+ <br />

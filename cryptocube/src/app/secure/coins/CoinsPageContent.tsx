@@ -243,11 +243,11 @@ export default function Page() {
                         }}
                     >
                         {/* Titre principal */}
-                        <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
+                        <h1 className="text-3xl max-w-6xl md:text-4xl font-bold leading-tight">
                             {categoryDetails.name}
                         </h1>
                         {/* Sous-titre */}
-                        <p className="text-xl md:text-2xl font-light opacity-75">
+                        <p className="text-lg md:text-xl font-light opacity-75">
                             {categoryDetails.content}
                         </p>
 
@@ -265,7 +265,7 @@ export default function Page() {
                                     backgroundColor: 'var(--color-container-bg)',
                                     color: 'var(--foreground-grey)',
                                     height: '110px',
-                                    width: '290px',
+                                    width: '380px',
                                     borderRadius: '10px',
                                     padding: '1rem',
                                     paddingLeft: '1.5rem',
@@ -284,7 +284,7 @@ export default function Page() {
                                     }}
                                 >
                                     <h2>{getFormatMarketCap(categoryDetails.market_cap)}</h2>
-                                    <h2 style={{ color: 'var(--foreground)', fontSize: '0.9rem' }}>{formatPercentage(categoryDetails.market_cap_change_24h)}</h2>
+                                    <h2 style={{ color: 'var(--foreground)', fontSize: '1rem' }}>{formatPercentage(categoryDetails.market_cap_change_24h)}</h2>
                                 </div>
                             </div>
 
@@ -294,7 +294,7 @@ export default function Page() {
                                     backgroundColor: 'var(--color-container-bg)',
                                     color: 'var(--foreground-grey)',
                                     height: '110px',
-                                    width: '290px',
+                                    width: '300px',
                                     borderRadius: '10px',
                                     padding: '1rem',
                                     paddingLeft: '1.5rem', boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
@@ -321,7 +321,7 @@ export default function Page() {
                 </div>
             ) : (
                 (
-                    <div className="min-h-[55vh] flex flex-col justify-center items-center px-4">
+                    <div className="min-h-[35vh] mt-10 flex flex-col justify-center items-center px-4">
                         <div className="text-center mx-auto space-y-4">
                             {/* Titre principal */}
                             <h1 className="text-4xl max-w-6xl md:text-5xl font-bold leading-tight">
@@ -343,7 +343,7 @@ export default function Page() {
             )}
 
             {/* Aperçu top : Top gagnants & Top par volume */}
-            <div className="max-w-[85rem] mx-auto px-6 mb-8">
+            <div className="max-w-[85rem] mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Colonne métriques gauche : Capitalisation + Volume 24h */}
                     <div className="flex flex-col gap-4">

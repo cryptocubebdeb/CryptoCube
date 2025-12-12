@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import Toolbar from "../../components/Portfolio/Toolbar"
 import TradeSidePanel from "../../components/Portfolio/TradeSidePanel";
 
@@ -36,21 +36,28 @@ export default function SimulatorLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <>
-      {/* Left sidebar */}
-      <Toolbar activeSection={activeSection}/>
+    <div className="relative flex w-full">
+      <div className="flex flex-1">
 
-      {/* Main content */}
-      <main className="min-h-screen ml-20 mr-[360px] pt-[20px] p-8">
-        {children}
-      </main>
+        <div className="sticky top-[90px] h-fit">
+          {/* Left sidebar */}
+          <Toolbar activeSection={activeSection}/>
+        </div>
 
-      {/* Right panel */}
-      <aside className="fixed right-0 top-[90px] h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[var(--color-container-bg)] p-6 mr-5 border-l border-[var(--background-toolbar-active)] overflow-y-auto mt-2">
-        <TradeSidePanel />
-      </aside>
+        {/* Main content */}
+        <main className="flex-1 min-h-screen ml-20 pt-[20px] p-8">
+          {children}
+        </main>
 
-    </>
-
+        {/* right-0 h-[calc(100vh-110px)] */}
+        <div className="sticky top-[90px] h-fit mr-3">
+          {/* Right panel */}
+          <aside className="h-[calc(100vh-110px)] w-[350px] rounded-xl bg-[var(--color-container-bg)] p-6 mr-5 border-l border-[var(--background-toolbar-active)] overflow-y-auto mt-2">
+            <TradeSidePanel />
+          </aside>
+        </div>
+      </div>
+      
+    </div>
   )
 }
