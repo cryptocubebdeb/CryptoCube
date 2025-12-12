@@ -10,7 +10,7 @@ export async function executeTrade(order, price: number, filledAmount: number) {
     //
 
     if (order.orderType === TradeType.BUY) {
-        // 1. Subtract cash
+
         await prisma.simulatorAccount.update({
             where: { id: simId },
             data: {
@@ -18,7 +18,6 @@ export async function executeTrade(order, price: number, filledAmount: number) {
             },
         });
 
-        // 2. Add to portfolio
         await prisma.portfolio.upsert({
             where: {
                 simulatorAccountId_coinSymbol: {
@@ -41,7 +40,7 @@ export async function executeTrade(order, price: number, filledAmount: number) {
     }
 
     if (order.orderType === TradeType.SELL) {
-        // 1. Add cash
+
         await prisma.simulatorAccount.update({
             where: { id: simId },
             data: {
@@ -49,7 +48,6 @@ export async function executeTrade(order, price: number, filledAmount: number) {
             },
         });
 
-        // 2. Subtract portfolio holdings
         await prisma.portfolio.update({
             where: {
                 simulatorAccountId_coinSymbol: {
