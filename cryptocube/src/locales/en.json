@@ -74,6 +74,7 @@
       "passwordLabel": "Password",
       "showPassword": "Show password",
       "hidePassword": "Hide password",
+      "forgotPassword": "Forgot password?",
       "submit": "Sign in",
       "orWith": "Or sign in with",
       "oauthMicrosoft": "Sign in with Microsoft",
@@ -493,5 +494,22 @@
     "browseCryptos": "Browse cryptocurrencies →",
     "removeFromWatchlist": "Remove from watchlist",
     "removeAriaLabel": "Remove from watchlist"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "submitted": "Check your email for a password reset link.",
+    "emailLabel": "Email address",
+    "sendLink": "Send reset link",
+    "emailPlaceholder": "Enter your email"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "newPasswordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+    "resetButton": "Reset password",
+    "passwordPlaceholder": "Enter your new password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "submitting": "Submitting...",
+    "submitted": "Your password has been reset successfully. You can now log in with your new password."
   }
 }

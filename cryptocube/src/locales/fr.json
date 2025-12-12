@@ -74,6 +74,7 @@
       "passwordLabel": "Mot de passe",
       "showPassword": "Afficher le mot de passe",
       "hidePassword": "Masquer le mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
       "submit": "Se connecter",
       "orWith": "Ou se connecter avec",
       "oauthMicrosoft": "Se connecter avec Microsoft",
@@ -494,6 +495,23 @@
     "browseCryptos": "Parcourir les cryptomonnaies →",
     "removeFromWatchlist": "Retirer de la liste de suivi",
     "removeAriaLabel": "Retirer de la liste de suivi"
+  },
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "submitted": "Vérifiez votre courriel pour un lien de réinitialisation du mot de passe.",
+    "emailLabel": "Addresse courriel",
+    "sendLink": "Envoyer le lien de réinitialisation",
+    "emailPlaceholder": "Entrez votre courriel"
+  },
+  "resetPassword": {
+    "title": "Réinitialisation du mot de passe",
+    "newPasswordLabel": "Nouveau mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "resetButton": "Réinitialiser le mot de passe",
+    "passwordPlaceholder": "Entrez votre nouveau mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre nouveau mot de passe",
+    "submitting": "Envoi en cours...",
+    "submitted": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
   }
 }
   
