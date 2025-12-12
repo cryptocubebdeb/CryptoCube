@@ -84,7 +84,6 @@ export default function HomeSection() {
       className="space-y-8 shadow-lg rounded-xl p-6"
       style={{ background: "var(--color-container-bg)" }}
     >
-
       {/* overview header of the simulator */}
       <div className="flex flex-col gap-2">
         <h2
@@ -98,7 +97,6 @@ export default function HomeSection() {
           <p className="text-sm" style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.loadingData")}</p>
         ) : (
           <div className="grid grid-cols-4 gap-4 text-sm">
-
             {/* cash */}
             <div>
               <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.cash")}</p>
@@ -106,7 +104,6 @@ export default function HomeSection() {
                 {formatUsd(currentCashValue)}
               </p>
             </div>
-
             {/* available balance (same value for now, but we keep it separated) */}
             <div>
               <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.availableBalance")}</p>
@@ -114,13 +111,11 @@ export default function HomeSection() {
                 {formatUsd(currentCashValue)}
               </p>
             </div>
-
             {/* number of holdings */}
             <div>
               <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.holdings")}</p>
               <p className="font-semibold" style={{ color: "var(--foreground)" }}>{totalHoldingsCount}</p>
             </div>
-
             {/* total portfolio value */}
             <div>
               <p style={{ color: "var(--foreground)", opacity: 0.6 }}>{t("simulator.portfolioValue")}</p>
@@ -128,21 +123,26 @@ export default function HomeSection() {
                 {formatUsd(currentPortfolioValue)}
               </p>
             </div>
-
           </div>
         )}
       </div>
 
       {/* title for the portfolio chart */}
       <h2
-        className="text-2xl font-semibold mb-6 text-center"
+        className="text-2xl font-semibold mb-8 text-center"
         style={{ color: "var(--foreground)" }}
       >
         {t("simulator.portfolioValueTitle")}
       </h2>
 
-      {/* the portfolio chart itself */}
-      <PortfolioChart />
+      {/* the portfolio chart itself, or a message if no coins */}
+      {totalHoldingsCount === 0 && !isLoading ? (
+        <p className="text-center text-lg mb-5" style={{ color: "var(--foreground-grey)" }}>
+          {t("simulator.noCoinsInPortfolio")}
+        </p>
+      ) : (
+        <PortfolioChart />
+      )}
     </div>
   );
 }

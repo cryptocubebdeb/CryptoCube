@@ -130,7 +130,7 @@ export default function PercentSection() {
             {t("percent.metricProfitLoss")}
           </p>
           <p
-            className={"text-lg font-semibold "}
+            className={"text-lg font-semibold"}
             style={{ color: unrealizedProfitLoss >= 0 ? "var(--color-green)" : "var(--color-red)" }}
           >
             {formatUsd(unrealizedProfitLoss)}

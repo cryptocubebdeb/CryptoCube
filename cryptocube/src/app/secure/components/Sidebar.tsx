@@ -19,7 +19,6 @@ const Sidebar = ({ userId }: SidebarProps) => {
   const Links = [
     { href: "/secure/account/details", icon: <User size={20} />, text: t("sidebar.details") },
     { href: "/secure/account/watchlist", icon: <Star size={20} />, text: t("sidebar.watchlist") },
-    { href: "/secure/account/notifications", icon: <Bell size={20} />, text: t("sidebar.notifications") },
     { href: "/secure/account/settings", icon: <Settings size={20} />, text: t("sidebar.settings") },
   ];
 
