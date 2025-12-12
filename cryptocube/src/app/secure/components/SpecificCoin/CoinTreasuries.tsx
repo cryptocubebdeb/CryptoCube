@@ -51,15 +51,15 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
 
     // --- Display the table ---
     return (
-        <div className="border border-white/10 rounded-md p-6 text-white/85 shadow-md">
-            <h2 className="text-2xl mb-5 font-semibold">
-                <T k="treasuries.title" /> {coinId.toUpperCase()}
+    <div className="rounded-md p-6 shadow-md" style={{ border: '1px solid var(--foreground)', background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
+            <h2 className="text-2xl mb-5 font-semibold" style={{ color: 'var(--foreground)' }}>
+                <T k="treasuries.title" /> <span style={{ color: 'var(--color-blue)' }}>{coinId.toUpperCase()}</span>
             </h2>
 
             {/* Table container */}
             <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-sm">
-                    <thead className="border-b border-white/20 text-white/70 uppercase">
+                <table className="w-full text-left border-collapse text-sm" style={{ color: 'var(--foreground)' }}>
+                    <thead className="border-b uppercase" style={{ borderColor: 'var(--foreground)', color: 'var(--foreground)' }}>
                         <tr>
                             <th className="py-2 px-3"><T k="treasuries.company" /></th>
                             <th className="py-2 px-3"><T k="treasuries.country" /></th>
@@ -73,7 +73,9 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
                         {companies.slice(0, 10).map((currentCompany, index) => (
                             <tr
                                 key={index}
-                                className="border-b border-white/10 hover:bg-white/5 transition"
+                                className="border-b border-white/10 transition"
+                                onMouseEnter={e => { e.currentTarget.style.background = 'var(--coinmarket-hover)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = ''; }}
                             >
                                 {/* This idea was given by ai, I couldn't find any data regarding link for the treasuries, so it recommand me to use the yahoo search and the symbole to search it*/}
                                 {/* Company name + clickable Yahoo Finance link */}
@@ -82,7 +84,7 @@ export default function CoinTreasuries({ coinId }: { coinId: string }) {
                                         href={`https://finance.yahoo.com/quote/${currentCompany.symbol?.split(".")[0]}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-blue-400 hover:underline"
+                                        style={{ color: 'var(--color-blue)', textDecoration: 'underline' }}
                                     >
                                         {currentCompany.name}
                                     </a>

@@ -137,10 +137,10 @@ export default function TradePanel({
 
     // Render panel
     return (
-        <div className="bg-[#0e1117] border border-white/10 p-4 rounded-lg text-white space-y-4">
+    <div className="border border-white/10 p-4 rounded-lg space-y-4" style={{ background: 'var(--tradepanel-background)', color: 'var(--foreground)' }}>
 
             {/* Header */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" style={{ color: 'var(--foreground)', opacity: 0.95 }}>
                 {logo && (
                     <Image
                         src={logo}
@@ -156,20 +156,23 @@ export default function TradePanel({
             </div>
 
             {/* Market / Limit selection */}
-            <div className="flex bg-white/5 rounded-md overflow-hidden">
-                {["MARKET", "LIMIT"].map((type) => (
-                    <button
-                        key={type}
-                        onClick={() => setOrderKind(type as any)}
-                        className={`flex-1 py-2 text-sm font-semibold ${
-                            orderKind === type
-                                ? "bg-yellow-400 text-black"
-                                : "text-white/60 hover:bg-white/10"
-                        }`}
-                    >
-                        {type}
-                    </button>
-                ))}
+            <div className="flex rounded-md overflow-hidden" style={{ background: 'rgba(var(--foreground-rgb), 0.05)' }}>
+                {["MARKET", "LIMIT"].map((type) => {
+                    const isActive = orderKind === type;
+                    return (
+                        <button
+                            key={type}
+                            onClick={() => setOrderKind(type as "MARKET" | "LIMIT")}
+                            className={`flex-1 py-2 text-sm font-semibold`}
+                            style={isActive
+                                ? { background: 'var(--tradepanel-buttons)', color: 'var(--background)' }
+                                : { background: 'var(--tradepanel-buttons-inactive)', color: 'var(--foreground)', opacity: 0.7 }
+                            }
+                        >
+                            {type}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Limit price input */}
@@ -180,13 +183,14 @@ export default function TradePanel({
                     value={limitPrice}
                     onChange={(e) => setLimitPrice(e.target.value)}
                     placeholder="Limit price"
-                    className="w-full bg-[#0e1117] border border-white/20 rounded-md px-3 py-2 text-sm"
+                    className="w-full border border-white/20 rounded-md px-3 py-2 text-sm"
+                    style={{ background: 'var(--tradepanel-background)' }}
                 />
             )}
 
             {/* Amount input */}
             <div className="flex flex-col items-center">
-                <span className="text-[10px] text-white/40 uppercase">
+                <span className="text-[10px] uppercase" style={{ color: 'var(--foreground)', opacity: 0.4 }}>
                     {inputMode === "FIAT" ? "FIAT" : symbol.toUpperCase()}
                 </span>
 
@@ -197,6 +201,7 @@ export default function TradePanel({
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="0"
                     className="bg-transparent text-center text-4xl font-semibold outline-none w-full py-2"
+                    style={{ color: 'var(--foreground)', opacity: 0.95 }}
                 />
             </div>
 
@@ -212,31 +217,26 @@ export default function TradePanel({
 
             {/* Input mode (fiat / crypto) */}
             <div className="flex gap-2">
-                <button
-                    onClick={() => setInputMode("FIAT")}
-                    className={`flex-1 py-2 text-sm rounded-md ${
-                        inputMode === "FIAT"
-                            ? "bg-yellow-400 text-black"
-                            : "bg-white/10 text-white/60"
-                    }`}
-                >
-                    Fiat
-                </button>
-
-                <button
-                    onClick={() => setInputMode("CRYPTO")}
-                    className={`flex-1 py-2 text-sm rounded-md ${
-                        inputMode === "CRYPTO"
-                            ? "bg-yellow-400 text-black"
-                            : "bg-white/10 text-white/60"
-                    }`}
-                >
-                    {symbol.toUpperCase()}
-                </button>
+                {["FIAT", "CRYPTO"].map((type) => {
+                    const isActive = inputMode === type;
+                    return (
+                        <button
+                            key={type}
+                            onClick={() => setInputMode(type as "FIAT" | "CRYPTO")}
+                            className="flex-1 py-2 text-sm rounded-md"
+                            style={isActive
+                                ? { background: 'var(--tradepanel-buttons)', color: 'var(--background)' }
+                                : { background: 'var(--tradepanel-buttons-inactive)', color: 'var(--foreground)', opacity: 0.7 }
+                            }
+                        >
+                            {type === "FIAT" ? "Fiat" : symbol.toUpperCase()}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Conversion preview */}
-            <p className="text-center text-xs text-white/50">
+            <p className="text-center text-xs" style={{ color: 'var(--foreground)', opacity: 0.5 }}>
                 {inputMode === "FIAT"
                     ? `≈ ${cryptoAmount.toFixed(6)} ${symbol}`
                     : `≈ $${fiatAmount.toFixed(2)}`}
@@ -246,14 +246,15 @@ export default function TradePanel({
             <button
                 onClick={submitOrder}
                 disabled={submitting}
-                className="w-full py-2 bg-yellow-400 text-black font-semibold rounded-md disabled:opacity-50"
+                className="w-full py-2 font-semibold rounded-md disabled:opacity-50"
+                style={{ background: 'var(--tradepanel-buttons)', color: 'var(--background)' }}
             >
                 {submitting ? "Sending…" : `${mode} ${symbol}`}
             </button>
 
             {/* Status message */}
             {message && (
-                <p className="text-xs text-center text-yellow-300 mt-1">
+                <p className="text-xs text-center mt-1" style={{ color: 'var(--foreground-alt)' }}>
                     {message}
                 </p>
             )}

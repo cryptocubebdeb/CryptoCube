@@ -378,7 +378,15 @@
   "realTimeFrom": "Prix mis à jour en temps réel depuis CoinGecko",
   "source": "Source",
   "unknown": "Inconnu",
-  "pricesUpdatedFrom": "prix mis à jour depuis CoinGecko"
+  "pricesUpdatedFrom": "prix mis à jour depuis CoinGecko",
+
+  "livebinancetrades": "Transactions Binance en direct",
+  "tradeTime": "Heure",
+  "tradePrice": "Prix",
+  "tradeAmount": "Montant",
+  "tradeSide": "Côté",
+  "tradeSell": "VENTE",
+  "tradeBuy": "ACHAT"
 },
 "markets": {
   "loading": "Chargement des données du marché...",

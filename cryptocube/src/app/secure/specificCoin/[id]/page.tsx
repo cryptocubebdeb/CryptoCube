@@ -116,10 +116,10 @@ export default async function Page({
                 {/* Main container */}
                 <div className="w-full max-w-[1600px] px-4 xl:px-8 flex items-start gap-12 mt-10">
                     {/* Right column - details */}
-                    <div className="flex-[0.27] text-white pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20">
+                    <div className="flex-[0.27] pr-10 text-xl rounded-[2px] shadow-md border-r border-white/20" style={{ color: 'var(--foreground)' }}>
 
                         {/* Crypto Name and Logo */}
-                        <div className="flex items-center gap-4 p-4 pt-0">
+                        <div className="flex items-center gap-4 p-4 pt-0" style={{ color: 'var(--foreground)' }}>
                             {logo && (
                                 <Image
                                     src={logo}
@@ -132,20 +132,18 @@ export default async function Page({
                             )}
                             <div className="flex items-baseline gap-2">
                                 <h1 className="text-3xl">{name}</h1>
-                                <span className="text-lg text-white/60 uppercase">{symbol}</span>
+                                <span className="text-lg uppercase" style={{ color: 'var(--foreground)', opacity: 0.6 }}>{symbol}</span>
                             </div>
                         </div>
 
-
-
                         {/* Current price */}
                         <div className="p-4 border-b border-white/10">
-                            <span className="text-3xl">
+                            <span className="text-3xl" style={{ color: 'var(--foreground)' }}>
                                 ${currentPrice?.toLocaleString("en-CA", { minimumFractionDigits: 2 })}
                             </span>
                             <span
-                                className={`text-2xl font-medium ml-3 ${priceChangePercentage >= 0 ? "text-green-500" : "text-red-500"
-                                    }`}
+                                className="text-2xl font-medium ml-3"
+                                style={{ color: priceChangePercentage >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}
                             >
                                 {priceChangePercentage >= 0 ? "+" : ""}
                                 {priceChangePercentage?.toFixed(2)}% (24h)
@@ -153,51 +151,54 @@ export default async function Page({
                         </div>
 
                         {/*------------- Buy Section -------------*/}
-                        <BuySection
-                            coinId={id}
-                            symbol={coinData?.symbol.toUpperCase()}
-                            price={currentPrice}
-                            logo={logo}
-                        />
+                        <div className="ml-8">
+                            <BuySection
+                                coinId={id}
+                                symbol={coinData?.symbol.toUpperCase()}
+                                price={currentPrice}
+                                logo={logo}
+                            />
+                        </div>
+                       
 
                         {/*------------- Market Stats -------------*/}
-                        <div className="mt-6">
-                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.marketStats" /></h2>
+                        <div className="mt-6 ml-4">
+                            <h2 className="text-xl mb-3" style={{ color: 'var(--foreground)', opacity: 0.9 }}><T k="specificCoin.marketStats" /></h2>
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.marketCap" /></span>
-                                    <span className="font-medium">${marketCap?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.marketCap" /></span>
+                                    <span className="font-small" style={{ color: 'var(--foreground)' }}>${marketCap?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.fdv" /></span>
-                                    <span className="font-medium">${fdv?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.fdv" /></span>
+                                    <span className="font-small" style={{ color: 'var(--foreground)' }}>${fdv?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.volume24h" /></span>
-                                    <span className="font-medium">${totalVolume?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.volume24h" /></span>
+                                    <span className="font-small" style={{ color: 'var(--foreground)' }}>${totalVolume?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.rank" /></span>
-                                    <span className="font-medium">#{rank}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.rank" /></span>
+                                    <span className="font-small" style={{ color: 'var(--foreground)' }}>#{rank}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/*------------- Price Performance -------------*/}
-                        <div className="mt-8">
-                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.pricePerformance" /></h2>
+                        <div className="mt-8 ml-4">
+                            <h2 className="text-xl mb-3" style={{ color: 'var(--foreground)', opacity: 0.9 }}><T k="specificCoin.pricePerformance" /></h2>
                             <div className="divide-y divide-white/10">
 
                                 {/* 24h Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.range24h" /></span>
-                                    <span className="font-medium text-right">
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.range24h" /></span>
+                                    <span className="font-small text-right" style={{ color: 'var(--foreground)' }}>
                                         ${low24h?.toLocaleString("en-CA")} - ${high24h?.toLocaleString("en-CA")}
-                                        <div className="text-base text-white/50">
-                                            <T k="specificCoin.fromLow" />: <span className={`${fromLow24h >= 0 ? "text-green-500" : "text-red-500"}`}>
+                                        <div className="text-base" style={{ color: 'var(--foreground)', opacity: 0.7 }}>
+                                            <T k="specificCoin.fromLow" />: <span style={{ color: fromLow24h >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}>
                                                 {fromLow24h?.toFixed(2)}%
                                             </span> · <T k="specificCoin.fromHigh" />:
-                                            <span className={`${fromHigh24h >= 0 ? "text-green-500" : "text-red-500"} ml-1`}>
+                                            <span className="ml-1" style={{ color: fromHigh24h >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}>
                                                 {fromHigh24h?.toFixed(2)}%
                                             </span>
                                         </div>
@@ -206,13 +207,14 @@ export default async function Page({
 
                                 {/* 7-Day Range */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70 "><T k="specificCoin.variation7d" /></span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.variation7d" /></span>
                                     <span
-                                        className={`font-medium text-right ${priceDifferenceIn7d >= 0 ? "text-green-500" : "text-red-500"}`}
+                                        className="font-small text-right"
+                                        style={{ color: priceDifferenceIn7d >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}
                                     >
                                         {PercentageChangeIn7d >= 0 ? "+" : ""}
                                         {PercentageChangeIn7d.toFixed(2)}%
-                                        <span className="text-white/60 ml-1">
+                                        <span className="ml-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
                                             ({priceDifferenceIn7d >= 0 ? "+" : "-"}{Math.abs(priceDifferenceIn7d).toLocaleString("en-CA", {
                                                 style: "currency",
                                                 currency: "usd",
@@ -224,58 +226,58 @@ export default async function Page({
 
                                 {/* All-Time High */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.ath" /></span>
-                                    <span className="font-medium text-right">
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.ath" /></span>
+                                    <span className="font-small text-right" style={{ color: 'var(--foreground)' }}>
                                         ${ath?.toLocaleString("en-CA")}
-                                        <span className={`ml-2 ${athChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
+                                        <span className="ml-2" style={{ color: athChangePercentage < 0 ? 'var(--color-red)' : 'var(--color-green)' }}>
                                             {athChangePercentage?.toFixed(2)}%
                                         </span>
-                                        <div className="text-base text-white/50">{formattedAthDate}</div>
+                                        <div className="text-base" style={{ color: 'var(--foreground)', opacity: 0.5 }}>{formattedAthDate}</div>
                                     </span>
                                 </div>
 
                                 {/* All-Time Low */}
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.atl" /></span>
-                                    <span className="font-medium text-right">
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: '1.1rem' }}><T k="specificCoin.atl" /></span>
+                                    <span className="font-small text-right" style={{ color: 'var(--foreground)' }}>
                                         ${atl?.toLocaleString("en-CA")}
-                                        <span className={`ml-2 ${atlChangePercentage < 0 ? "text-red-500" : "text-green-500"}`}>
+                                        <span className="ml-2" style={{ color: atlChangePercentage < 0 ? 'var(--color-red)' : 'var(--color-green)' }}>
                                             {atlChangePercentage?.toFixed(2)}%
                                         </span>
-                                        <div className="text-base text-white/50">{formattedAtlDate}</div>
+                                        <div className="text-base" style={{ color: 'var(--foreground)', opacity: 0.5 }}>{formattedAtlDate}</div>
                                     </span>
                                 </div>
                             </div>
                         </div>
 
                         {/* ------------- Supply Metrics ------------- */}
-                        <div className="mt-8">
-                            <h2 className="text-2xl text-white/90 mb-3"><T k="specificCoin.supplyMetrics" /></h2>
+                        <div className="mt-8 ml-4">
+                            <h2 className="text-2xl mb-3" style={{ color: 'var(--foreground)', opacity: 0., fontSize: '1.1rem' }}><T k="specificCoin.supplyMetrics" /></h2>
                             <div className="divide-y divide-white/10">
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.circulatingSupply" /></span>
-                                    <span className="font-medium">{circulatingSupply?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7 }}><T k="specificCoin.circulatingSupply" /></span>
+                                    <span className="font-medium" style={{ color: 'var(--foreground)' }}>{circulatingSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.totalSupply" /></span>
-                                    <span className="font-medium">{totalSupply?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7 }}><T k="specificCoin.totalSupply" /></span>
+                                    <span className="font-medium" style={{ color: 'var(--foreground)' }}>{totalSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-3">
-                                    <span className="text-white/70"><T k="specificCoin.maxSupply" /></span>
-                                    <span className="font-medium">{maxSupply?.toLocaleString("en-CA")}</span>
+                                    <span style={{ color: 'var(--foreground)', opacity: 0.7 }}><T k="specificCoin.maxSupply" /></span>
+                                    <span className="font-medium" style={{ color: 'var(--foreground)' }}>{maxSupply?.toLocaleString("en-CA")}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/*------------- Gauges Section -------------*/}
                         <div className="mt-10 border border-white/10 rounded-md p-6">
-                            <h2 className="text-2xl text-white/90 mb-6 text-center"><T k="specificCoin.marketOverview" /></h2>
+                            <h2 className="text-2xl mb-6 text-center" style={{ color: 'var(--foreground)', opacity: 0.9 }}><T k="specificCoin.marketOverview" /></h2>
 
                             {/* Volatility Index */}
                             <div className="flex flex-col items-center mb-8">
-                                <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.volatilityIndex" /> — {name}</h3>
+                                <h3 className="text-lg mb-3" style={{ color: 'var(--foreground)', opacity: 0.8 }}><T k="specificCoin.volatilityIndex" /> — {name}</h3>
                                 <RiskGauge value={Math.round(riskScore)} />
-                                <p className="text-white/60 text-sm mt-3">
+                                <p className="text-sm mt-3" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
                                     <T k="specificCoin.basedOn7d" /> {Math.round(PercentageChangeIn7d)}%
                                 </p>
                             </div>
@@ -284,48 +286,45 @@ export default async function Page({
                             <div className="flex justify-center gap-10 flex-wrap">
                                 {/* Fear & Greed */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.sentiment" /></h3>
+                                    <h3 className="text-lg mb-3" style={{ color: 'var(--foreground)', opacity: 0.8 }}><T k="specificCoin.sentiment" /></h3>
                                     <RiskGauge value={Math.round(fearGreedValue)} />
-                                    <p className="text-sm text-white/60 mt-2">{fearGreedLabel}</p>
+                                    <p className="text-sm mt-2" style={{ color: 'var(--foreground)', opacity: 0.6 }}>{fearGreedLabel}</p>
                                 </div>
 
                                 {/* Global Market */}
                                 <div className="flex flex-col items-center w-64">
-                                    <h3 className="text-lg text-white/80 mb-3"><T k="specificCoin.globalMarket" /></h3>
+                                    <h3 className="text-lg mb-3" style={{ color: 'var(--foreground)', opacity: 0.8 }}><T k="specificCoin.globalMarket" /></h3>
                                     <RiskGauge value={Math.round(marketHealth)} />
-                                    <p className="text-sm text-white/60 mt-2">
+                                    <p className="text-sm mt-2" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
                                         {marketHealth >= 55 ? <T k="specificCoin.growing" /> : marketHealth <= 45 ? <T k="specificCoin.declining" /> : <T k="specificCoin.stable" />}
                                     </p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     {/* Left column - chart + risk analysis */}
                     <div className="flex-1 flex flex-col gap-6">
 
                         {/* Chart container */}
-                        <div className="text-white rounded-[4px] shadow-md relative">
+                        <div className="rounded-[4px] shadow-md relative" style={{ color: 'var(--foreground)' }}>
                             <div className="w-full min-h-[450px] py-4">
                                 <CoinChart coinId={id} currency="usd" />
                             </div>
                         </div>
 
-
-
                         {/* Extra coin fundamentals */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm text-white/70 border-t border-white/10 pt-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6 mt-6 text-sm border-t border-white/10 pt-4" style={{ color: 'var(--foreground)', opacity: 0.7 }}>
                             <div>
-                                <span className="block text-white/50"><T k="specificCoin.launchDate" /></span>
+                                <span className="block" style={{ color: 'var(--foreground)', opacity: 0.5 }}><T k="specificCoin.launchDate" /></span>
                                 <span>{coinData?.genesis_date || <T k="specificCoin.unknown" />}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50"><T k="specificCoin.hashAlgorithm" /></span>
+                                <span className="block" style={{ color: 'var(--foreground)', opacity: 0.5 }}><T k="specificCoin.hashAlgorithm" /></span>
                                 <span>{coinData?.hashing_algorithm || <T k="specificCoin.unknown" />}</span>
                             </div>
                             <div>
-                                <span className="block text-white/50"><T k="specificCoin.category" /></span>
+                                <span className="block" style={{ color: 'var(--foreground)', opacity: 0.5 }}><T k="specificCoin.category" /></span>
                                 <span>{coinData?.categories?.[0] || <T k="specificCoin.unknown" />}</span>
                             </div>
                         </div>
@@ -336,58 +335,67 @@ export default async function Page({
                         {/* ------------- Description ------------- */}
                         <div className="mt-8">
                             <div className="flex items-baseline justify-between mb-3">
-                                <h2 className="text-2xl text-white/90"><T k="specificCoin.description" /></h2>
+                                <h2 className="text-2xl" style={{ color: 'var(--foreground)', opacity: 0.9 }}><T k="specificCoin.description" /></h2>
 
                                 {/* ------------- Website ------------- */}
                                 <div className="flex flex-wrap gap-3 mt-6 text-sm">
+                                    <style>{`
+                                      .coin-link:hover {
+                                        background: var(--coinmarket-hover) !important;
+                                      }
+                                    `}</style>
                                     {coinData?.links?.subreddit_url && (
-                                        <a href={coinData.links.subreddit_url} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                        <a href={coinData.links.subreddit_url} target="_blank" className="coin-link" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)', borderRadius: '0.375rem', padding: '0.75rem 0.75rem', transition: 'background 0.2s' }}>
                                             Reddit
                                         </a>
                                     )}
                                     {coinData?.links?.repos_url?.github?.[0] && (
-                                        <a href={coinData.links.repos_url.github[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                        <a href={coinData.links.repos_url.github[0]} target="_blank" className="coin-link" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)', borderRadius: '0.375rem', padding: '0.75rem 0.75rem', transition: 'background 0.2s' }}>
                                             GitHub
                                         </a>
                                     )}
                                     {coinData?.links?.homepage?.[0] && (
-                                        <a href={coinData.links.homepage[0]} target="_blank" className="bg-white/10 px-3 py-1 rounded-md hover:bg-white/20 transition">
+                                        <a href={coinData.links.homepage[0]} target="_blank" className="coin-link" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)', borderRadius: '0.375rem', padding: '0.75rem 0.75rem', transition: 'background 0.2s' }}>
                                             Website
                                         </a>
                                     )}
                                 </div>
                             </div>
 
-                            <details className="group bg-[#12141A] border border-white/10 rounded-md">
-                                <summary className="cursor-pointer list-none px-4 py-3 text-white/75 hover:text-white transition text-sm sm:text-base select-none">
-                                    <span className="mr-2 font-medium"><T k="specificCoin.about" /> {name}</span>
-                                    <span className="text-white/50 group-open:hidden">· <T k="specificCoin.seeMore" /></span>
-                                    <span className="text-white/50 hidden group-open:inline">· <T k="specificCoin.seeLess" /></span>
-                                </summary>
+                            <details className="group border border-white/10 rounded-md" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
+                                <details className="group border border-white/10 rounded-md" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
+                                    <summary className="cursor-pointer list-none px-4 py-3 text-sm sm:text-base select-none" style={{ color: 'var(--foreground)', opacity: 0.75 }}>
+                                        <span className="mr-2 font-medium"><T k="specificCoin.about" /> {name}</span>
+                                        <span className="group-open:hidden" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeMore" /></span>
+                                        <span className="hidden group-open:inline" style={{ color: 'var(--foreground)', opacity: 0.5 }}>· <T k="specificCoin.seeLess" /></span>
+                                    </summary>
 
-                                <div className="px-4 pb-5">
-                                    <div
-                                        className="text-white/80 text-[13px] sm:text-[14px] leading-relaxed sm:leading-7"
-                                        style={{
-                                            textAlign: "justify",
-                                            textJustify: "inter-word",
-                                            lineHeight: "1.6",
-                                        }}
-                                        dangerouslySetInnerHTML={{ __html: coinDescription }}
-                                    />
-                                    <p className="text-white/50 text-sm italic mt-6">
-                                        <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" />: CoinGecko
-                                    </p>
-                                </div>
+                                    <div className="px-4 pb-5">
+                                        <div
+                                            className="text-[13px] sm:text-[14px] leading-relaxed sm:leading-7"
+                                            style={{
+                                                color: 'var(--foreground)',
+                                                opacity: 0.8,
+                                                textAlign: "justify",
+                                                textJustify: "inter-word",
+                                                lineHeight: "1.6",
+                                            }}
+                                            dangerouslySetInnerHTML={{ __html: coinDescription }}
+                                        />
+                                        <p className="text-sm italic mt-6" style={{ color: 'var(--foreground)', opacity: 0.5 }}>
+                                            <T k="specificCoin.updated" /> {new Date(coinData.last_updated).toLocaleString()} · <T k="specificCoin.source" />: CoinGecko
+                                        </p>
+                                    </div>
+                                </details>
                             </details>
                         </div>
 
 
                         {/* ------------- Global Prices ------------- */}
                         <div className="mt-2 rounded-md p-3">
-                            <h2 className="text-2xl text-white/90 mb-5"><T k="specificCoin.globalPrices" /></h2>
+                            <h2 className="text-2xl mb-5" style={{ color: 'var(--foreground)', opacity: 0.9 }}><T k="specificCoin.globalPrices" /></h2>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-6 text-sm text-white/80">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-4 gap-x-6 text-sm" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
                                 {[
                                     { code: "usd", label: "USD (Dollar américain)" },
                                     { code: "cad", label: "CAD (Dollar canadien)" },
@@ -401,8 +409,8 @@ export default async function Page({
                                     const value = coinData?.market_data?.current_price?.[code];
                                     return (
                                         <div key={code} className="flex justify-between items-center border-b border-white/10 pb-2">
-                                            <span className="text-white/60">{label}</span>
-                                            <span className="font-medium">
+                                            <span style={{ color: 'var(--foreground)', opacity: 0.6 }}>{label}</span>
+                                            <span className="font-medium" style={{ color: 'var(--foreground)' }}>
                                                 {value
                                                     ? value.toLocaleString("en-CA", {
                                                         style: "currency",
@@ -416,13 +424,13 @@ export default async function Page({
                                 })}
                             </div>
 
-                            <p className="text-white/50 text-xs mt-5 text-center">
+                            <p className="text-xs mt-5 text-center" style={{ color: 'var(--foreground)', opacity: 0.5 }}>
                                 <T k="specificCoin.pricesUpdatedFrom" />
                             </p>
                         </div>
 
                         {/* ------------- News section ------------- */}
-                        <div className="text-white w-[95%] mx-auto rounded-[8px] shadow-md">
+                        <div className="mx-auto" style={{ color: 'var(--foreground)' }}>
                             <CoinDailyNews coinId={id} />
                         </div>
                     </div>

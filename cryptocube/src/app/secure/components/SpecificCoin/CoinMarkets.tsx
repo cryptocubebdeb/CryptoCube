@@ -51,10 +51,10 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
   }, [coinId]);
 
   if (isLoading)
-    return <div className="text-white/60 mt-4"><T k="markets.loading" /></div>;
+    return <div className="mt-4" style={{ color: 'var(--foreground)', opacity: 0.6 }}><T k="markets.loading" /></div>;
   if (!marketTickers.length)
     return (
-      <div className="text-white/60 mt-4">
+      <div className="mt-4" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
         <T k="markets.empty" />
       </div>
     );
@@ -91,7 +91,8 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
   return (
     <div
       ref={containerRef}
-      className="border border-white/10 rounded-md p-6 text-white/85 shadow-md"
+  className="border border-white/10 rounded-md p-6 shadow-md"
+  style={{ color: 'var(--foreground)', opacity: 0.85 }}
     >
       <h2 className="text-2xl mb-5 font-semibold">
         <T k="markets.title" /> {coinId.toUpperCase()}
@@ -112,7 +113,7 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
             <col className="w-[10%]" />
           </colgroup>
 
-          <thead className="border-b border-white/20 text-white/70 uppercase">
+          <thead className="border-b border-white/20 uppercase" style={{ color: 'var(--foreground)', opacity: 0.7 }}>
             <tr>
               <th className="py-2 px-3 text-center">#</th>
               <th className="py-2 px-3"><T k="markets.exchange" /></th>
@@ -146,54 +147,60 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
                     if (ticker.trade_url)
                       window.open(ticker.trade_url, "_blank", "noopener,noreferrer");
                   }}
-                  className={`border-b border-white/10 transition ${ticker.trade_url
-                      ? "hover:bg-white/10 cursor-pointer"
-                      : "opacity-70 cursor-default"
-                    }`}
+                  className={`border-b border-white/10 transition ${ticker.trade_url ? "cursor-pointer" : "opacity-70 cursor-default"}`}
+                  style={ticker.trade_url ? { cursor: 'pointer' } : { opacity: 0.7, cursor: 'default' }}
+                  onMouseEnter={e => {
+                    if (ticker.trade_url) e.currentTarget.style.background = 'var(--coinmarket-hover)';
+                  }}
+                  onMouseLeave={e => {
+                    if (ticker.trade_url) e.currentTarget.style.background = '';
+                  }}
                 >
-                  <td className="py-2 px-3 text-center whitespace-nowrap">
+                  <td className="py-2 px-3 text-center whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     {rowNumber}
                   </td>
 
-                  <td className="py-2 px-3 flex items-center gap-2 truncate">
+                  <td className="py-2 px-3 flex items-center gap-2 truncate" style={{ color: 'var(--foreground)' }}>
                     <span className="truncate">{ticker.market.name}</span>
                   </td>
 
-                  <td className="py-2 px-3 whitespace-nowrap">
+                  <td className="py-2 px-3 whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     {ticker.base}/{ticker.target}
                   </td>
 
-                  <td className="py-2 px-3 text-right whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     ${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </td>
 
-                  <td className="py-2 px-3 text-right whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     {ticker.bid_ask_spread_percentage
                       ? `${ticker.bid_ask_spread_percentage.toFixed(2)}%`
                       : "—"}
                   </td>
 
-                  <td className="py-2 px-3 text-right whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     ${volume.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </td>
 
-                  <td className="py-2 px-3 text-right whitespace-nowrap">
+                  <td className="py-2 px-3 text-right whitespace-nowrap" style={{ color: 'var(--foreground)' }}>
                     {volumePercent}%
                   </td>
 
-                  <td className="py-2 px-3 text-center text-white/70 whitespace-nowrap">
+                  <td className="py-2 px-3 text-center whitespace-nowrap" style={{ color: 'var(--foreground)', opacity: 0.7 }}>
                     {formattedTime}
                   </td>
 
                   <td className="py-2 px-3 text-center whitespace-nowrap">
                     <span
-                      className={
-                        ticker.trust_score === "green"
-                          ? "text-green-400 font-semibold"
-                          : ticker.trust_score === "yellow"
-                            ? "text-yellow-400 font-semibold"
-                            : "text-red-400 font-semibold"
-                      }
+                      style={{
+                        color:
+                          ticker.trust_score === "green"
+                            ? 'var(--color-green)'
+                            : ticker.trust_score === "yellow"
+                              ? 'var(--foreground-alt)'
+                              : 'var(--color-red)',
+                        fontWeight: 600
+                      }}
                     >
                       {ticker.trust_score?.toUpperCase() || "N/A"}
                     </span>
@@ -206,13 +213,19 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-6 gap-2 text-white/80 flex-wrap">
+  <div className="flex justify-center items-center mt-6 gap-2 flex-wrap" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
         {/* Prev */}
         <button
           onClick={() => changePage(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${currentPage === 1 ? "opacity-40 cursor-not-allowed" : ""
-            }`}
+          style={{ color: 'var(--foreground)' }}
+          className={`px-3 py-1 border border-white/20 rounded-md transition ${currentPage === 1 ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+          onMouseEnter={e => {
+            if (currentPage !== 1) e.currentTarget.style.background = 'var(--coinmarket-hover)';
+          }}
+          onMouseLeave={e => {
+            if (currentPage !== 1) e.currentTarget.style.background = '';
+          }}
         >
           ‹
         </button>
@@ -221,10 +234,17 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
           <button
             key={pageNumber}
             onClick={() => changePage(pageNumber)}
+            style={{ color: 'var(--foreground)', background: currentPage === pageNumber ? 'var(--coinmarket-hover)' : '' }}
             className={`px-3 py-1 rounded-md border border-white/20 transition ${currentPage === pageNumber
-                ? "bg-white/20 text-white font-semibold"
-                : "hover:bg-white/10"
+                ? "font-semibold"
+                : "cursor-pointer"
               }`}
+            onMouseEnter={e => {
+              if (currentPage !== pageNumber) e.currentTarget.style.background = 'var(--coinmarket-hover)';
+            }}
+            onMouseLeave={e => {
+              if (currentPage !== pageNumber) e.currentTarget.style.background = '';
+            }}
           >
             {pageNumber}
           </button>
@@ -234,8 +254,14 @@ export default function CoinMarkets({ coinId }: { coinId: string }) {
         <button
           onClick={() => changePage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 border border-white/20 rounded-md hover:bg-white/10 transition ${currentPage === totalPages ? "opacity-40 cursor-not-allowed" : ""
-            }`}
+          style={{ color: 'var(--foreground)' }}
+          className={`px-3 py-1 border border-white/20 rounded-md transition ${currentPage === totalPages ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+          onMouseEnter={e => {
+            if (currentPage !== totalPages) e.currentTarget.style.background = 'var(--coinmarket-hover)';
+          }}
+          onMouseLeave={e => {
+            if (currentPage !== totalPages) e.currentTarget.style.background = '';
+          }}
         >
           ›
         </button>

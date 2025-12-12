@@ -82,15 +82,15 @@ export default function CoinDailyNews({
     <Box sx={{ position: "relative" }}>
       {/* Header with arrows */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h5" sx={{ color: "white" }}><T k="coinNews.latestUpdates" /></Typography>
+        <Typography variant="h5" sx={{ color: "var(--foreground)" }}><T k="coinNews.latestUpdates" /></Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton onClick={prev} size="small" sx={{ color: "white" }}>
+          <IconButton onClick={prev} size="small" sx={{ color: "var(--foreground)" }}>
             <ArrowBackIosIcon fontSize="inherit" />
           </IconButton>
-          <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
+          <Typography variant="caption" sx={{ color: "var(--foreground)", opacity: 0.7 }}>
             {currentIndex + 1} / {totalPages}
           </Typography>
-          <IconButton onClick={next} size="small" sx={{ color: "white" }}>
+          <IconButton onClick={next} size="small" sx={{ color: "var(--foreground)" }}>
             <ArrowForwardIosIcon fontSize="inherit" />
           </IconButton>
         </Box>
@@ -100,53 +100,63 @@ export default function CoinDailyNews({
         {visible.map((item) => (
           <Box
             key={item.id}
-            className="bg-[#15171E] rounded-md p-3 border border-white/5 hover:border-white/20 transition-colors"
+            className="p-3 transition-colors"
+            component="a"
+            href={item.url}
+            target="_blank"
+            sx={{
+              background: 'var(--auth-background)',
+              borderRadius: 4,
+              display: 'block',
+              textDecoration: 'none',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+              '&:hover': {
+                transform: 'scale(1.035)',
+                boxShadow: '0 2px 16px 0 rgba(0,0,0,0.10)',
+              },
+            }}
           >
             {/* Image */}
-            <Link href={item.url} target="_blank" sx={{ textDecoration: "none", cursor: "pointer" }}>
-              <Avatar
-                src={item.thumbnail || "/default-news.png"}
-                alt={item.title}
-                variant="rounded"
-                sx={{
-                  width: "100%",
-                  height: 160,
-                  borderRadius: 2,
-                  mb: 1,
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease, filter 0.2s ease",
-                  "&:hover": { transform: "scale(1.02)", filter: "brightness(1.05)" },
-                }}
-                imgProps={{
-                  onError: (e: any) => { e.currentTarget.src = "/default-news.png" },
-                }}
-              />
-            </Link>
+            <Avatar
+              src={item.thumbnail || "/default-news.png"}
+              alt={item.title}
+              variant="rounded"
+              sx={{
+                width: "100%",
+                height: 160,
+                borderRadius: 2,
+                mb: 1,
+                cursor: "pointer",
+                transition: "transform 0.2s ease, filter 0.2s ease",
+                "&:hover": { filter: "brightness(1.05)" },
+              }}
+              imgProps={{
+                onError: (e: any) => { e.currentTarget.src = "/default-news.png" },
+              }}
+            />
 
             {/* Title */}
-            <Link href={item.url} target="_blank" underline="hover" sx={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ fontSize: "1.05rem", lineHeight: 1.4, fontWeight: 500, color: "white" }}
-              >
-                {item.title.length > 80 ? item.title.slice(0, 80) + "…" : item.title}
-              </Typography>
-            </Link>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "1.05rem", lineHeight: 1.4, fontWeight: 500, color: "var(--foreground)" }}
+            >
+              {item.title.length > 80 ? item.title.slice(0, 80) + "…" : item.title}
+            </Typography>
 
             {/* Source • Date */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
-              <Typography variant="body2" sx={{ color: "gray" }}>
+              <Typography variant="body2" sx={{ color: "var(--foreground-grey)" }}>
                 {item.news_site || "CoinGecko"}
               </Typography>
-              <Typography variant="body2" sx={{ color: "gray" }}>•</Typography>
-              <Typography variant="body2" sx={{ color: "gray" }}>
+              <Typography variant="body2" sx={{ color: "var(--foreground-grey)" }}>•</Typography>
+              <Typography variant="body2" sx={{ color: "var(--foreground-grey)" }}>
                 {new Date(item.created_at).toLocaleDateString()}
               </Typography>
             </Box>
 
             {/* Short description */}
             {item.description && (
-              <Typography variant="body2" sx={{ mt: 1, color: "rgba(255,255,255,0.75)" }}>
+              <Typography variant="body2" sx={{ mt: 1, color: "var(--foreground)", opacity: 0.75 }}>
                 {item.description.length > 120 ? item.description.slice(0, 120) + "…" : item.description}
               </Typography>
             )}
@@ -164,11 +174,11 @@ export default function CoinDailyNews({
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              backgroundColor: currentIndex === index ? '#dadadaff' : 'rgba(255, 255, 255, 0.3)',
+              backgroundColor: currentIndex === index ? 'var(--news-dot-active)' : 'var(--news-dot-inactive)',
               cursor: 'pointer',
               transition: 'background-color 0.3s ease',
               '&:hover': {
-                backgroundColor: currentIndex === index ? '#525252ff' : 'rgba(255, 255, 255, 0.5)',
+                backgroundColor: currentIndex === index ? 'var(--news-dot-hover)' : 'var(--news-dot-hover-inactive)',
               },
             }}
           />

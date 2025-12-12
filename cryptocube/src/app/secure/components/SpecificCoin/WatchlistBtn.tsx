@@ -48,7 +48,8 @@ export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
     return (
       <button
         disabled
-        className="px-4 py-2 border border-white/20 rounded-md text-white/60 cursor-not-allowed"
+        style={{ border: '1px solid var(--foreground)', color: 'var(--foreground)', background: 'transparent' }}
+        className="px-4 py-2 rounded-md cursor-not-allowed"
       >
         {t('coinsPage.loading')}
       </button>
@@ -57,11 +58,12 @@ export default function WatchlistButton({ coinId }: WatchlistButtonProps) {
   return (
     <button
       onClick={handleToggle}
-      className={`px-4 py-2 rounded-md border transition ${
-        isInWatchlist
-          ? "border-red-400 text-red-400 hover:bg-red-400/10"
-          : "border-white/30 text-white hover:bg-white/10"
-      }`}
+      style={{
+        border: isInWatchlist ? '1px solid var(--color-red)' : '1px solid var(--foreground)',
+        color: isInWatchlist ? 'var(--color-red)' : 'var(--foreground)',
+        background: isInWatchlist ? 'rgba(255,0,0,0.1)' : 'transparent'
+      }}
+      className="px-4 py-2 rounded-md border transition"
     >
       {isInWatchlist ? t('coinsPage.removeFromWatchlist') : t('coinsPage.addToWatchlist')}
     </button>

@@ -55,19 +55,33 @@ export default function CoinChart({ coinId, currency = "usd" }: params) {
       {/* === Header Row === */}
       <div className="flex justify-between items-center mb-4">
 
-  {/* Bouton liste de suivi (gauche) */}
-        <WatchlistButton coinId={coinId} />
+        {/* Bouton liste de suivi (gauche) */}
+        <div style={{ marginLeft: '1rem' }}>
+          <WatchlistButton coinId={coinId}/>
+        </div>
 
-  {/* Boutons de plage temporelle */}
-        <div className="flex gap-2 mb-4">
+        {/* Boutons de plage temporelle */}
+        <div className="flex gap-2 mb-4 mr-3">
           {ranges.map(range => (
             <button
               key={range.value}
               onClick={() => setDays(range.value)}
-              className={`px-3 py-1 rounded-md text-sm ${days === range.value
-                ? "bg-yellow-500 text-black"
-                : "bg-gray-800 text-gray-200 hover:bg-gray-700"
-                }`}
+              style={{
+                padding: '0.25rem 0.75rem',
+                borderRadius: '0.375rem',
+                fontSize: '0.95rem',
+                background: days === range.value ? 'var(--foreground-alt)' : 'var(--auth-background)',
+                color: days === range.value ? 'var(--background)' : 'var(--foreground-grey)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background 0.18s',
+              }}
+              onMouseOver={e => {
+                if (days !== range.value) e.currentTarget.style.background = 'var(--chart-range-hover)';
+              }}
+              onMouseOut={e => {
+                if (days !== range.value) e.currentTarget.style.background = 'var(--auth-background)';
+              }}
             >
               {t(range.labelKey)}
             </button>

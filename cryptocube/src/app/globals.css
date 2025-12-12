@@ -3,6 +3,7 @@
 
 :root {
     --background: #0c0c11;
+    --background-landing:
     --background-footer: rgb(25, 32, 43);
     --foreground: #ededed;
     --foreground-grey: rgb(176, 176, 176);
@@ -10,8 +11,9 @@
     --foreground-search: #ffffff;
     --color-main-bg: #1d202b;
     --color-container-bg: rgb(23, 23, 28);
-    --x-axis-text-color: #ffffff40;
-    --y-axis-text-color: #ffffff40;
+    --chart-range-hover: #35374a;
+    --x-axis-text-color: var(--foreground);
+    --y-axis-text-color: var(--foreground);
     --background-hover: #1a1a20ff;
     --background-search: #1e293b;
     --background-search-hover: #0f172a;
@@ -23,7 +25,7 @@
 
     --border-button-category: #b6b6deff;
     --background-button-category-hover: #42425cff;
-    --background-button-category-hover-text: #e1e1f6ff;
+    --background-button-category-hover-text: var(--foreground);
 
     --background-section-category-active: #25253eff;
     --background-section-border-category-active: #2d2d3fff;
@@ -33,29 +35,43 @@
     --auth-background: #15171E;
 
     --background-toolbar-active: #23252c;
-    --background-tradepanel-alt: #FFDD00;
+    --background-tradepanel-alt: var(--foreground-alt);
     --background-tradepanel-inactive: #23252c;
     --foreground-tradepanel-active: #000000;
-    --foreground-tradepanel-inactive: #ffffffcf;
+    --foreground-tradepanel-inactive: var(--foreground);
 
-    --foreground-about: #d2dbed;
-    --foreground-about-border: #3a475e;
+    --foreground-about: var(--foreground);
+    --foreground-about-border: var(--foreground-alt);
 
     --background-details-input: rgba(255,255,255,0.08);
     --background-details-display: rgba(255,255,255,0.08);
 
+    --coinmarket-hover: rgb(32, 32, 44);
+
     --color-green: #4caf50;
     --color-red: #ff0000;
     --color-blue: #3B82F6;
+
+    --news-dot-active: #dadadaff;
+    --news-dot-inactive: rgba(255, 255, 255, 0.3);
+    --news-dot-hover: #525252ff;
+    --news-dot-hover-inactive: rgba(255, 255, 255, 0.5);
+
+    --tradepanel-background: #0e1117;
+    --tradepanel-buttons: #FFDD00;
+    --tradepanel-buttons-inactive: #262b35;
+
+    --landing-alt: #e9ca00;
 }
 
 .light {
-    --background: #f6fdff;
+    --background: #fdffff;
     --background-footer: rgb(179, 191, 212);
     --foreground: #000000;
     --foreground-grey: rgba(26, 26, 26, 0.753);
     --foreground-alt: #21335e;
     --foreground-search: #ffffff;
+    --chart-range-hover: rgb(219, 226, 242);
 
     --color-red: #f73636;
     --color-green: #206d22;
@@ -97,6 +113,18 @@
     
     --background-details-display: #ccd6ed;
 
+    --coinmarket-hover: #d9e4f1;
+
+    --news-dot-active: #232323;
+    --news-dot-inactive: rgba(0, 0, 0, 0.18);
+    --news-dot-hover: #525252;
+    --news-dot-hover-inactive: rgba(0, 0, 0, 0.32);
+
+    --tradepanel-background: rgb(218, 235, 248);
+    --tradepanel-buttons: rgb(68, 115, 160);
+    --tradepanel-buttons-inactive: rgb(183, 200, 218);
+
+    --landing-alt: #0630ae;
 }
 
 @theme inline {
@@ -113,7 +141,10 @@ body {
 }
 
 .btn-primary {
-  @apply w-64 bg-yellow-400 px-6 py-2 text-white rounded-3xl hover:bg-yellow-700 font-mono font-semibold;
+    @apply w-64 px-6 py-2 rounded-3xl font-mono font-semibold;
+    background: var(--foreground-alt);
+    color: var(--foreground);
+    border: none;
 }
 
 .navbar-text {
@@ -130,6 +161,21 @@ html {
   scroll-behavior: smooth;
 }
 
+.landing-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 4100px;
+}
+
+html.light .landing-bg {
+  background-image: url('/images/landingbglight.png');
+}
+
+html.dark .landing-bg {
+  background-image: url('/images/landingbg.png');
+}
+
 /* Styles for dashboard page */
 .headline {
     display: flex;
@@ -139,6 +185,7 @@ html {
     align-items: center;
     gap: 1.5rem;
     margin-top: 8.5rem;
+    color: var(--foreground);
 }
 
 .titreHeadline {
@@ -147,6 +194,7 @@ html {
     margin-left: 3rem;
     text-align: center;
     font-size: larger;
+    color: var(--foreground);
 }
 
 .titreSubHeadline {
@@ -155,6 +203,7 @@ html {
     margin-left: 3rem;
     text-align: center;
     font-size: 25px;
+    color: var(--foreground);
 }
 
 
@@ -164,14 +213,16 @@ html {
     font-weight: 400;
     margin-top: 2.5rem;
     margin-left: 3rem;
+    color: var(--foreground);
 }
 
 .main {
-    background-color: #15171E;
+    background-color: var(--color-container-bg);
     margin-left: 2rem;
     width: max-content;
     height: 95%;
     overflow-x: hidden;
+    color: var(--foreground);
 }
 
 .personalInfoHeader {
@@ -211,29 +262,27 @@ html {
 }
 
 .inputField {
-    background-color: #bec6e0;
+    background-color: var(--background-details-input);
     color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
     width: 13rem;
     margin-top: 0.5rem;
-    color: var(--foreground);
 }
 
 .inputEmailField{
-    background-color: #bec6e0;
+    background-color: var(--background-details-input);
     color: var(--foreground);
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
     margin-top: 0.5rem;
     width: 100%;
-    color: black;
 }
 
 .inputProfileField{
-    background-color: #bec6e0;
+    background-color: var(--background-details-input);
     color: var(--foreground);
     border: none;
     border-radius: 10px;

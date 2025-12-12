@@ -13,21 +13,14 @@ export default function Page() {
     <>
       <Navbar />
       <div
-        style={{
-          backgroundImage: "url('images/landingbg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          minHeight: "4100px",
-        }}
-        className="h-screen flex flex-col justify-start items-center space-y-6"
+        className="landing-bg h-screen flex flex-col justify-start items-center space-y-6"
       >
         <h1 className="text-8xl mt-50 mb-15 font-bold text-center">
-          {t("landing.title")}<span className="text-yellow-400">Cube</span>
+          {t("landing.title")}<span style={{ color: "var(--landing-alt)" }}>Cube</span>
         </h1>
 
         <h2 className="text-5xl text-center">{t("landing.subtitle1")}</h2>
-        <h2 className="text-5xl text-center underline text-yellow-500 mb-10">
+        <h2 className="text-5xl text-center underline mb-10" style={{ color: "var(--landing-alt)" }}>
           {t("landing.subtitle2")}
         </h2>
 
@@ -37,12 +30,15 @@ export default function Page() {
 
         {/* Redirectioner vers sign up si pas connecté, et vers dashboard si connecté */}
         <Link href="/auth/signup">
-          <button className="text-2xl bg-yellow-400 px-10 py-5 text-black rounded-md font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-yellow-700/70 hover:shadow-lg cursor-pointer">
+          <button
+            className="text-2xl px-10 py-5 rounded-md font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-lg cursor-pointer"
+            style={{ background: "var(--landing-alt)", color: "var(--background)" }}
+          >
             {t("landing.ctaStart")}
           </button>
         </Link>
 
-        <hr className="border-t-4 rounded-md border-yellow-400 w-full max-w-3xl my-20 opacity-30" />
+  <hr className="border-t-4 rounded-md w-full max-w-3xl my-20 opacity-30" style={{ borderColor: "var(--landing-alt)" }} />
 
         <div
           className="w-full flex flex-row justify-between items-center mt-20"
@@ -54,7 +50,7 @@ export default function Page() {
 
             <h2 className="text-5xl text-left ml-30 mb-15 font-semibold">
               {t("landing.trendTitle2")}{" "}
-              <span className="text-yellow-400">{t("landing.trendHighlighted")}</span>
+              <span style={{ color: "var(--landing-alt)" }}>{t("landing.trendHighlighted")}</span>
             </h2>
 
             <h2 className="text-5xl text-left mb-15 font-semibold">
@@ -73,17 +69,15 @@ export default function Page() {
 
         <h2 className="w-10/12 text-5xl text-center mt-50 mb-15 leading-relaxed font-semibold">
           {t("landing.simulatorTitle").split("simulateur")[0]}
-          <span className="text-yellow-400">
+          <span style={{ color: "var(--landing-alt)" }}>
             {t("landing.simulatorTitle").split("simulateur")[1]}
           </span>
         </h2>
 
-        <div 
-          style={{
-              boxShadow: "25px 30px 0 rgba(74, 59, 0, 0.7)",
-            }}
-          className="rounded-scrollbar w-[1200px] h-[1000px] overflow-y-auto rounded-4xl border-yellow-500 border-solid border-3 mx-auto"
-          >
+        <div
+          className="rounded-scrollbar w-[1200px] h-[1000px] overflow-y-auto rounded-4xl border-solid border-3 mx-auto"
+          style={{ boxShadow: "25px 30px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
+        >
             <Image
               src="/images/portfoliosim.png"
               alt="Portfolio Simulator Example"
@@ -107,10 +101,8 @@ export default function Page() {
 
         <div className="flex flex-row justify-center items-center gap-20">
           <div
-            style={{
-              boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
-            }}
-            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
+            className="mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-2 hover:scale-110 transform transition-all duration-300"
+            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
           >
             <h2 className="text-7xl text-center font-semibold">
               2500+ <br />
@@ -119,10 +111,8 @@ export default function Page() {
           </div>
 
           <div
-            style={{
-              boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
-            }}
-            className="bg-zinc-900 self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
+            className="self-end mt-100 w-120 italic rounded-2xl shadow-lg p-8 border-2 hover:scale-110 transform transition-all duration-300"
+            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)", borderColor: "var(--landing-alt)" }}
           >
             <h2 className="text-7xl text-center font-semibold">
               $12M+ <br />
@@ -131,10 +121,8 @@ export default function Page() {
           </div>
 
           <div
-            style={{
-              boxShadow: "20px 25px 0 rgba(74, 59, 0, 0.7)"
-            }}
-            className="bg-zinc-900 mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-yellow-400 border-2 hover:scale-110 transform transition-all duration-300"
+            className="mb-50 w-120 italic rounded-2xl shadow-lg p-8 border-2 hover:scale-110 transform transition-all duration-300"
+            style={{ background: "var(--color-container-bg)", boxShadow: "20px 25px 0 rgba(63, 59, 59, 0.7)", borderColor: "var(--landing-alt)" }}
           >
             <h2 className="text-7xl text-center font-semibold">
               50,000+ <br />
@@ -146,7 +134,7 @@ export default function Page() {
         <Link href="/auth/signup">
           <h2 className="text-4xl text-center mt-90 mb-15 font-semibold hover:underline hover:scale-105 transform transition-all duration-200">
             {t("landing.join").split("CryptoCube")[0]}
-            <span className="text-yellow-400">CryptoCube</span>
+            <span style={{ color: "var(--landing-alt)" }}>CryptoCube</span>
             {t("landing.join").split("CryptoCube")[1]}
           </h2>
         </Link>
