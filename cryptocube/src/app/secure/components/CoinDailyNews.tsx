@@ -36,7 +36,7 @@ export default function CoinDailyNews({
   useEffect(() => {
     async function load() {
       try {
-        const items = await getCoinNews(coinId, fetchSize)
+        const items = await getCoinNews(coinId)
         setNews(items || [])
         setCurrentIndex(0) // always start on first page for a new coin
       } catch (err) {
