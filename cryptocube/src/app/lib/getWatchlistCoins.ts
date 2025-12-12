@@ -5,7 +5,7 @@ export async function getWatchlistCoins(coinIds: string[]) {
         return [];
     }
 
-    const API_KEY = process.env.COINGECKO_API_KEY;
+    const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
     
     const options = API_KEY 
         ? {
