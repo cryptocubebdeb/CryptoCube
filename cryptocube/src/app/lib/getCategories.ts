@@ -2,9 +2,9 @@ import { CategoryData } from "./definitions";
 const URL_API = "https://api.coingecko.com/api/v3";
 
 export const getCategories = async (): Promise<CategoryData[]> => {
-    const API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+    const API_KEY = process.env.COINGECKO_API_KEY;
     if (!API_KEY) {
-        throw new Error("Missing NEXT_PUBLIC_COINGECKO_API_KEY in environment.");
+        throw new Error("Missing COINGECKO_API_KEY in environment.");
     }
 
     const options = {
