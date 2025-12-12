@@ -31,10 +31,11 @@ export async function POST(request: Request) {
     });
 
     if (existingSimulatorAccount) {
-        return NextResponse.json(
-            { error: "Simulator account already exists" },
-            { status: 400 }
-        );
+        return NextResponse.json({
+            success: true,
+            simulatorAccount: existingSimulatorAccount,
+            message: "Simulator account already exists (returned instead of error).",
+        });
     }
 
     // Créer simulator account
