@@ -146,13 +146,7 @@ export default function DashboardContent() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 100 }}>
-              {holdings.length === 0 ? (
-                <p style={{ color: 'var(--foreground-grey)', fontSize: 18, margin: 0 }}>
-                  {t('simulator.noCoinsInPortfolio')}
-                </p>
-              ) : (
                 <PortfolioChart width={1400} height={380} />
-              )}
             </div>
           </>
         ) : (

@@ -135,14 +135,8 @@ export default function HomeSection() {
         {t("simulator.portfolioValueTitle")}
       </h2>
 
-      {/* the portfolio chart itself, or a message if no coins */}
-      {totalHoldingsCount === 0 && !isLoading ? (
-        <p className="text-center text-lg mb-5" style={{ color: "var(--foreground-grey)" }}>
-          {t("simulator.noCoinsInPortfolio")}
-        </p>
-      ) : (
-        <PortfolioChart />
-      )}
+      <PortfolioChart />
+      
     </div>
   );
 }
