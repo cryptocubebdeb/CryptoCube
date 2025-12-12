@@ -27,7 +27,7 @@ export default function Page() {
         </h1>
 
         <h2 className="text-5xl text-center">{t("landing.subtitle1")}</h2>
-        <h2 className="text-5xl text-center underline text-yellow-500 mb-10">
+        <h2 className="text-5xl text-center text-yellow-500 mb-10">
           {t("landing.subtitle2")}
         </h2>
 

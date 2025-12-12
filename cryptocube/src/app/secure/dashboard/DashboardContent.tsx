@@ -158,7 +158,7 @@ export default function DashboardContent() {
             <Typography variant="h6" sx={{ mt: 2 }}>
               {t('dashboard.trySimulator')}
             </Typography>
-            <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00', textDecoration: 'underline' }}>
+            <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00' }}>
               {t('dashboard.noRisk')}
             </Typography>
             <Button
