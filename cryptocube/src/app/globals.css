@@ -67,6 +67,8 @@
 
     --simulator-wallet-coins: #15171f;
     --simulator-wallet-coins-hover: #1b1e27;
+
+    --forgotpassword-btn: #1545c7;
 }
 
 .light {
@@ -135,6 +137,8 @@
 
     --simulator-wallet-coins: rgb(220, 235, 248);
     --simulator-wallet-coins-hover: rgb(216, 236, 251);
+
+    --forgotpassword-btn: rgb(172, 199, 220);
 }
 
 @theme inline {

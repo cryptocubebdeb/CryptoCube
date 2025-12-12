@@ -146,7 +146,7 @@ export function SignInForm({ urlError }: { urlError?: string }) {
                 sx: {
                   borderRadius: 2,
                   bgcolor: "rgba(255,255,255,0.08)",
-                  color: "var(--foreground)",
+                  color: "var(--foreground)"
                 },
               }}
               InputLabelProps={{ sx: { color: "var(--foreground-grey)" } }}
@@ -186,6 +186,14 @@ export function SignInForm({ urlError }: { urlError?: string }) {
               }}
               InputLabelProps={{ sx: { color: "var(--foreground-grey)" } }}
             />
+
+            <p 
+              style={{ fontSize: '0.9rem', marginLeft: '6px', color: 'var(--foreground)', opacity: 0.8 }} 
+              className="hover:underline cursor-pointer"
+              onClick={() => router.push('/auth/forgot-password')}
+            >
+              {t("signin.forgotPassword")}
+            </p>
 
             {message && (
               <p className="text-red-500 text-sm text-center">{message}</p>

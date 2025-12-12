@@ -120,7 +120,7 @@ export default function SearchSection() {
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder={t('search.placeholder')}
-          className="ml-3 w-full bg-transparent outline-none placeholder:text-[var(--foreground-grey)]"
+          className="ml-3 w-full bg-transparent outline-none placeholder:text-[var(--foreground-search)] placeholder:opacity-80"
           style={{
             color: 'var(--foreground-search)',
           }}

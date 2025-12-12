@@ -99,7 +99,7 @@ export default function ActivitySection() {
 
           {/* Filter for BUY / SELL / ALL */}
           <div className="flex items-center gap-1">
-            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.side")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem', marginRight: '0.2rem' }}>{t("activity.side")}</span>
 
             <div className="flex rounded-lg overflow-hidden shadow-sm">
               {(["ALL", "BUY", "SELL"] as SideFilter[]).map((value) => (
@@ -137,7 +137,7 @@ export default function ActivitySection() {
 
           {/* Filter for MARKET / LIMIT / ALL */}
           <div className="flex items-center gap-1">
-            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.type")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem', marginRight: '0.2rem', marginLeft: '0.3rem' }}>{t("activity.type")}</span>
 
             <div className="flex rounded-lg overflow-hidden border border-[#23252c]">
               {(["ALL", "MARKET", "LIMIT"] as KindFilter[]).map((value) => (
@@ -175,7 +175,7 @@ export default function ActivitySection() {
 
           {/* Filter by coin */}
           <div className="flex items-center gap-1">
-            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem' }}>{t("activity.coin")}</span>
+            <span style={{ color: 'var(--foreground-grey)', fontSize: '0.95rem', marginRight: '0.2rem', marginLeft: '0.3rem' }}>{t("activity.coin")}</span>
 
             <select
               value={coinFilter}
@@ -196,12 +196,12 @@ export default function ActivitySection() {
 
       {/* Display while loading */}
       {loading && (
-        <p className="text-slate-400 text-sm">{t("activity.loading")}</p>
+        <p className="text-sm" style={{ color: 'var(--foreground-grey)' }}>{t("activity.loading")}</p>
       )}
 
       {/* When no trades match the filters */}
       {!loading && filteredTrades.length === 0 && (
-        <p className="text-slate-500 text-sm">
+        <p className="text-sm" style={{ color: 'var(--foreground-grey)' }}>
           {executedTrades.length === 0
             ? t("activity.noExecutedTrades")
             : t("activity.noMatchingTrades")}
@@ -220,13 +220,14 @@ export default function ActivitySection() {
             return (
               <div
                 key={trade.id}
-                className="flex items-center justify-between bg-[#15171f] border border-[#23252c] rounded-lg px-4 py-3"
+                className="flex items-center justify-between shadow-sm rounded-lg px-4 py-3"
+                style={{ backgroundColor: 'var(--simulator-wallet-coins)' }}
               >
                 {/* Left side contains all trade details */}
                 <div>
                   <p
                     className={`font-semibold ${
-                      isBuy ? "text-green-400" : "text-red-400"
+                      isBuy ? "var(--color-green)" : "var(--color-red)"
                     }`}
                   >
                     {isBuy
@@ -235,7 +236,7 @@ export default function ActivitySection() {
                     {trade.coinSymbol}
                   </p>
 
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs" style={{ color: 'var(--foreground-grey)' }}>
                     {trade.orderKind === "MARKET"
                       ? t("activity.marketOrder")
                       : t("activity.limitAt", {
@@ -243,17 +244,17 @@ export default function ActivitySection() {
                         })}
                   </p>
 
-                  <p className="text-xs text-slate-300 mt-1">
+                  <p className="text-xs" style={{ color: 'var(--foreground-grey)', marginTop: '0.25rem' }}>
                     {amount.toFixed(6)} @ ${executedPrice.toFixed(2)}
                   </p>
 
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs" style={{ color: 'var(--foreground-grey)' }}>
                     {t("activity.total", { total: total.toFixed(2) })}
                   </p>
                 </div>
 
                 {/* Right side only shows the timestamp */}
-                <div className="text-right text-xs text-slate-400">
+                <div className="text-right text-xs" style={{ color: 'var(--foreground-grey)' }}>
                   {trade.executedAt
                     ? new Date(trade.executedAt).toLocaleString()
                     : "-"}
