@@ -94,7 +94,7 @@ export default function Page() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
         <h2 className="title mb-12">{t("watchlist.title")}</h2>
 
         {isLoading && (

@@ -36,7 +36,6 @@
     "title": "Mon Compte",
     "details": "Détails",
     "watchlist": "Liste de suivi",
-    "notifications": "Notifications",
     "settings": "Paramètres",
     "signOut": "Déconnexion"
   },
@@ -186,7 +185,8 @@
   "portfolioValueTitle": "Valeur du portefeuille dans le temps",
   "available": "Disponible",
   "availableBalance": "Solde disponible",
-  "portfolioValue": "Valeur du portefeuille"
+  "portfolioValue": "Valeur du portefeuille",
+  "noCoinsInPortfolio": "Aucune crypto dans votre portefeuille. Commencez à trader pour voir vos progrès ici."
 },
 "simulatorWelcome": {
   "title": "Bienvenue dans le simulateur CryptoCube",

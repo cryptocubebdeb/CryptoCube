@@ -1,11 +1,11 @@
 "use client";
-
+ 
 import React, { useEffect, useState } from "react";
 import { Box, Avatar, Typography } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import MiniChart from "./MiniChart";
-
+ 
 interface Coin {
   id: string;
   name: string;
@@ -16,33 +16,33 @@ interface Coin {
   price_change_percentage_7d_in_currency?: number;
   sparkline_in_7d?: { price: number[] };
 }
-
+ 
 export default function TopWinningCoins(): React.JSX.Element {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState(true);
-
+ 
   useEffect(() => {
   async function fetchCoins() {
     try {
       // this must match the folder you created: /api/home/gainers
       const response = await fetch("/api/home/gainers");
-
+ 
       if (!response.ok) {
         throw new Error("Failed to fetch /api/home/gainers");
       }
-
+ 
       const jsonData = await response.json();
-
+ 
       // your API returns { coins: [...] }
       const coinsArray = Array.isArray(jsonData.coins) ? jsonData.coins : [];
-
+ 
       // just in case the API is not sorted, we keep your old sorting logic
       const sortedCoins = coinsArray.sort(
         (first: Coin, second: Coin) =>
           (second.price_change_percentage_24h || 0) -
           (first.price_change_percentage_24h || 0)
       );
-
+ 
       setCoins(sortedCoins);
     } catch (error) {
       console.error("Error fetching top coins:", error);
@@ -51,11 +51,11 @@ export default function TopWinningCoins(): React.JSX.Element {
       setLoading(false);
     }
   }
-
+ 
   fetchCoins();
 }, []);
-
-
+ 
+ 
   return (
     <Box sx={{ pt: 1 }}>
       {coins.slice(0, 5).map((coin, index) => (
@@ -74,7 +74,7 @@ export default function TopWinningCoins(): React.JSX.Element {
               index < 4 ? "1px solid rgba(255, 255, 255, 0.1)" : "none",
             cursor: "pointer",
             "&:hover": {
-              backgroundColor: "#1a1a20ff",
+              backgroundColor: "var(--background-hover)",
             },
             transition: "background-color 0.2s ease",
           }}
@@ -89,24 +89,24 @@ export default function TopWinningCoins(): React.JSX.Element {
               alt={coin.name}
               sx={{ width: 32, height: 32 }}
             />
-
+ 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography variant="body1" sx={{ fontWeight: 500, color: "white" }}>
+              <Typography variant="body1" sx={{ fontWeight: 500, color: "var(--foreground)" }}>
                 {coin.name}
               </Typography>
-
-              <Typography variant="body1" sx={{ color: "gray" }}>
+ 
+              <Typography variant="body1" sx={{ color: "var(--foreground-grey)" }}>
                 {coin.symbol.toUpperCase()}
               </Typography>
             </Box>
           </Box>
-
+ 
           {/* Right: price + change */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body1" sx={{ fontWeight: 500, color: "white" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500, color: "var(--foreground)" }}>
               ${coin.current_price.toFixed(2)}
             </Typography>
-
+ 
             <Box
               sx={{
                 display: "flex",
@@ -117,25 +117,25 @@ export default function TopWinningCoins(): React.JSX.Element {
               }}
             >
               {coin.price_change_percentage_24h >= 0 ? (
-                <TrendingUpIcon sx={{ color: "#4caf50", fontSize: "1rem" }} />
+                <TrendingUpIcon sx={{ color: "var(--color-green)", fontSize: "1rem" }} />
               ) : (
-                <TrendingDownIcon sx={{ color: "#f44336", fontSize: "1rem" }} />
+                <TrendingDownIcon sx={{ color: "var(--color-red)", fontSize: "1rem" }} />
               )}
-
+ 
               <Typography
                 variant="body1"
                 sx={{
                   color:
                     coin.price_change_percentage_24h >= 0
-                      ? "#4caf50"
-                      : "#f44336",
+                      ? "var(--color-green)"
+                      : "var(--color-red)",
                 }}
               >
                 {coin.price_change_percentage_24h >= 0 ? "+" : ""}
                 {coin.price_change_percentage_24h.toFixed(2)}%
               </Typography>
             </Box>
-
+ 
             <MiniChart
               data={coin.sparkline_in_7d?.price || []}
               isPositive={(coin.price_change_percentage_24h || 0) >= 0}
@@ -147,3 +147,4 @@ export default function TopWinningCoins(): React.JSX.Element {
     </Box>
   );
 }
+ 

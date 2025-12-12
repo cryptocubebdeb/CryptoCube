@@ -113,7 +113,7 @@ export default function DashboardContent() {
           marginLeft: 'auto',
           marginRight: 'auto',
           width: '90%',
-          height: hasPortfolio ? '700px' : '500px',
+          height: hasPortfolio ? (holdings.length === 0 ? '400px' : '700px') : '500px',
           boxShadow: '8px 8px 7px rgba(0, 0, 0, 0.2)'
         }}
 
@@ -145,8 +145,14 @@ export default function DashboardContent() {
               )}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <PortfolioChart width={1400} height={380} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 100 }}>
+              {holdings.length === 0 ? (
+                <p style={{ color: 'var(--foreground-grey)', fontSize: 18, margin: 0 }}>
+                  {t('simulator.noCoinsInPortfolio')}
+                </p>
+              ) : (
+                <PortfolioChart width={1400} height={380} />
+              )}
             </div>
           </>
         ) : (
@@ -159,7 +165,7 @@ export default function DashboardContent() {
             <Typography variant="h6" sx={{ mt: 2 }}>
               {t('dashboard.trySimulator')}
             </Typography>
-            <Typography variant="h6" sx={{ mt: 2, color: '#FFDD00' }}>
+            <Typography variant="h6" sx={{ mt: 2, color: 'var(--foreground-alt)', textDecoration: 'underline' }}>
               {t('dashboard.noRisk')}
             </Typography>
             <Button
