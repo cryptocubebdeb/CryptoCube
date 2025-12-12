@@ -4,6 +4,7 @@ import Link from "next/link"
 import Sidebar from "../../components/Sidebar";
 import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { CoinData } from "@/app/lib/definitions"
 import { getWatchlistCoins } from "@/app/lib/getWatchlistCoins"
 import { fetchWatchlistIds, removeFromWatchlist } from "@/app/lib/watchlistActions"
@@ -12,6 +13,7 @@ import CoinsTable from "../../components/CoinsTable"
 export default function Page() {
   const { data: session, status } = useSession()
   const userId = (session?.user as { id?: string })?.id
+  const { t } = useTranslation()
 
   const [watchlistCoins, setWatchlistCoins] = useState<CoinData[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -38,8 +40,8 @@ export default function Page() {
         const coinsData = await getWatchlistCoins(coinIds)
         setWatchlistCoins(coinsData)
       } catch (err) {
-        console.error("Erreur:", err)
-        setError(err instanceof Error ? err.message : "Une erreur est survenue")
+        console.error(t("watchlist.error"), err)
+        setError(err instanceof Error ? err.message : t("watchlist.errorOccurred"))
       } finally {
         setIsLoading(false)
       }
@@ -53,7 +55,7 @@ export default function Page() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center h-screen text-white">
-        <p>Chargement...</p>
+        <p>{t("watchlist.loading")}</p>
       </div>
     )
   }
@@ -62,7 +64,7 @@ export default function Page() {
   if (!userId || !session?.user?.email) {
     return (
       <div className="flex items-center justify-center h-screen text-white">
-        <p>Veuillez vous connecter pour accéder à votre watchlist</p>
+        <p>{t("watchlist.mustLogin")}</p>
       </div>
     )
   }
@@ -77,10 +79,10 @@ export default function Page() {
       if (success) {
         setWatchlistCoins(prev => prev.filter(coin => coin.id !== coinId))
       } else {
-        console.error("Erreur lors de la suppression")
+        console.error(t("watchlist.removeError"))
       }
     } catch (error) {
-      console.error("Erreur:", error)
+      console.error(t("watchlist.error"), error)
     } finally {
       setRemovingCoinId(null)
     }
@@ -92,12 +94,12 @@ export default function Page() {
       <Sidebar userId={userId} />
 
       {/* Main Content Area */}
-  <main className="main flex-1 mt-1 rounded-2xl overflow-auto" style={{ background: 'var(--color-container-bg)', color: 'var(--foreground)' }}>
-        <h2 className="title mb-12">Watchlist</h2>
+      <main className="main flex-1 mt-1 rounded-2xl overflow-auto">
+        <h2 className="title mb-12">{t("watchlist.title")}</h2>
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <div className="text-xl">Chargement...</div>
+            <div className="text-xl">{t("watchlist.loading")}</div>
           </div>
         )}
 
@@ -109,9 +111,9 @@ export default function Page() {
 
         {!isLoading && !error && watchlistCoins.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-xl mb-4">Votre watchlist est vide</p>
+            <p className="text-xl mb-4">{t("watchlist.empty")}</p>
             <Link href="/secure/coins" className="text-blue-400 hover:underline">
-              Parcourir les cryptomonnaies →
+              {t("watchlist.browseCryptos")}
             </Link>
           </div>
         )}
@@ -129,8 +131,8 @@ export default function Page() {
                   className={`transition-colors p-1 rounded text-yellow-500 hover:text-yellow-400 ${
                     removingCoinId === coinId ? "opacity-50" : ""
                   }`}
-                  aria-label="Remove from watchlist"
-                  title="Retirer de la watchlist"
+                  aria-label={t("watchlist.removeAriaLabel")}
+                  title={t("watchlist.removeFromWatchlist")}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

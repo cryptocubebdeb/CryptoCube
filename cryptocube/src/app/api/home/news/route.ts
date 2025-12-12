@@ -1,0 +1,50 @@
+import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const API_KEY = process.env.NEWSAPI_API_KEY;
+
+  if (!API_KEY) {
+    return NextResponse.json(
+      { error: "Missing NEWSAPI_API_KEY" },
+      { status: 500 }
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `https://newsapi.org/v2/everything?q=cryptocurrency OR bitcoin OR ethereum OR crypto&sortBy=publishedAt&pageSize=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+        next: { revalidate: 300 },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`News API error ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const articles = data.articles.map((article: any, index: number) => ({
+      id: index.toString(),
+      title: article.title,
+      url: article.url,
+      description: article.description,
+      created_at: article.publishedAt,
+      news_site: article.source.name,
+      thumbnail: article.urlToImage || "/placeholder.png",
+    }));
+
+    return NextResponse.json({ articles });
+  } catch (error) {
+    console.error("Error fetching Crypto news:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch news" },
+      { status: 500 }
+    );
+  }
+}
