@@ -298,6 +298,95 @@ async function main() {
 
   console.log("[SEED] Orders created");
 
+// =============================
+// TRADE HISTORY (EXECUTED TRADES)
+// =============================
+console.log("[SEED] Creating trade history...");
+
+await prisma.tradeHistory.createMany({
+  data: [
+    // ===== ALICE =====
+    {
+      simulatorAccountId: aliceSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "BTC",
+      amountTraded: 0.02,
+      tradePrice: 95000,
+      tradeTotal: 0.02 * 95000,
+      executedAt: new Date("2024-03-12"),
+    },
+    {
+      simulatorAccountId: aliceSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "ETH",
+      amountTraded: 0.4,
+      tradePrice: 3000,
+      tradeTotal: 0.4 * 3000,
+      executedAt: new Date("2024-05-02"),
+    },
+    {
+      simulatorAccountId: aliceSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "SOL",
+      amountTraded: 3,
+      tradePrice: 160,
+      tradeTotal: 3 * 160,
+      executedAt: new Date("2024-06-15"),
+    },
+
+    // ===== JOHN =====
+    {
+      simulatorAccountId: johnSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "BTC",
+      amountTraded: 0.005,
+      tradePrice: 91000,
+      tradeTotal: 0.005 * 91000,
+      executedAt: new Date("2024-04-01"),
+    },
+    {
+      simulatorAccountId: johnSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "DOGE",
+      amountTraded: 500,
+      tradePrice: 0.12,
+      tradeTotal: 500 * 0.12,
+      executedAt: new Date("2024-02-20"),
+    },
+
+    // ===== JANE =====
+    {
+      simulatorAccountId: janeSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "DOT",
+      amountTraded: 50,
+      tradePrice: 7.5,
+      tradeTotal: 50 * 7.5,
+      executedAt: new Date("2024-03-08"),
+    },
+    {
+      simulatorAccountId: janeSim.id,
+      tradeType: TradeType.BUY,
+      coinSymbol: "LINK",
+      amountTraded: 20,
+      tradePrice: 14,
+      tradeTotal: 20 * 14,
+      executedAt: new Date("2024-06-01"),
+    },
+    {
+      simulatorAccountId: janeSim.id,
+      tradeType: TradeType.SELL,
+      coinSymbol: "LINK",
+      amountTraded: 5,
+      tradePrice: 16.2,
+      tradeTotal: 5 * 16.2,
+      executedAt: new Date("2024-09-10"),
+    },
+  ],
+});
+
+console.log("[SEED] Trade history created");
+
 
   // =============================
   // MASSIVE PORTFOLIO HISTORY (730 days) FOR ALICE + JOHN
